@@ -1,12 +1,11 @@
-import React from "react";
 import AuthUser from "/public/icons/AuthUser.svg";
 import Image from "next/image";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
 const EmailInput = (props: { className?: string }) => {
   return (
     <label
-      className={twMerge(
+      className={cn(
         `relative w-full rounded-full bg-white-200 px-12 py-3 text-base font-medium`,
         props.className,
       )}
@@ -16,7 +15,7 @@ const EmailInput = (props: { className?: string }) => {
       </span>
       <input
         placeholder="Email"
-        className="placeholder:text-slate-600 bg-white-200 focus:outline-none"
+        className="bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type="email"
         name=""
         id=""

@@ -3,7 +3,6 @@ import AuthFacebook from "/public/icons/AuthFacebook.svg";
 import AuthGithub from "/public/icons/AuthGithub.svg";
 import AuthGoogle from "/public/icons/AuthGoogle.svg";
 import Image from "next/image";
-import React from "react";
 
 const OAuth = () => {
   return (

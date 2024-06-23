@@ -1,16 +1,16 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import AuthPassword from "/public/icons/AuthPassword.svg";
 import PasswordEyeClose from "/public/icons/PasswordEyeClose.svg";
 import PasswordEyeOpen from "/public/icons/PasswordEyeOpen.svg";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/lib/utils";
 
 const PasswordInput = (props: { placeholder?: string; className?: string }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <label
-      className={twMerge(
+      className={cn(
         "relative mt-[-10px] w-full rounded-full bg-white-200 px-12 py-3 text-base font-medium",
         props.className,
       )}
@@ -20,7 +20,7 @@ const PasswordInput = (props: { placeholder?: string; className?: string }) => {
       </span>
       <input
         placeholder={props.placeholder || "Password"}
-        className="placeholder:text-slate-600 bg-white-200 focus:outline-none"
+        className="bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type={showPassword ? "text" : "password"}
         name=""
         id=""

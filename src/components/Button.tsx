@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
 
 const Button = (props: {
   children: ReactNode;
@@ -13,7 +13,7 @@ const Button = (props: {
     <button
       type="button"
       onClick={() => router.push(props.navigateTo ? props.navigateTo : "/")}
-      className={twMerge("btn-primary", props.className)}
+      className={cn("btn-primary", props.className)}
     >
       {props.children}
     </button>
