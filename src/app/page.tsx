@@ -8,7 +8,7 @@ import Subscribe from "@/components/home/Subscribe";
 export default function Home() {
   return (
     <>
-      <Header />
+      <Header nav={{ label: "Login", link: "/login" }} />
       <main className="font-roboSlab">
         <section className="flex flex-col px-4 pb-7 *:grow md:flex-row-reverse md:*:w-0">
           <Hero />

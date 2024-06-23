@@ -11,6 +11,10 @@ const config: Config = {
       "yellow-600": "#EE4610",
       "yellow-400": "#F68B1D",
       white: "#fff",
+      "white-200": "#F2F1F1",
+      "slate-100": "#E4E4E7",
+      "slate-300": "#c2bcbc",
+      "slate-600": "#A1A1AA",
       black: "#151515",
       // "grey-400": "#A4A5AB",
       "grey-400": "#707079",
@@ -22,6 +26,17 @@ const config: Config = {
       roboSlab: ["var(--font-robotoSlab)"],
       cousine: ["var(--font-cousine)"],
       montserrat: ["var(--font-montserrat)"],
+    },
+    extend: {
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
+      },
     },
   },
   plugins: [],

@@ -12,32 +12,32 @@ export const featuresContent = [
   {
     logo: IconVideo,
     heading: "Video Messaging",
-    desc: "Provides real-time face-to-face interaction, making conversations more personal and effective.",
+    desc: "Provides real-time face-to-face interaction, for effective conversations.",
   },
   {
     logo: IconShare,
     heading: "File Sharing",
-    desc: "Supports sharing of documents, images, videos, making it easy to exchange information without leaving the app.",
+    desc: "Simplifies the process of exchanging documents, images, videos and other files.",
   },
   {
     logo: IconDeviceSync,
     heading: "Multi-Device Sync",
-    desc: "Ensures messages and notifications are synchronized across all devices, providing a seamless user experience.",
+    desc: "Ensures messages and notifications are synchronized across all devices.",
   },
   {
     logo: IconWifi,
     heading: "Keep Safe & Private",
-    desc: "Ensures that only the communicating users can read the messages, providing a high level of security and privacy.",
+    desc: "Ensures that only the communicating users can read the messages.",
   },
   {
     logo: IconGroupChat,
     heading: "Group Chats and Channels",
-    desc: " Facilitates collaboration by allowing users to create and manage groups for different purposes.",
+    desc: " Facilitates collaboration by allowing users to create and manage groups.",
   },
   {
     logo: IconTimer,
     heading: "Save Your Time",
-    desc: "Advanced search capabilities enable users to quickly locate specific messages, files, or contacts.",
+    desc: "Advanced search capabilities enable users to quickly locate specific resources.",
   },
 ];
 
