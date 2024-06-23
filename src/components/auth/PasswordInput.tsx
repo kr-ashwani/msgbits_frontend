@@ -22,8 +22,6 @@ const PasswordInput = (props: { placeholder?: string; className?: string }) => {
         placeholder={props.placeholder || "Password"}
         className="bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type={showPassword ? "text" : "password"}
-        name=""
-        id=""
       />
       <span
         onClick={() => setShowPassword((state) => !state)}

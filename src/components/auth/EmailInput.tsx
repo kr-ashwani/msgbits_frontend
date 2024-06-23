@@ -17,8 +17,6 @@ const EmailInput = (props: { className?: string }) => {
         placeholder="Email"
         className="bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type="email"
-        name=""
-        id=""
       />
     </label>
   );
