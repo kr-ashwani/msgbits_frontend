@@ -1,4 +1,4 @@
-import ProtectedRoute from "@/components/ProtectedRoutes";
+import ProtectedRoute from "@/components/auth/ProtectedRoutes";
 
 export default function AuthLayout({
   children,

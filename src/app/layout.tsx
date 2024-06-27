@@ -3,6 +3,7 @@ import { Roboto_Slab, Cousine, Montserrat } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
+import AuthTokenVerify from "@/components/auth/AuthTokenVerify";
 
 const roboto_slab = Roboto_Slab({
   display: "swap",
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="mx-auto max-w-screen-xl">
         <StoreProvider>
+          <AuthTokenVerify />
           {children}
         </StoreProvider>
         <Toaster theme="light" />

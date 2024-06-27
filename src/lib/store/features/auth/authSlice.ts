@@ -1,17 +1,15 @@
+import { IUser } from "@/schema/userSchema";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface IUser {
-  email: string;
-  name: string;
-}
-
 export interface AuthState {
   user: null | IUser;
+  isAuthPreflightCompleted: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
+  isAuthPreflightCompleted: false,
 };
 
 export const authSlice = createSlice({
@@ -19,12 +17,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<IUser>) {
+      state.isAuthPreflightCompleted = true;
       state.user = action.payload;
+    },
+    setAuthPreflightCompleted(state, action: PayloadAction<true>) {
+      state.isAuthPreflightCompleted = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser } = authSlice.actions;
+export const { setUser, setAuthPreflightCompleted } = authSlice.actions;
 
 export default authSlice.reducer;
