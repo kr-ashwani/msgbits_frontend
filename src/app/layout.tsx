@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto_Slab, Cousine, Montserrat } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const roboto_slab = Roboto_Slab({
   display: "swap",
@@ -36,7 +37,10 @@ export default function RootLayout({
       className={`${roboto_slab.variable} ${cousine.variable} ${montserrat.variable}`}
     >
       <body className="mx-auto max-w-screen-xl">
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          {children}
+        </StoreProvider>
+        <Toaster theme="light" />
       </body>
     </html>
   );

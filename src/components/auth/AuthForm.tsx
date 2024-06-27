@@ -1,7 +1,9 @@
+"use client";
 import Link from "next/link";
 import PasswordInput from "./PasswordInput";
 import Button from "../Button";
 import EmailInput from "./EmailInput";
+import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
 
 const LoginForm = (props: { AuthType: "Login" | "Signup" }) => {
   const nextAuth = props.AuthType === "Login" ? "Signup" : "Login";
@@ -19,7 +21,10 @@ const LoginForm = (props: { AuthType: "Login" | "Signup" }) => {
       >
         Forget Password?
       </Link>
-      <Button className="mx-16 mb-[-20px]" navigateTo="#">
+      <Button
+        className="mx-16 mb-[-20px]"
+        onClick={() => toastDelegate.success("form submitted")}
+      >
         {props.AuthType}
       </Button>
       <p className="text-center font-roboSlab">

@@ -21,6 +21,10 @@ const config: Config = {
       "grey-100": "#F2F2F2",
       "yellow-100": "#FFDFCD",
       "slate-gray": "#6D6D6D",
+      "red-500": "#ef4444",
+      "green-500": "#22c55e",
+      "amber-500": "#f59e0b",
+      "blue-500": "#3b82f6",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],

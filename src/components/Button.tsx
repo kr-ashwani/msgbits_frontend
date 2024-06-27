@@ -1,18 +1,26 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 const Button = (props: {
   children: ReactNode;
   className?: string;
   navigateTo?: string;
+  onClick?: (e?: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => any;
 }) => {
   const router = useRouter();
+
   return (
     <button
       type="button"
-      onClick={() => router.push(props.navigateTo ? props.navigateTo : "/")}
+      onClick={(e) =>
+        props.onClick
+          ? props.onClick(e)
+          : props.navigateTo
+            ? router.push(props.navigateTo)
+            : ""
+      }
       className={cn("btn-primary", props.className)}
     >
       {props.children}
