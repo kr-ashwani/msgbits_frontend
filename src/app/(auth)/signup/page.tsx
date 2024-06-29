@@ -1,6 +1,6 @@
 import SignupLogo from "/public/assets/Signup.svg";
 import Image from "next/image";
-import LoginForm from "@/components/auth/AuthForm";
+import AuthForm from "@/components/auth/AuthForm";
 import OAuth from "@/components/auth/OAuth";
 
 const Signup = () => {
@@ -19,7 +19,7 @@ const Signup = () => {
         <div className="flex flex-col items-center gap-10 pt-12 sm:gap-12">
           <OAuth />
           <div className="h-[1px] w-8/12 bg-slate-100 lg:w-1/2"></div>
-          <LoginForm AuthType="Signup" />
+          <AuthForm AuthType="Signup" />
         </div>
       </section>
     </main>

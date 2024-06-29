@@ -8,7 +8,9 @@ const config: Config = {
   ],
   theme: {
     colors: {
+      "yellow-800": "#EE5810",
       "yellow-600": "#EE4610",
+      "yellow-500": "#F47419",
       "yellow-400": "#F68B1D",
       white: "#fff",
       "white-200": "#F2F1F1",
@@ -32,6 +34,16 @@ const config: Config = {
       montserrat: ["var(--font-montserrat)"],
     },
     extend: {
+      backgroundImage: {
+        "gradient-button":
+          "linear-gradient(100deg, theme(colors[yellow-600]), theme(colors[yellow-400]))",
+        "gradient-button-hover":
+          "linear-gradient(100deg, theme(colors[yellow-500]), theme(colors[yellow-400]))",
+        "gradient-button-click":
+          "linear-gradient(100deg, theme(colors[yellow-800]), theme(colors[yellow-600]))",
+        "gradient-button-disabled":
+          "linear-gradient(100deg, theme(colors[yellow-400]), theme(colors[white-200]))",
+      },
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },

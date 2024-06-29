@@ -5,8 +5,14 @@ import AuthPassword from "/public/icons/AuthPassword.svg";
 import PasswordEyeClose from "/public/icons/PasswordEyeClose.svg";
 import PasswordEyeOpen from "/public/icons/PasswordEyeOpen.svg";
 import { cn } from "@/lib/utils";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-const PasswordInput = (props: { placeholder?: string; className?: string }) => {
+const PasswordInput = function <T extends FieldValues>(props: {
+  type: Path<T>;
+  register: UseFormRegister<T>;
+  placeholder?: string;
+  className?: string;
+}) {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <label
@@ -19,8 +25,9 @@ const PasswordInput = (props: { placeholder?: string; className?: string }) => {
         <Image width={25} src={AuthPassword} alt="user icon"></Image>
       </span>
       <input
+        {...props.register(props.type)}
         placeholder={props.placeholder || "Password"}
-        className="bg-white-200 placeholder:text-slate-600 focus:outline-none"
+        className="w-full bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type={showPassword ? "text" : "password"}
       />
       <span

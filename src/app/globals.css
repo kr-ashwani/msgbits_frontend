@@ -3,14 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-  .bg-gradient-yellow-custom {
-    background: linear-gradient(
-      100deg,
-      theme(colors[yellow-600]),
-      theme(colors[yellow-400])
-    );
-  }
   .btn-primary {
-    @apply bg-gradient-yellow-custom rounded-full px-6 py-2 font-cousine text-lg font-bold text-white;
+    @apply bg-gradient-button rounded-full px-6 py-2 font-cousine text-lg font-bold text-white;
   }
 }

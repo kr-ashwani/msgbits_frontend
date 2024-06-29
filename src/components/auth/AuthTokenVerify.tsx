@@ -19,7 +19,7 @@ const AuthTokenVerify = () => {
         const response = await fetchData("/authtokenverify", UserSchema);
 
         if (response.success) {
-          dispatch(setUser(response.data));
+          dispatch(setUser(response.payload));
         } else {
           dispatch(setAuthPreflightCompleted(true));
           toastDelegate.error(response.error);

@@ -4,10 +4,11 @@ import { fromError } from "zod-validation-error";
 
 interface SuccessData<T extends z.ZodSchema> {
   success: true;
-  data: T;
+  payload: T;
 }
 interface FailureData {
   success: false;
+  errCode: string;
   error: string;
 }
 const ServerErrorResponse = z.object({
@@ -21,51 +22,65 @@ const ServerErrorResponse = z.object({
 class CustomFetch {
   static serverURL = process.env.NEXT_PUBLIC_SERVER_URL as string;
 
-  async fetchData<T extends z.ZodSchema>(
+  async fetchData<T extends z.ZodSchema, U>(
     input: RequestInfo | URL,
     sucessDataSchema: T,
+    jsonData: U | null = null,
     init?: RequestInit,
   ): Promise<SuccessData<z.infer<T>> | FailureData> {
     try {
-      const serverSegment =
+      const reqToSelfServer =
         (typeof input === "string" || input instanceof String) &&
         input.startsWith("/");
+
+      let jsonReq: null | RequestInit = null;
+      if (jsonData)
+        jsonReq = {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
+          method: "post",
+        };
       const response = await fetch(
-        serverSegment ? CustomFetch.serverURL + input : input,
-        { cache: "no-store", credentials: "include", ...init },
+        reqToSelfServer ? CustomFetch.serverURL + input : input,
+        { cache: "no-store", credentials: "include", ...init, ...jsonReq },
       );
       const responseJson = await response.json();
 
       if (!response.ok) {
-        if (serverSegment) {
+        if (reqToSelfServer) {
           const serverErr = ServerErrorResponse.parse(responseJson);
           return {
             success: false,
+            errCode: serverErr.errCode,
             error: `${serverErr.errCode}: ${serverErr.message}`,
           };
         }
         throw new Error("Failed to fetch data");
       }
-
-      const data = sucessDataSchema.parse(responseJson?.data || responseJson);
-      return { success: true, data };
+      const payload = sucessDataSchema.parse(responseJson);
+      return { success: true, payload };
     } catch (err) {
       if (err instanceof z.ZodError) {
         const validationError = fromError(err);
-        console.log(
-          validationError.name,
-          validationError.message,
-          validationError.details,
-        );
+
         return {
           success: false,
+          errCode: "Validation Error",
           error: `Data Fetch Error: ${validationError.toString()}`,
         };
       } else if (err instanceof Error)
-        return { success: false, error: `Data Fetch Error: ${err.message}` };
+        return {
+          success: false,
+          errCode: "Fetch Error",
+          error: `Data Fetch Error: ${err.message}`,
+        };
       else
         return {
           success: false,
+          errCode: "Fetch Error",
           error: `Data Fetch Error: Something went wrong.`,
         };
     }

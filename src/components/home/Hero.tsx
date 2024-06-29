@@ -19,7 +19,7 @@ const Hero = () => {
             without interruption.
           </p>
           <Button
-            navigateTo="/login"
+            navigateTo="/chat"
             className="btn-primary mt-4 flex w-max items-center gap-3"
           >
             <p>Start Chatting Now</p>
