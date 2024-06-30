@@ -41,8 +41,15 @@ const ForgotPassword = () => {
           Enter your email address to receive a password reset link.
         </p>
       </div>
-      <Input register={register} type="email" className="max-w-sm" />
-      <Button navigateTo="#">Send Reset Link</Button>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full max-w-sm flex-col gap-10"
+      >
+        <Input register={register} type="email" className="max-w-sm" />
+        <Button disabled={isSubmitting} className="self-center" navigateTo="#">
+          Send Reset Link
+        </Button>
+      </form>
     </main>
   );
 };
