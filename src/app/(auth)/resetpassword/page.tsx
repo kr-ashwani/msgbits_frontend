@@ -1,14 +1,45 @@
 "use client";
 import Button from "@/components/Button";
 import PasswordInput from "@/components/auth/PasswordInput";
+import useDisplayFormError from "@/hooks/useDisplayFormError";
 import { IResetPassword, resetPasswordSchema } from "@/schema/AuthUserSchema";
+import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
+import { UserSchema } from "@/schema/userSchema";
+import { fetchData } from "@/utils/custom/customFetch";
+import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 const ResetPassword = () => {
-  const { register } = useForm<IResetPassword>({
+  const searchParams = useSearchParams();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<IResetPassword>({
     resolver: zodResolver(resetPasswordSchema),
   });
+
+  useDisplayFormError(errors);
+  const onSubmit: SubmitHandler<IResetPassword> = async (data) => {
+    const params = {
+      email: searchParams.get("email"),
+      code: searchParams.get("code"),
+    };
+    const response = await fetchData(
+      "/resetpassword",
+      serverResWapperSchema(UserSchema),
+      {
+        ...params,
+        ...data,
+      },
+    );
+    if (!response.success) return toastDelegate.error(response.error);
+    toastDelegate.success(
+      `Password has been successfully changed. Please log in `,
+    );
+  };
   return (
     <main className="mb-20 mt-14 flex flex-col items-center gap-10 px-4">
       <h2 className="text-center font-cousine text-xl font-bold leading-tight text-black md:text-2xl">
@@ -20,19 +51,26 @@ const ResetPassword = () => {
         </p>
       </div>
 
-      <PasswordInput
-        type="password"
-        register={register}
-        className="max-w-sm"
-        placeholder="New Password"
-      />
-      <PasswordInput
-        type="confirmPassword"
-        register={register}
-        className="max-w-sm"
-        placeholder="Confirm New Password"
-      />
-      <Button navigateTo="#">Reset Password</Button>
+      <form
+        className="flex w-full max-w-sm flex-col gap-10"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <PasswordInput
+          type="password"
+          register={register}
+          className="w-full"
+          placeholder="New Password"
+        />
+        <PasswordInput
+          type="confirmPassword"
+          register={register}
+          className="w-full"
+          placeholder="Confirm New Password"
+        />
+        <Button disabled={isSubmitting} className="self-center">
+          Reset Password
+        </Button>
+      </form>
     </main>
   );
 };

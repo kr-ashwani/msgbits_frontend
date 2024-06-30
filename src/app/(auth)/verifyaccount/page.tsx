@@ -12,11 +12,14 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "@/utils/custom/customFetch";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
-import { useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const VerifyAccount = () => {
+  const router = useRouter();
   const otp = useRef("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const query = useAppSelector((state) => state.query);
   const dispatch = useDispatch();
   async function verifOTP(e: React.FormEvent<HTMLFormElement>) {
@@ -28,22 +31,23 @@ const VerifyAccount = () => {
       );
     if (!query.email)
       return toastDelegate.error("Validation Error: Email address is missing.");
-    console.log(otp.current, query.email);
+    setIsLoading(true);
     const response = await fetchData(
-      "/fetchData",
+      "/verifyaccount",
       serverResWapperSchema(UserSchema),
       {
         otp: otp.current,
         email: query.email,
       },
     );
-    if (!response.success)
-      return toastDelegate.error(response.errCode + response.error);
+    setIsLoading(false);
+    if (!response.success) return toastDelegate.error(response.error);
 
     toastDelegate.success(
       `${response.payload.data.name}, You have logged in successfully`,
     );
     dispatch(setUser(response.payload.data));
+    router.push("/chat");
   }
   return (
     <main className="mb-20 mt-14 flex flex-col items-center gap-12 px-4">
@@ -72,7 +76,7 @@ const VerifyAccount = () => {
             </InputOTPGroup>
           </InputOTP>
 
-          <Button>Verify OTP</Button>
+          <Button disabled={isLoading}>Verify OTP</Button>
         </div>
       </form>
     </main>

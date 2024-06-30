@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Logo from "/public/assets/Logo.svg";
-import Button from "./Button";
 import Link from "next/link";
+import NavigationButton from "./auth/NavigationButton";
 
 const Header = (props: { nav: { label: string; link: string } }) => {
   return (
@@ -12,7 +12,7 @@ const Header = (props: { nav: { label: string; link: string } }) => {
         </Link>
       </div>
       <nav>
-        <Button navigateTo={props.nav.link}>{props.nav.label}</Button>
+        <NavigationButton nav={props.nav} />
       </nav>
     </header>
   );

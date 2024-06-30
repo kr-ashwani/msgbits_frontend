@@ -20,6 +20,9 @@ export const authSlice = createSlice({
       state.isAuthPreflightCompleted = true;
       state.user = action.payload;
     },
+    resetUser(state) {
+      state.user = null;
+    },
     setAuthPreflightCompleted(state, action: PayloadAction<true>) {
       state.isAuthPreflightCompleted = action.payload;
     },
@@ -27,6 +30,7 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setAuthPreflightCompleted } = authSlice.actions;
+export const { setUser, resetUser, setAuthPreflightCompleted } =
+  authSlice.actions;
 
 export default authSlice.reducer;

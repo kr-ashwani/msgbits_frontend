@@ -20,6 +20,7 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { setUser } from "@/lib/store/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { setQueryEmail } from "@/lib/store/features/query/querySlice";
+import useDisplayFormError from "@/hooks/useDisplayFormError";
 
 const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
   const router = useRouter();
@@ -35,15 +36,7 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
     ),
   });
 
-  useEffect(() => {
-    if (Object.keys(errors).length) {
-      let errStr = "";
-      Object.values(errors).forEach(
-        (err) => (errStr = errStr.concat(err?.message || "").concat("; ")),
-      );
-      toastDelegate.error(`Validation Error: ${errStr}`);
-    }
-  }, [errors]);
+  useDisplayFormError(errors);
   const onSubmit: SubmitHandler<ILoginUser | ISignupUser> = async (data) => {
     let response;
 
