@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import AuthRoute from "@/components/auth/AuthRoute";
 
 export default function AuthLayout({
   children,
@@ -9,7 +10,7 @@ export default function AuthLayout({
   return (
     <>
       <Header nav={{ label: "Home", link: "/" }} />
-      {children}
+      <AuthRoute>{children}</AuthRoute>
       <Footer />
     </>
   );

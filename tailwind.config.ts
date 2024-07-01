@@ -18,7 +18,6 @@ const config: Config = {
       "slate-300": "#c2bcbc",
       "slate-600": "#A1A1AA",
       black: "#151515",
-      // "grey-400": "#A4A5AB",
       "grey-400": "#707079",
       "grey-100": "#F2F2F2",
       "yellow-100": "#FFDFCD",

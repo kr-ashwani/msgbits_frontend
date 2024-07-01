@@ -9,9 +9,19 @@ import { fetchData } from "@/utils/custom/customFetch";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 const ResetPassword = () => {
+  return (
+    <Suspense fallback={<p>loading</p>}>
+      <ResetPasswordComponent />
+    </Suspense>
+  );
+};
+
+//Nextjs docs useSearchParams must be wrapped around Suspense
+const ResetPasswordComponent = () => {
   const searchParams = useSearchParams();
   const {
     register,

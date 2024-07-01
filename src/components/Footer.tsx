@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="mb-6 px-4 pt-5">
+    <footer className="mb-6 px-4 pt-10">
       <div className="flex items-start justify-between gap-8 max-sm:flex-col md:gap-10">
         <div className="flex flex-col items-start gap-1">
           <a href="/">
@@ -46,7 +46,7 @@ const Footer = () => {
               <ul>
                 {section.links.map((link) => (
                   <li
-                    className="text-white-400 font-montserrat mt-3 text-sm leading-normal hover:text-slate-gray"
+                    className="text-white-400 mt-3 font-montserrat text-sm leading-normal hover:text-slate-gray"
                     key={link.name}
                   >
                     <a href={link.link}>{link.name}</a>
@@ -59,7 +59,7 @@ const Footer = () => {
       </div>
 
       <div className="text-white-400 mt-16 flex justify-between max-sm:flex-col max-sm:items-center">
-        <div className="font-montserrat flex flex-1 cursor-pointer items-center justify-start gap-2">
+        <div className="flex flex-1 cursor-pointer items-center justify-start gap-2 font-montserrat">
           <Image
             src={CopyrightSign}
             alt="copyright sign"
@@ -69,7 +69,7 @@ const Footer = () => {
           />
           <p>Copyright. All rights reserved.</p>
         </div>
-        <p className="font-montserrat cursor-pointer">Terms & Conditions</p>
+        <p className="cursor-pointer font-montserrat">Terms & Conditions</p>
       </div>
     </footer>
   );

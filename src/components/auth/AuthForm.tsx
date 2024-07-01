@@ -12,7 +12,6 @@ import {
   signupUserSchema,
 } from "@/schema/AuthUserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { fetchData } from "@/utils/custom/customFetch";
 import { UserSchema } from "@/schema/userSchema";
 import { useRouter } from "next/navigation";
@@ -70,7 +69,7 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex w-full max-w-sm flex-col gap-10 px-5 font-montserrat sm:px-1"
+      className="flex w-full max-w-sm flex-col gap-6 px-5 font-montserrat sm:px-1"
     >
       {props.AuthType === "Signup" ? (
         <Input type="name" register={register} />
@@ -86,16 +85,16 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
       ) : null}
 
       <Link
-        className="mb-[-15px] text-right font-roboSlab font-medium text-yellow-600"
+        className="text-right font-roboSlab font-medium text-yellow-600"
         href={"/forgotpassword"}
       >
         Forget Password?
       </Link>
 
-      <Button disabled={isSubmitting} className="mx-16 mb-[-20px]">
+      <Button disabled={isSubmitting} className="mx-16">
         {props.AuthType}
       </Button>
-      <p className="text-center font-roboSlab">
+      <p className="mt-[-8px] text-center font-roboSlab">
         Already have an Account?
         <Link
           className="pl-2 font-medium text-yellow-600"

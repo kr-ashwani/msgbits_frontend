@@ -17,7 +17,7 @@ const PasswordInput = function <T extends FieldValues>(props: {
   return (
     <label
       className={cn(
-        "relative mt-[-10px] w-full rounded-full bg-white-200 px-12 py-3 text-base font-medium",
+        "relative w-full rounded-full bg-white-200 px-12 py-3 text-base font-medium",
         props.className,
       )}
     >
