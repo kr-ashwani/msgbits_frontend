@@ -1,6 +1,6 @@
 "use client";
 import { fetchData } from "@/utils/custom/customFetch";
-import Button from "../Button";
+import Button from "../utility/Button";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { z } from "zod";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";

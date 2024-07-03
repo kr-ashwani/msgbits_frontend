@@ -1,7 +1,7 @@
 import Image from "next/image";
 import LandingLogo from "/public/assets/ChattingLogo.svg";
 import IconRight from "/public/icons/ArrowRight.svg";
-import Button from "../Button";
+import Button from "../utility/Button";
 
 const Hero = () => {
   return (

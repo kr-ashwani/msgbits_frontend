@@ -4,6 +4,7 @@ import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 import AuthTokenVerify from "@/components/auth/AuthTokenVerify";
+import Script from "next/script";
 
 const roboto_slab = Roboto_Slab({
   display: "swap",
@@ -43,6 +44,17 @@ export default function RootLayout({
           {children}
         </StoreProvider>
         <Toaster theme="light" />
+
+        <Script
+          strategy="beforeInteractive"
+          src="https://accounts.google.com/gsi/client"
+        />
+        <script
+          async
+          defer
+          crossOrigin="anonymous"
+          src="https://connect.facebook.net/en_US/all.js"
+        />
       </body>
     </html>
   );

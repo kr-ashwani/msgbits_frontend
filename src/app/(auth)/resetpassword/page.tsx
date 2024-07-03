@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/Button";
+import Button from "@/components/utility/Button";
 import PasswordInput from "@/components/auth/PasswordInput";
 import useDisplayFormError from "@/hooks/useDisplayFormError";
 import { IResetPassword, resetPasswordSchema } from "@/schema/AuthUserSchema";
@@ -70,12 +70,14 @@ const ResetPasswordComponent = () => {
           register={register}
           className="w-full"
           placeholder="New Password"
+          autoComplete="new-password"
         />
         <PasswordInput
           type="confirmPassword"
           register={register}
           className="w-full"
           placeholder="Confirm New Password"
+          autoComplete="new-password"
         />
         <Button disabled={isSubmitting} className="self-center">
           Reset Password

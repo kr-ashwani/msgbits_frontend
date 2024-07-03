@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import PasswordInput from "./PasswordInput";
-import Button from "../Button";
+import Button from "../utility/Button";
 import Input from "./Input";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -75,9 +75,16 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
         <Input type="name" register={register} />
       ) : null}
       <Input type="email" register={register} />
-      <PasswordInput type="password" register={register} />
+      <PasswordInput
+        autoComplete={
+          props.AuthType === "Login" ? "current-password" : "new-password"
+        }
+        type="password"
+        register={register}
+      />
       {props.AuthType === "Signup" ? (
         <PasswordInput
+          autoComplete="new-password"
           type="confirmPassword"
           register={register}
           placeholder="Confirm Password"

@@ -1,4 +1,4 @@
-import Button from "../Button";
+import Button from "../utility/Button";
 
 const Subscribe = () => {
   return (

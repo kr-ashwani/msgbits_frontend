@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/Button";
+import Button from "@/components/utility/Button";
 import Input from "@/components/auth/Input";
 import useDisplayFormError from "@/hooks/useDisplayFormError";
 import { IForgotPassword, forgotPasswordSchema } from "@/schema/AuthUserSchema";

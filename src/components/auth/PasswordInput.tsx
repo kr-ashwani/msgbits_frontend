@@ -10,6 +10,7 @@ import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 const PasswordInput = function <T extends FieldValues>(props: {
   type: Path<T>;
   register: UseFormRegister<T>;
+  autoComplete: "current-password" | "new-password";
   placeholder?: string;
   className?: string;
 }) {
@@ -29,6 +30,7 @@ const PasswordInput = function <T extends FieldValues>(props: {
         placeholder={props.placeholder || "Password"}
         className="w-full bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type={showPassword ? "text" : "password"}
+        autoComplete={props.autoComplete}
       />
       <span
         onClick={() => setShowPassword((state) => !state)}

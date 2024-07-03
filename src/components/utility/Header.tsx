@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Logo from "/public/assets/Logo.svg";
 import Link from "next/link";
-import NavigationButton from "./auth/NavigationButton";
+import NavigationButton from "../auth/NavigationButton";
 
 const Header = (props: { nav: { label: string; link: string } }) => {
   return (

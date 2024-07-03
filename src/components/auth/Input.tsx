@@ -27,6 +27,7 @@ const Input = function <T extends FieldValues>(props: {
         placeholder={capitalize(props.type)}
         className="w-full bg-white-200 placeholder:text-slate-600 focus:outline-none"
         type={props.type}
+        autoComplete="username"
       />
     </label>
   );
