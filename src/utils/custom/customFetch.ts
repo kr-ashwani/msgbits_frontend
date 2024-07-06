@@ -65,23 +65,25 @@ class CustomFetch {
     } catch (err) {
       if (err instanceof z.ZodError) {
         const validationError = fromError(err);
-
+        const errMsg =
+          validationError.toString().split(":")[1] ||
+          validationError.toString();
         return {
           success: false,
-          errCode: "Validation Error",
-          error: `Data Fetch Error: ${validationError.toString()}`,
+          errCode: "Response Validation Error",
+          error: `Response Validation Error: ${errMsg}`,
         };
       } else if (err instanceof Error)
         return {
           success: false,
           errCode: "Fetch Error",
-          error: `Data Fetch Error: ${err.message}`,
+          error: `Fetch Error: ${err.message}`,
         };
       else
         return {
           success: false,
           errCode: "Fetch Error",
-          error: `Data Fetch Error: Something went wrong.`,
+          error: `Fetch Error: Something went wrong.`,
         };
     }
   }

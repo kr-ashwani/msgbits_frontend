@@ -9,6 +9,7 @@ export const loginUserSchema = z.object({
   password: z
     .string()
     .min(6, "Password too short - should be of 6 characters minimum"),
+  authType: z.literal("Login"),
 });
 
 export const signupUserSchema = loginUserSchema
@@ -21,6 +22,7 @@ export const signupUserSchema = loginUserSchema
     confirmPassword: z.string({
       required_error: "confirmPassword is required",
     }),
+    authType: z.literal("Signup"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "confirmPassword did not match",

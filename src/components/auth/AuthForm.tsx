@@ -20,15 +20,18 @@ import { setUser } from "@/lib/store/features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { setQueryEmail } from "@/lib/store/features/query/querySlice";
 import useDisplayFormError from "@/hooks/useDisplayFormError";
+import { useEffect } from "react";
 
 const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const oppositeAuthType = props.AuthType === "Login" ? "Signup" : "Login";
+  //ILoginUser | ISignupUser is Discriminated unions
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<ILoginUser | ISignupUser>({
     resolver: zodResolver(
       props.AuthType === "Login" ? loginUserSchema : signupUserSchema,
@@ -38,24 +41,33 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
   useDisplayFormError(errors);
   const onSubmit: SubmitHandler<ILoginUser | ISignupUser> = async (data) => {
     let response;
-
-    if (props.AuthType === "Login") {
+    // checking on the basis of Discriminated unions tag
+    if (data.authType === "Login") {
       response = await fetchData(
         "/login",
         serverResWapperSchema(UserSchema),
         data,
       );
-      if (!response.success) return toastDelegate.error(response.error);
+      if (!response.success) {
+        if (response.errCode === "Email Verification Error") {
+          toastDelegate.warning(
+            "To use the services, User must verify their account with an OTP sent to their email.",
+          );
+          dispatch(setQueryEmail(data.email));
+          return router.push("/verifyaccount");
+        } else return toastDelegate.error(response.error);
+      }
       toastDelegate.success(
         `${response.payload.data.name}, You have logged in successfully`,
       );
       dispatch(setUser(response.payload.data));
     } else {
-      response = await fetchData(
-        "/signup",
-        serverResWapperSchema(UserSchema),
-        data,
-      );
+      //random profile pic link
+      const profilePicture = `https://avatar.iran.liara.run/public/${Math.random() > 0.5 ? "boy" : "girl"}?username=${data.name}`;
+      response = await fetchData("/signup", serverResWapperSchema(UserSchema), {
+        ...data,
+        profilePicture,
+      });
       if (!response.success) return toastDelegate.error(response.error);
 
       toastDelegate.success(
@@ -65,6 +77,11 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
       router.push("/verifyaccount");
     }
   };
+
+  useEffect(() => {
+    // setting Discriminated unions tag
+    setValue("authType", props.AuthType, { shouldValidate: true });
+  }, [setValue, props.AuthType]);
 
   return (
     <form
