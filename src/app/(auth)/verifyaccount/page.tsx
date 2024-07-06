@@ -12,12 +12,10 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "@/utils/custom/customFetch";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
-import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const VerifyAccount = () => {
-  const router = useRouter();
   const otp = useRef("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const query = useAppSelector((state) => state.query);
@@ -47,7 +45,6 @@ const VerifyAccount = () => {
       `${response.payload.data.name}, You have logged in successfully`,
     );
     dispatch(setUser(response.payload.data));
-    router.push("/chat");
   }
   return (
     <main className="mb-20 mt-14 flex flex-col items-center gap-12 px-4">

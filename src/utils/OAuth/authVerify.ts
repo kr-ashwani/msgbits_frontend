@@ -23,6 +23,7 @@ export const authVerify = async (dispatch: storeDispatch) => {
           `${response.payload.data.name}, You are Authenticated successfully.`,
         );
     } else {
+      dispatch(setAuthPreflightCompleted(true));
       //if (process.env.NODE_ENV === "development")
       // toastDelegate.error(response.error);
     }

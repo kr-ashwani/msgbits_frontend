@@ -51,7 +51,7 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
       if (!response.success) {
         if (response.errCode === "Email Verification Error") {
           toastDelegate.warning(
-            "To use the services, User must verify their account with an OTP sent to their email.",
+            "User must verify their account with an OTP sent to their email.",
           );
           dispatch(setQueryEmail(data.email));
           return router.push("/verifyaccount");
