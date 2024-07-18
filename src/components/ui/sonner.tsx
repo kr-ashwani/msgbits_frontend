@@ -1,15 +1,18 @@
 "use client";
 
+import useDetectKeyboardOpen from "@/hooks/useDetectKeyboardOpen";
 import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
+  const isKeyboardOpen = useDetectKeyboardOpen(300);
+
   return (
     <Sonner
       theme={props["theme"]}
-      position="top-right"
-      className="toaster group font-montserrat"
+      position={`${isKeyboardOpen ? "top-right" : "top-right"}`}
+      className={`toaster group font-montserrat`}
       toastOptions={{
         classNames: {
           icon: "!size-lg group-data-[type=error]:text-red-500 group-data-[type=success]:text-green-500 group-data-[type=warning]:text-amber-500 group-data-[type=info]:text-blue-500",

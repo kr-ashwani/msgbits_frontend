@@ -49,10 +49,8 @@ export default function RootLayout({
           strategy="beforeInteractive"
           src="https://accounts.google.com/gsi/client"
         />
-        <script
-          async
-          defer
-          crossOrigin="anonymous"
+        <Script
+          strategy="beforeInteractive"
           src="https://connect.facebook.net/en_US/all.js"
         />
       </body>

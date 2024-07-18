@@ -4,6 +4,6 @@
 
 @layer utilities {
   .btn-primary {
-    @apply bg-gradient-button rounded-full px-6 py-2 font-cousine text-lg font-bold text-white;
+    @apply rounded-full bg-gradient-button px-6 py-2 font-cousine text-lg font-bold text-white;
   }
 }

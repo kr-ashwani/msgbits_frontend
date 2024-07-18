@@ -108,12 +108,14 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
         />
       ) : null}
 
-      <Link
-        className="text-right font-roboSlab font-medium text-yellow-600"
-        href={"/forgotpassword"}
-      >
-        Forget Password?
-      </Link>
+      <p className="text-right">
+        <Link
+          className="text-right font-roboSlab font-medium text-yellow-600"
+          href={"/forgotpassword"}
+        >
+          Forget Password?
+        </Link>
+      </p>
 
       <Button disabled={isSubmitting} className="mx-16">
         {props.AuthType}

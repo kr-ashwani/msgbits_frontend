@@ -31,10 +31,20 @@ const OAuth = () => {
         ></div>
       </div>
       <div ref={facebookRef} className="relative">
-        <Image width={53} src={AuthFacebook} alt="google icon"></Image>
+        <Image
+          className="cursor-pointer"
+          width={53}
+          src={AuthFacebook}
+          alt="google icon"
+        ></Image>
       </div>
       <GithubOAuthProviderButton>
-        <Image width={50} src={AuthGithub} alt="google icon"></Image>
+        <Image
+          className="cursor-pointer"
+          width={50}
+          src={AuthGithub}
+          alt="google icon"
+        ></Image>
       </GithubOAuthProviderButton>
     </div>
   );
