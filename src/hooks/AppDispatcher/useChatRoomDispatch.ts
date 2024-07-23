@@ -1,0 +1,3 @@
+const useChatRoomDispatch = () => {};
+
+export { useChatRoomDispatch };

@@ -15,10 +15,10 @@ const MessageBaseSchema = z.object({
     required_error: "Status is required",
   }),
   repliedTo: z.union([z.string(), z.null()]),
-  createdAt: z.string({
+  createdAt: z.number({
     required_error: "createdAt is required",
   }),
-  updatedAt: z.string({
+  updatedAt: z.number({
     required_error: "updatedAt is required",
   }),
 });
@@ -36,4 +36,8 @@ const MessageSchema = z.discriminatedUnion("type", [
   TextMessageSchema,
   FileMessageSchema,
 ]);
+
+export type IMessageBase = z.infer<typeof MessageBaseSchema>;
+export type ITextMessage = z.infer<typeof TextMessageSchema>;
+export type IFileMessage = z.infer<typeof FileMessageSchema>;
 export type IMessage = z.infer<typeof MessageSchema>;

@@ -2,7 +2,7 @@ import { IMessage } from "@/schema/MessageSchema";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface messageState {
+export interface messageState {
   [p: string]: IMessage;
 }
 const initialState: messageState = {};

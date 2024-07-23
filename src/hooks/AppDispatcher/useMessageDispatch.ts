@@ -1,0 +1,3 @@
+const useMessageDispatch = () => {};
+
+export { useMessageDispatch };

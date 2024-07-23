@@ -1,4 +1,5 @@
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { SocketProvider } from "@/context/SocketContext";
 
 export default function AuthLayout({
   children,
@@ -7,7 +8,9 @@ export default function AuthLayout({
 }>) {
   return (
     <>
-      <ProtectedRoute>{children}</ProtectedRoute>
+      <ProtectedRoute>
+        <SocketProvider>{children}</SocketProvider>
+      </ProtectedRoute>
     </>
   );
 }

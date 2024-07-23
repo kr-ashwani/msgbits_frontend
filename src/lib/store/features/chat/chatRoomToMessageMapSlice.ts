@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-interface chatRoomState {
+export interface chatRoomToMessageMapState {
   [p: string]: [string];
 }
-const initialState: chatRoomState = {};
+const initialState: chatRoomToMessageMapState = {};
 
 export const chatRoomToMessageMapSlice = createSlice({
   name: "Chat Room To Message Mapping",

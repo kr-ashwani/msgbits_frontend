@@ -1,0 +1,3 @@
+const useSelectedChatDispatch = () => {};
+
+export { useSelectedChatDispatch };

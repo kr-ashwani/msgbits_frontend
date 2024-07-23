@@ -15,10 +15,10 @@ const ChatRoomBaseSchema = z.object({
   lastMessageId: z.string({
     required_error: "Last Message Id is required",
   }),
-  createdAt: z.string({
+  createdAt: z.number({
     required_error: "createdAt is required",
   }),
-  updatedAt: z.string({
+  updatedAt: z.number({
     required_error: "updatedAt is required",
   }),
 });
@@ -49,4 +49,7 @@ const ChatRoomSchema = z.discriminatedUnion("type", [
   PrivateChatRoomSchema,
   GroupChatRoomSchema,
 ]);
+export type IChatRoomBase = z.infer<typeof ChatRoomBaseSchema>;
+export type IGroupChatRoom = z.infer<typeof GroupChatRoomSchema>;
+export type IPrivateChatRoom = z.infer<typeof PrivateChatRoomSchema>;
 export type IChatRoom = z.infer<typeof ChatRoomSchema>;
