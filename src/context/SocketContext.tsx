@@ -13,6 +13,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       socket.current.disconnect();
+      //document.getElementsByTagName("body")[0].classList.remove("chatStyle");
     };
   }, []);
 

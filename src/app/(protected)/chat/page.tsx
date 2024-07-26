@@ -2,6 +2,8 @@
 import ChatRoomContainer from "@/components/chat/ChatRoomContainer";
 import ChatRoomDetails from "@/components/chat/ChatRoomDetails";
 import ChatRoomMessages from "@/components/chat/ChatRoomMessages";
+import useChatStyle from "@/hooks/useChatStyle";
+import { useSetUpSocketListners } from "@/hooks/useSetUpSocketListners";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 export interface DisplayComponent {
@@ -10,6 +12,8 @@ export interface DisplayComponent {
 }
 
 const Chat = () => {
+  useChatStyle();
+  useSetUpSocketListners();
   const displayComponent = useRef<DisplayComponent>({
     chatRoomMessages: null,
     chatRoomDetails: null,

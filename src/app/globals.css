@@ -7,3 +7,10 @@
     @apply rounded-full bg-gradient-button px-6 py-2 font-cousine text-lg font-bold text-white;
   }
 }
+
+/* setting style to body only for chat route */
+.chatStyle {
+  overflow: hidden;
+  width: 100%;
+  max-width: none;
+}

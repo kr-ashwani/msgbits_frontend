@@ -2,13 +2,10 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { fetchData } from "../custom/customFetch";
 import { toastDelegate } from "../toastDelegate/ToastDelegate";
 import { authVerify } from "./authVerify";
-import { storeDispatch } from "./types";
 import { UserSchema } from "@/schema/userSchema";
+import { AppDispatch } from "@/lib/store/store";
 
-async function handleCredentialResponse(
-  response: any,
-  dispatch: storeDispatch,
-) {
+async function handleCredentialResponse(response: any, dispatch: AppDispatch) {
   try {
     const servRes = await fetchData(
       "/oauth/google",
@@ -24,7 +21,7 @@ async function handleCredentialResponse(
   }
 }
 
-function googleOAuth(dispatch: storeDispatch) {
+function googleOAuth(dispatch: AppDispatch) {
   const globalThisVar = globalThis as any;
   if (!globalThisVar?.google)
     return toastDelegate.error(

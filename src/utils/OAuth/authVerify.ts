@@ -6,10 +6,9 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "../custom/customFetch";
 import { toastDelegate } from "../toastDelegate/ToastDelegate";
+import { AppDispatch } from "@/lib/store/store";
 
-import { storeDispatch } from "./types";
-
-export const authVerify = async (dispatch: storeDispatch) => {
+export const authVerify = async (dispatch: AppDispatch) => {
   try {
     const response = await fetchData(
       "/authtokenverify",

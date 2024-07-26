@@ -3,12 +3,12 @@ import { toastDelegate } from "../toastDelegate/ToastDelegate";
 import { fetchData } from "../custom/customFetch";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { authVerify } from "./authVerify";
-import { storeDispatch } from "./types";
 import { UserSchema } from "@/schema/userSchema";
+import { AppDispatch } from "@/lib/store/store";
 
 const facebookOAuth = (
   facebookRef: RefObject<HTMLDivElement>,
-  dispatch: storeDispatch,
+  dispatch: AppDispatch,
 ) => {
   function statusChangeCallback(response: any) {
     // Called with the results from FB.getLoginStatus().

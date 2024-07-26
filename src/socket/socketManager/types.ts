@@ -10,7 +10,7 @@ export type EmitterMapping = ChatRoomEmitterMapping & MessageEmitterMapping;
 interface ChatRoomListenerMapping {
   "chatroom-create": (payload: IChatRoom) => void;
   "chatroom-update": (payload: IChatRoom) => void;
-  "chatroom-messages": (payload: IChatRoom[]) => void;
+  "chatroom-getall": (payload: IChatRoom[]) => void;
 }
 
 interface MessageListenerMapping {
