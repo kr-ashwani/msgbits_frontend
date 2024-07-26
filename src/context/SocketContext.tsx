@@ -1,23 +1,24 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import { SocketManager } from "@/socket/socketManager/SocketManager";
+import SocketSingleton from "@/socket/socketManager/SocketSingleton";
+import React, { ReactNode, useEffect, useRef } from "react";
 
-export const SocketContext = React.createContext({} as Socket);
+export const SocketContext = React.createContext({} as SocketManager);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
-  const [socket, setSocket] = useState(
-    io(String(process.env.NEXT_PUBLIC_SERVER_URL), {
-      autoConnect: false,
-      withCredentials: true,
-    }),
-  );
+  const socket = useRef(SocketSingleton.getInstance());
 
   useEffect(() => {
-    socket.connect();
+    socket.current.connect();
     return () => {
-      socket.disconnect();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      socket.current.disconnect();
     };
-  }, [socket]);
+  }, []);
 
-  return <SocketContext.Provider value={socket}></SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={socket.current}>
+      {children}
+    </SocketContext.Provider>
+  );
 };

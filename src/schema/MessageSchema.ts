@@ -32,7 +32,7 @@ const FileMessageSchema = MessageBaseSchema.extend({
   file: FileSchema,
 });
 
-const MessageSchema = z.discriminatedUnion("type", [
+export const MessageSchema = z.discriminatedUnion("type", [
   TextMessageSchema,
   FileMessageSchema,
 ]);

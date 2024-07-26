@@ -45,7 +45,7 @@ const GroupChatRoomSchema = ChatRoomBaseSchema.extend({
   ),
 });
 
-const ChatRoomSchema = z.discriminatedUnion("type", [
+export const ChatRoomSchema = z.discriminatedUnion("type", [
   PrivateChatRoomSchema,
   GroupChatRoomSchema,
 ]);
