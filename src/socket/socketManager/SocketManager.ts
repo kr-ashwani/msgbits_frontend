@@ -130,10 +130,22 @@ export class SocketManager {
   public on<K extends keyof ListenerMapping>(
     event: K,
     callback: ListenerMapping[K],
-  ): void {
+  ) {
     // chat room event
-    setUpChatRoomEventListenerWithValidation(this.socket, event, callback);
-    setUpMessageEventListenerWithValidation(this.socket, event, callback);
+
+    let unsub = null;
+    unsub = setUpChatRoomEventListenerWithValidation(
+      this.socket,
+      event,
+      callback,
+    );
+    if (unsub) return unsub;
+    unsub = setUpMessageEventListenerWithValidation(
+      this.socket,
+      event,
+      callback,
+    );
+    return unsub;
   }
 
   public off<K extends keyof ListenerMapping>(
