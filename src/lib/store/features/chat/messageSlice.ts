@@ -10,9 +10,18 @@ const initialState: messageState = {};
 export const messageSlice = createSlice({
   name: "Message",
   initialState,
-  reducers: {},
+  reducers: {
+    addMessageOfChatRoom(
+      state,
+      action: PayloadAction<Record<string, IMessage[]>>,
+    ) {
+      Object.values(action.payload).forEach((msgArr) => {
+        msgArr.forEach((msg) => (state[msg.chatRoomId] = msg));
+      });
+    },
+  },
 });
 
-export const {} = messageSlice.actions;
+export const { addMessageOfChatRoom } = messageSlice.actions;
 
 export default messageSlice.reducer;

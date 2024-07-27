@@ -7,6 +7,7 @@ import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "../custom/customFetch";
 import { toastDelegate } from "../toastDelegate/ToastDelegate";
 import { AppDispatch } from "@/lib/store/store";
+import { debug } from "../custom/Debug";
 
 export const authVerify = async (dispatch: AppDispatch) => {
   try {
@@ -23,12 +24,13 @@ export const authVerify = async (dispatch: AppDispatch) => {
         );
     } else {
       dispatch(setAuthPreflightCompleted(true));
-      //if (process.env.NODE_ENV === "development")
-      // toastDelegate.error(response.error);
+      debug("error", response.error);
     }
   } catch (err) {
     dispatch(setAuthPreflightCompleted(true));
-    // if (process.env.NODE_ENV === "development" && err instanceof Error)
-    //   toastDelegate.error(err.message);
+    debug(
+      "error",
+      err instanceof Error ? err.message : "Auth Token Verification failed",
+    );
   }
 };

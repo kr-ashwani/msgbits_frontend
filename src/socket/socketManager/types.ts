@@ -1,4 +1,5 @@
 import { IChatRoom } from "@/schema/ChatRoomSchema";
+import { IChatUser } from "@/schema/ChatUserSchema";
 import { IMessage } from "@/schema/MessageSchema";
 
 interface ChatRoomEmitterMapping {}
@@ -19,4 +20,12 @@ interface MessageListenerMapping {
   "message-chatroom": (payload: { [P: string]: IMessage[] }) => void;
 }
 
-export type ListenerMapping = ChatRoomListenerMapping & MessageListenerMapping;
+interface ChatUserListenerMapping {
+  "chatuser-create": (payload: IChatUser) => void;
+  "chatuser-update": (payload: IChatUser) => void;
+  "chatuser-getall": (payload: IChatUser[]) => void;
+}
+
+export type ListenerMapping = ChatRoomListenerMapping &
+  MessageListenerMapping &
+  ChatUserListenerMapping;

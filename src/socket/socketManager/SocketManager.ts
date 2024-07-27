@@ -1,20 +1,18 @@
 import { Socket } from "socket.io-client";
 import { EmitterMapping, ListenerMapping } from "./types";
 import { debug } from "@/utils/custom/Debug";
-import { ChatRoomSchema } from "@/schema/ChatRoomSchema";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
-import { z } from "zod";
-import { setUpChatRoomEventListenerWithValidation } from "./socketListners/chatRoomEventListners";
-import { setUpMessageEventListenerWithValidation } from "./socketListners/messageEventListeners";
+import { SocketListeners } from "./socketListners";
 
 export class SocketManager {
   private socket: Socket;
+  private socketListeners: SocketListeners;
   private eventQueue: { [event: string]: Queue<any> } = {};
   private isProcessingQueue: { [event: string]: boolean } = {};
   private timeoutDuration: number = 5000; // 5 seconds timeout duration
 
   constructor(socket: Socket) {
     this.socket = socket;
+    this.socketListeners = new SocketListeners(this.socket);
     this.setupDefaultEventListeners();
   }
 
@@ -131,21 +129,7 @@ export class SocketManager {
     event: K,
     callback: ListenerMapping[K],
   ) {
-    // chat room event
-
-    let unsub = null;
-    unsub = setUpChatRoomEventListenerWithValidation(
-      this.socket,
-      event,
-      callback,
-    );
-    if (unsub) return unsub;
-    unsub = setUpMessageEventListenerWithValidation(
-      this.socket,
-      event,
-      callback,
-    );
-    return unsub;
+    return this.socketListeners.setUpListenersWithValidation(event, callback);
   }
 
   public off<K extends keyof ListenerMapping>(

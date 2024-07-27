@@ -10,9 +10,19 @@ const initialState: chatRoomState = {};
 export const chatRoomSlice = createSlice({
   name: "Chat Room",
   initialState,
-  reducers: {},
+  reducers: {
+    addChatRoom(state, action: PayloadAction<IChatRoom | IChatRoom[]>) {
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach(
+          (chatroom) => (state[chatroom.chatRoomId] = chatroom),
+        );
+      } else {
+        state[action.payload.chatRoomId] = action.payload;
+      }
+    },
+  },
 });
 
-export const {} = chatRoomSlice.actions;
+export const { addChatRoom } = chatRoomSlice.actions;
 
 export default chatRoomSlice.reducer;

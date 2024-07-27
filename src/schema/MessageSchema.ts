@@ -2,6 +2,9 @@ import { z } from "zod";
 import { FileSchema } from "./FileSchema";
 
 const MessageBaseSchema = z.object({
+  chatRoomId: z.string({
+    required_error: "chatRoomId is required",
+  }),
   messageId: z.string({
     required_error: "MessageId is required",
   }),
@@ -15,10 +18,10 @@ const MessageBaseSchema = z.object({
     required_error: "Status is required",
   }),
   repliedTo: z.union([z.string(), z.null()]),
-  createdAt: z.number({
+  createdAt: z.string({
     required_error: "createdAt is required",
   }),
-  updatedAt: z.number({
+  updatedAt: z.string({
     required_error: "updatedAt is required",
   }),
 });

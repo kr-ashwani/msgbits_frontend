@@ -1,53 +1,52 @@
 import { Socket } from "socket.io-client";
 import { ListenerMapping } from "../types";
-import { MessageSchema } from "@/schema/MessageSchema";
 import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
 import { z } from "zod";
+import { ChatUserSchema } from "@/schema/ChatUserSchema";
 
-export function setUpMessageEventListenerWithValidation<
+export function setUpChatUserEventListenerWithValidation<
   K extends keyof ListenerMapping,
 >(socket: Socket, event: K, callback: ListenerMapping[K]) {
-  if (event === "message-create") {
+  if (event === "chatuser-create") {
     // typescript is unable to infer callback properly
-    const callbackFn = callback as ListenerMapping["message-create"];
+    const callbackFn = callback as ListenerMapping["chatuser-create"];
     const eventHandler = (payload: any) => {
-      const result = MessageSchema.safeParse(payload);
+      const result = ChatUserSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
         toastDelegate.error(
-          "ValidationError: server did not correctly send newly created Message data",
+          "ValidationError: server did not correctly send newly created ChatUser data",
         );
     };
     socket.on(event as string, eventHandler);
     return eventHandler;
-  } else if (event === "message-update") {
+  } else if (event === "chatuser-update") {
     // typescript is unable to infer callback properly
-    const callbackFn = callback as ListenerMapping["message-update"];
+    const callbackFn = callback as ListenerMapping["chatuser-update"];
     const eventHandler = (payload: any) => {
-      const result = MessageSchema.safeParse(payload);
+      const result = ChatUserSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
         toastDelegate.error(
-          "ValidationError: server did not correctly send updated Message data",
+          "ValidationError: server did not correctly send updated ChatUser data",
         );
     };
     socket.on(event as string, eventHandler);
     return eventHandler;
-  } else if (event === "message-chatroom") {
+  } else if (event === "chatuser-getall") {
     // typescript is unable to infer callback properly
-    const callbackFn = callback as ListenerMapping["message-chatroom"];
+    const callbackFn = callback as ListenerMapping["chatuser-getall"];
     const eventHandler = (payload: any) => {
-      const result = z
-        .record(z.string(), z.array(MessageSchema))
-        .safeParse(payload);
+      const result = z.array(ChatUserSchema).safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
         toastDelegate.error(
-          "ValidationError: server did not correctly send ChatRoom Messages data",
+          "ValidationError: server did not correctly send ChatUser data",
         );
     };
     socket.on(event as string, eventHandler);
     return eventHandler;
   }
+
   return null;
 }

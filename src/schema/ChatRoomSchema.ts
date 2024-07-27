@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const ChatRoomBaseSchema = z.object({
   chatRoomId: z.string({
-    required_error: "MessageId is required",
+    required_error: "chatRoomId is required",
   }),
   members: z.array(
     z.string({
@@ -15,10 +15,10 @@ const ChatRoomBaseSchema = z.object({
   lastMessageId: z.string({
     required_error: "Last Message Id is required",
   }),
-  createdAt: z.number({
+  createdAt: z.string({
     required_error: "createdAt is required",
   }),
-  updatedAt: z.number({
+  updatedAt: z.string({
     required_error: "updatedAt is required",
   }),
 });

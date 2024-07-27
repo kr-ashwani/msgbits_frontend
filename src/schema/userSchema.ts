@@ -15,6 +15,9 @@ export const UserSchema = z.object({
   updatedAt: z.string({
     required_error: "updatedAt is required",
   }),
+  _id: z.string({
+    required_error: "_id is required",
+  }),
 });
 
 export const OAuthUserSchema = z.object({
