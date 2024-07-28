@@ -1,21 +1,20 @@
 "use client";
 
 import { DisplayComponent } from "@/app/(protected)/chat/page";
-import { MutableRefObject } from "react";
 
 const ChatRoomContainer = ({
   displayComponent,
 }: {
-  displayComponent: MutableRefObject<DisplayComponent>;
+  displayComponent: DisplayComponent;
 }) => {
   return (
-    <section className="h-full w-full bg-[#701a75]">
+    <section id="chatRoomContainer" className="h-full w-full bg-[#701a75]">
       <p>Chat Room Container</p>
 
       <button
         onClick={() =>
-          displayComponent.current.chatRoomMessages &&
-          displayComponent.current.chatRoomMessages(true)
+          displayComponent.setShowchatRoomMessages &&
+          displayComponent.setShowchatRoomMessages(true)
         }
       >
         OPEN

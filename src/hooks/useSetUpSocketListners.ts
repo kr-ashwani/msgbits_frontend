@@ -16,7 +16,6 @@ type EventHandlerPairArray<T> = {
 export const useSetUpSocketListners = () => {
   const socket = useSocket();
   const messageDispatch = useMessageDispatch();
-  console.log(messageDispatch);
   const chatRoomDispatch = useChatRoomDispatch();
   const chatUserDispatch = useChatUserDispatch();
 

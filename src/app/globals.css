@@ -14,3 +14,8 @@
   width: 100%;
   max-width: none;
 }
+
+:root {
+  --chatRoomContainer-width: 350px;
+  --chatRoomDetail-width: 350px;
+}
