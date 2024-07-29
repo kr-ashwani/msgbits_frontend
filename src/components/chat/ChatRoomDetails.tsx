@@ -1,39 +1,30 @@
 "use client";
-import { DisplayComponent } from "@/app/(protected)/chat/page";
+import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
+import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
+import { useShowChatRoomDetailsState } from "@/hooks/AppSelector/useShowChatRoomDetailsState";
 import useLeftSwipeToggle from "@/hooks/useLeftSwipeToggle";
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import { useEffect, useRef } from "react";
 
-const ChatRoomDetails = ({
-  displayComponent,
-  setShowChatRoomDetail,
-}: {
-  displayComponent: DisplayComponent;
-  setShowChatRoomDetail: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const [showComponent, setShowComponent] = useState(false);
-  const comp = useRef<HTMLElement>(null);
+const ChatRoomDetails = () => {
+  const component = useRef<HTMLElement>(null);
+  useLeftSwipeToggle(component);
+  const showChatRoomDetail = useShowChatRoomDetailsState();
+  const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
 
-  useLeftSwipeToggle(comp, displayComponent.setShowchatRoomDetails);
+  useEffect(() => {}, []);
 
-  useEffect(() => {
-    displayComponent.setShowchatRoomDetails = setShowComponent;
-  }, [displayComponent]);
   return (
     <section
       id="chatRoomDetails"
-      ref={comp}
-      className={`absolute inset-0 h-full w-[full] transition-transform ${showComponent ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+      ref={component}
+      className={`absolute inset-0 h-full w-[full] transition-transform ${showChatRoomDetail.showChatRoomDetails() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <p>Chat Room Details</p>
-      <button
-        onClick={() => {
-          displayComponent.setShowchatRoomDetails &&
-            displayComponent.setShowchatRoomDetails(false);
-          setShowChatRoomDetail(false);
-        }}
+      <p
+        onClick={() => showChatRoomDetailsDispatch.toggleChatRoomDetails(false)}
       >
         CLOSE
-      </button>
+      </p>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora
         veritatis impedit animi totam distinctio labore? In, quisquam. Esse

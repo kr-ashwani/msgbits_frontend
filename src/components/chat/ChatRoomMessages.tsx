@@ -1,47 +1,30 @@
 "use client";
-import { DisplayComponent } from "@/app/(protected)/chat/page";
+import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
+import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
+import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import useLeftSwipeToggle from "@/hooks/useLeftSwipeToggle";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
-const ChatRoomMessages = ({
-  displayComponent,
-  setShowChatRoomDetail,
-}: {
-  displayComponent: DisplayComponent;
-  setShowChatRoomDetail: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const [showComponent, setShowComponent] = useState(false);
-  const comp = useRef<HTMLElement>(null);
-  useLeftSwipeToggle(comp, displayComponent.setShowchatRoomMessages);
-  useEffect(() => {
-    displayComponent.setShowchatRoomMessages = setShowComponent;
-  }, [displayComponent]);
+const ChatRoomMessages = () => {
+  const component = useRef<HTMLElement>(null);
+  useLeftSwipeToggle(component);
+  const selectedChat = useSelectedChatState();
+  const selectedChatDispatch = useSelectedChatDispatch();
+  const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
 
   return (
     <section
       id="chatRoomMessage"
-      ref={comp}
-      className={`absolute inset-0 h-full w-full transition-transform ${showComponent ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
+      ref={component}
+      className={`absolute inset-0 h-full w-full transition-transform ${selectedChat.getSelectedChatRoom() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
     >
       <p>Chat Room Messages</p>
-      <button
-        onClick={() => {
-          displayComponent.setShowchatRoomDetails &&
-            displayComponent.setShowchatRoomDetails(true);
-          setShowChatRoomDetail(true);
-        }}
+      <p
+        onClick={() => showChatRoomDetailsDispatch.toggleChatRoomDetails(true)}
       >
         OPEN
-      </button>
-      <button
-        onClick={() => {
-          displayComponent.setShowchatRoomMessages &&
-            displayComponent.setShowchatRoomMessages(false);
-        }}
-      >
-        CLOSE
-      </button>
-
+      </p>
+      <p onClick={() => selectedChatDispatch.setSelectedChat(null)}>CLOSE</p>
       <p>
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum quas ipsum
         molestiae autem, eveniet perspiciatis reprehenderit eaque natus

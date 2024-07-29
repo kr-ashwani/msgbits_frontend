@@ -1,24 +1,16 @@
 "use client";
 
-import { DisplayComponent } from "@/app/(protected)/chat/page";
+import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import ChatRoom from "./ChatRoom";
 
-const ChatRoomContainer = ({
-  displayComponent,
-}: {
-  displayComponent: DisplayComponent;
-}) => {
+const ChatRoomContainer = () => {
+  const chatRoom = useChatRoomState();
   return (
     <section id="chatRoomContainer" className="h-full w-full">
       <p>Chat Room Container</p>
-
-      <button
-        onClick={() =>
-          displayComponent.setShowchatRoomMessages &&
-          displayComponent.setShowchatRoomMessages(true)
-        }
-      >
-        OPEN
-      </button>
+      {chatRoom.getChatRooms().map((chatRoom) => (
+        <ChatRoom key={chatRoom.chatRoomId} chatRoom={chatRoom} />
+      ))}
     </section>
   );
 };

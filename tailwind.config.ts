@@ -27,6 +27,7 @@ const config: Config = {
       "amber-500": "#f59e0b",
       "blue-500": "#3b82f6",
       "chat-bg": "var(--theme-bg-color)",
+      "border-color": "var(--border-color)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],

@@ -1,10 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 
-const useLeftSwipeToggle = (
-  comp: RefObject<HTMLElement>,
-  setDisplayComponent: Dispatch<SetStateAction<boolean>> | null,
-) => {
+const useLeftSwipeToggle = (comp: RefObject<HTMLElement>) => {
   useEffect(() => {
     if (!comp.current) return;
     let offsetX = comp.current.getBoundingClientRect().left;
@@ -65,11 +62,11 @@ const useLeftSwipeToggle = (
         comp.current.style.removeProperty("transition-duration");
         comp.current.style.removeProperty("transition-timing-function");
       }
-      if (translatePercent === 100)
-        setDisplayComponent && setDisplayComponent(false);
-      else if (vel >= 0.5) setDisplayComponent && setDisplayComponent(false);
-      else setDisplayComponent && setDisplayComponent(true);
+      if (translatePercent === 100 || vel >= 0.5) showComponent();
+      else hideComponent();
     }
+    function showComponent() {}
+    function hideComponent() {}
     function resize(this: Window) {
       if (comp.current) offsetX = comp.current.getBoundingClientRect().left;
       width = this.screen.width;
@@ -99,7 +96,7 @@ const useLeftSwipeToggle = (
       if (comp.current) unregisterTouchEvents(comp.current);
       window.removeEventListener("resize", resize);
     };
-  }, [comp, setDisplayComponent]);
+  }, [comp]);
 
   return null;
 };

@@ -1,14 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: string | null = null;
+type SelectedChatState = string | null;
+
+const initialState: SelectedChatState = "";
 
 export const selectedChatSlice = createSlice({
   name: "Selected Chat",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedChatId(state, action: PayloadAction<string>) {
+      return action.payload;
+    },
+  },
 });
 
-export const {} = selectedChatSlice.actions;
+export const { setSelectedChatId } = selectedChatSlice.actions;
 
 export default selectedChatSlice.reducer;

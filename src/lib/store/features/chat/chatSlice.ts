@@ -4,6 +4,7 @@ import chatRoomToMessageMapReducer from "./chatRoomToMessageMapSlice";
 import messageReducer from "./messageSlice";
 import selectedChatReducer from "./selectedChatSlice";
 import chatUserReducer from "./chatUserSlice";
+import showChatRoomDetailsReducer from "./showChatRoomDetails";
 
 const chatReducer = combineReducers({
   chatRoom: chatRoomReducer,
@@ -11,6 +12,7 @@ const chatReducer = combineReducers({
   chatRoomToMessageMap: chatRoomToMessageMapReducer,
   selectedChat: selectedChatReducer,
   chatUser: chatUserReducer,
+  showChatRoomDetails: showChatRoomDetailsReducer,
 });
 
 export default chatReducer;
