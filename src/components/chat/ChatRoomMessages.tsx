@@ -21,7 +21,7 @@ const ChatRoomMessages = ({
     <section
       id="chatRoomMessage"
       ref={comp}
-      className={`absolute inset-0 h-full w-full bg-[#4338ca] transition-transform ${showComponent ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
+      className={`absolute inset-0 h-full w-full transition-transform ${showComponent ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
     >
       <p>Chat Room Messages</p>
       <button

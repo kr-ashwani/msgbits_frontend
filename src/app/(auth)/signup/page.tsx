@@ -1,20 +1,13 @@
-import SignupLogo from "/public/assets/Signup.svg";
-import Image from "next/image";
 import AuthForm from "@/components/auth/AuthForm";
 import OAuth from "@/components/auth/OAuth";
+import Svg from "@/components/svg";
 
 const Signup = () => {
   return (
-    <main className="my-16 font-roboSlab sm:my-6">
+    <main className="my-10 font-roboSlab sm:my-6">
       <section className="flex flex-col px-4 pb-7 *:grow md:flex-row-reverse md:*:w-0">
         <div className="flex items-center justify-center">
-          <Image
-            className="px-5 sm:mt-[-75px] md:px-1"
-            priority
-            width={450}
-            src={SignupLogo}
-            alt="landing logo"
-          />
+          {Svg("Signup", { width: "450", height: "400" })}
         </div>
         <div className="flex flex-col items-center gap-10 pt-6 sm:gap-10">
           <OAuth />

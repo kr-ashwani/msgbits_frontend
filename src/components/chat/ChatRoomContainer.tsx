@@ -8,7 +8,7 @@ const ChatRoomContainer = ({
   displayComponent: DisplayComponent;
 }) => {
   return (
-    <section id="chatRoomContainer" className="h-full w-full bg-[#701a75]">
+    <section id="chatRoomContainer" className="h-full w-full">
       <p>Chat Room Container</p>
 
       <button

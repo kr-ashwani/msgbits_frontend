@@ -22,7 +22,7 @@ const Chat = () => {
 
   return (
     <main
-      className={`relative grid h-svh w-full grid-cols-1 overflow-hidden text-white md:grid-cols-[var(--chatRoomContainer-width)_1fr] lg:transition-all ${showChatRoomDetail ? "lg:grid-cols-[var(--chatRoomContainer-width)_1fr_var(--chatRoomDetail-width)]" : "lg:grid-cols-[var(--chatRoomContainer-width)_1fr_0]"}`}
+      className={`font-manrope bg-chat-bg relative grid h-full w-full grid-cols-1 overflow-hidden md:grid-cols-[var(--chatRoomContainer-width)_1fr] lg:transition-all ${showChatRoomDetail ? "lg:grid-cols-[var(--chatRoomContainer-width)_1fr_var(--chatRoomDetail-width)]" : "lg:grid-cols-[var(--chatRoomContainer-width)_1fr_0]"}`}
     >
       <ChatRoomContainer displayComponent={displayComponent.current} />
       <ChatRoomMessages

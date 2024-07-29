@@ -26,11 +26,13 @@ const config: Config = {
       "green-500": "#22c55e",
       "amber-500": "#f59e0b",
       "blue-500": "#3b82f6",
+      "chat-bg": "var(--theme-bg-color)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],
       cousine: ["var(--font-cousine)"],
       montserrat: ["var(--font-montserrat)"],
+      manrope: ["var(--font-manrope)"],
     },
     extend: {
       backgroundImage: {

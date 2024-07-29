@@ -1,8 +1,8 @@
 "use client";
-import AuthUser from "/public/icons/AuthUser.svg";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { FieldValues, Path, UseFormRegister } from "react-hook-form";
+import Svg from "../svg";
 
 const Input = function <T extends FieldValues>(props: {
   type: Path<T>;
@@ -20,7 +20,7 @@ const Input = function <T extends FieldValues>(props: {
       )}
     >
       <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-        <Image width={25} src={AuthUser} alt="user icon"></Image>
+        {Svg("AuthUser", { width: "25" })}
       </span>
       <input
         {...props.register(props.type)}

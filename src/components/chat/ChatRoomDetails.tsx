@@ -22,7 +22,7 @@ const ChatRoomDetails = ({
     <section
       id="chatRoomDetails"
       ref={comp}
-      className={`absolute inset-0 h-full w-[full] bg-[#9d174d] transition-transform ${showComponent ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+      className={`absolute inset-0 h-full w-[full] transition-transform ${showComponent ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <p>Chat Room Details</p>
       <button

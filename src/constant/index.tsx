@@ -1,41 +1,37 @@
-import IconVideo from "/public/icons/Video.svg";
-import IconTimer from "/public/icons/Timer.svg";
 import IconShare from "/public/icons/FileShare.png";
 import IconDeviceSync from "/public/icons/DeviceSync.png";
-import IconWifi from "/public/icons/Wifi.svg";
 import IconGroupChat from "/public/icons/GroupChat.png";
-import Facebook from "/public/icons/Facebook.svg";
-import Instagram from "/public/icons/Instagram.svg";
-import Twitter from "/public/icons/Twitter.svg";
+import Svg from "@/components/svg";
+import Image from "next/image";
 
 export const featuresContent = [
   {
-    logo: IconVideo,
+    logo: Svg("Video", { width: "26" }),
     heading: "Video Messaging",
     desc: "Provides real-time face-to-face interaction, for effective conversations.",
   },
   {
-    logo: IconShare,
+    logo: <Image width={26} src={IconShare} alt="video icon"></Image>,
     heading: "File Sharing",
     desc: "Simplifies the process of exchanging documents, images, videos and other files.",
   },
   {
-    logo: IconDeviceSync,
+    logo: <Image width={26} src={IconDeviceSync} alt="video icon"></Image>,
     heading: "Multi-Device Sync",
     desc: "Ensures messages and notifications are synchronized across all devices.",
   },
   {
-    logo: IconWifi,
+    logo: Svg("Wifi", { width: "26" }),
     heading: "Keep Safe & Private",
     desc: "Ensures that only the communicating users can read the messages.",
   },
   {
-    logo: IconGroupChat,
+    logo: <Image width={26} src={IconGroupChat} alt="video icon"></Image>,
     heading: "Group Chats and Channels",
     desc: " Facilitates collaboration by allowing users to create and manage groups.",
   },
   {
-    logo: IconTimer,
+    logo: Svg("Timer", { width: "26" }),
     heading: "Save Your Time",
     desc: "Advanced search capabilities enable users to quickly locate specific resources.",
   },
@@ -71,7 +67,7 @@ export const footerLinks = [
 ];
 
 export const socialMedia = [
-  { src: Facebook, alt: "facebook logo", link: "#" },
-  { src: Twitter, alt: "twitter logo", link: "#" },
-  { src: Instagram, alt: "instagram logo", link: "#" },
+  { src: Svg("Facebook", { width: "30" }), alt: "facebook logo", link: "#" },
+  { src: Svg("Twitter", { width: "30" }), alt: "twitter logo", link: "#" },
+  { src: Svg("Instagram", { width: "30" }), alt: "instagram logo", link: "#" },
 ];

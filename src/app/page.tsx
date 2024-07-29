@@ -18,7 +18,7 @@ export default function Home() {
         >
           <Features />
         </section>
-        <section className="padding-x w-full px-4 py-14 md:px-10">
+        <section className="padding-x w-full px-4 pb-6 pt-14 md:px-10">
           <Subscribe />
         </section>
       </main>

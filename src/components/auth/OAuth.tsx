@@ -1,14 +1,10 @@
 "use client";
-import Link from "next/link";
-import AuthFacebook from "/public/icons/AuthFacebook.svg";
-import AuthGithub from "/public/icons/AuthGithub.svg";
-import AuthGoogle from "/public/icons/AuthGoogle.svg";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { googleOAuth } from "@/utils/OAuth/OAuthGoogle";
 import { facebookOAuth } from "@/utils/OAuth/OAuthFacebook";
 import GithubOAuthProviderButton from "./GithubOAuthProviderButton";
 import { useAppDispatch } from "@/lib/store/hooks";
+import Svg from "../svg";
 
 const OAuth = () => {
   const dispatch = useAppDispatch();
@@ -19,32 +15,20 @@ const OAuth = () => {
     return facebookUnsub;
   }, [dispatch]);
 
-  //useOAuthFacebook(facebookRef);
-
   return (
     <div className="flex items-center gap-10 sm:gap-12">
       <div className="relative">
-        <Image width={47} src={AuthGoogle} alt="google icon"></Image>
+        {Svg("AuthGoogle", { width: "47", height: "47" })}
         <div
           className="absolute left-0 right-0 top-0 mt-1 overflow-hidden rounded-full opacity-5"
           id="buttonDiv"
         ></div>
       </div>
       <div ref={facebookRef} className="relative">
-        <Image
-          className="cursor-pointer"
-          width={53}
-          src={AuthFacebook}
-          alt="google icon"
-        ></Image>
+        {Svg("AuthFacebook", { width: "53", height: "53" })}
       </div>
       <GithubOAuthProviderButton>
-        <Image
-          className="cursor-pointer"
-          width={50}
-          src={AuthGithub}
-          alt="google icon"
-        ></Image>
+        {Svg("AuthGithub", { width: "50", height: "50" })}
       </GithubOAuthProviderButton>
     </div>
   );

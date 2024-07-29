@@ -1,13 +1,11 @@
-import Image from "next/image";
-import LandingLogo from "/public/assets/ChattingLogo.svg";
-import IconRight from "/public/icons/ArrowRight.svg";
+import Svg from "../svg";
 import Button from "../utility/Button";
 
 const Hero = () => {
   return (
     <>
       <div className="flex items-center justify-center">
-        <Image priority width={300} src={LandingLogo} alt="landing logo" />
+        {Svg("ChattingLogo", { width: "300", height: "400" })}
       </div>
       <div className="ml-3 flex items-center">
         <div className="flex max-w-[400px] flex-col gap-7">
@@ -23,7 +21,7 @@ const Hero = () => {
             className="btn-primary mt-4 flex w-max items-center gap-3"
           >
             <p>Start Chatting Now</p>
-            <Image src={IconRight} alt="icon right" />
+            {Svg("ArrorRight")}
           </Button>
         </div>
       </div>

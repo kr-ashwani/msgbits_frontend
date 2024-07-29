@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { MouseEvent, ReactNode } from "react";
+import Svg from "../svg";
 
 const Button = (props: {
   disabled?: boolean;
@@ -23,13 +24,16 @@ const Button = (props: {
             : ""
       }
       className={cn(
-        `btn-primary hover:bg-gradient-button-hover focus:bg-gradient-button-click group relative ring-slate-300 ring-offset-1 active:ring-1 disabled:text-opacity-0`,
+        `btn-primary group relative ring-slate-300 ring-offset-1 hover:bg-gradient-button-hover focus:bg-gradient-button-click active:ring-1 disabled:text-opacity-0`,
         props.className,
       )}
     >
-      <span className="flex items-center justify-center gap-2 before:absolute before:inset-0 before:hidden before:w-full before:items-center before:justify-center before:pt-[8px] before:text-center before:content-[url('/icons/loading.svg')] group-disabled:before:flex">
-        {props.children}
-      </span>
+      {props.children}
+      {
+        <span className="absolute inset-0 hidden items-center justify-center group-disabled:flex">
+          {Svg("loading")}
+        </span>
+      }
     </button>
   );
 };

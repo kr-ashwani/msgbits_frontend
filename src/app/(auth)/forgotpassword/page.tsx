@@ -46,7 +46,7 @@ const ForgotPassword = () => {
         className="flex w-full max-w-sm flex-col gap-10"
       >
         <Input register={register} type="email" className="max-w-sm" />
-        <Button disabled={isSubmitting} className="self-center" navigateTo="#">
+        <Button disabled={isSubmitting} className="self-center">
           Send Reset Link
         </Button>
       </form>

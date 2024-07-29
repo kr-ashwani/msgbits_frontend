@@ -15,7 +15,7 @@ const Features = () => {
           >
             <div>
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
-                <Image width={26} src={elem.logo} alt="video icon"></Image>
+                {elem.logo}
               </div>
             </div>
             <div className="flex flex-col gap-1">

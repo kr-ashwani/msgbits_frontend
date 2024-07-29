@@ -1,20 +1,13 @@
-import LoginLogo from "/public/assets/Login.svg";
-import Image from "next/image";
 import AuthForm from "@/components/auth/AuthForm";
 import OAuth from "@/components/auth/OAuth";
+import Svg from "@/components/svg";
 
 const Login = () => {
   return (
-    <main className="my-16 font-roboSlab sm:my-6">
+    <main className="my-10 font-roboSlab sm:my-6">
       <section className="flex flex-col px-4 pb-7 *:grow md:flex-row-reverse md:*:w-0">
         <div className="flex items-center justify-center">
-          <Image
-            className="px-5 sm:mt-[-15px] md:px-1"
-            priority
-            width={500}
-            src={LoginLogo}
-            alt="landing logo"
-          />
+          {Svg("Login", { width: "450", height: "300" })}
         </div>
         <div className="flex flex-col items-center gap-10 pt-6 sm:gap-10">
           <OAuth />

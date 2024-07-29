@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Roboto_Slab, Cousine, Montserrat } from "next/font/google";
+import { Roboto_Slab, Cousine, Montserrat, Manrope } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 import AuthTokenVerify from "@/components/auth/AuthTokenVerify";
 import Script from "next/script";
 
-const roboto_slab = Roboto_Slab({
+const robotoSlab = Roboto_Slab({
   display: "swap",
   subsets: ["latin"],
   variable: "--font-robotoSlab",
@@ -22,6 +22,11 @@ const cousine = Cousine({
   subsets: ["latin"],
   variable: "--font-cousine",
 });
+const manrope = Manrope({
+  display: "swap",
+  subsets: ["latin"],
+  variable: "--font-manrope",
+});
 
 export const metadata: Metadata = {
   title: "Msgbits",
@@ -36,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${roboto_slab.variable} ${cousine.variable} ${montserrat.variable}`}
+      className={`${robotoSlab.variable} ${cousine.variable} ${montserrat.variable} ${manrope.variable}`}
     >
       <body className="mx-auto max-w-screen-xl">
         <StoreProvider>
