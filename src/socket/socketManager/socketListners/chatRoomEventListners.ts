@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { ListenerMapping } from "../types";
 import { ChatRoomSchema } from "@/schema/ChatRoomSchema";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { z } from "zod";
 
 export function setUpChatRoomEventListenerWithValidation<
@@ -14,7 +14,7 @@ export function setUpChatRoomEventListenerWithValidation<
       const result = ChatRoomSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send newly created ChatRoom data",
         );
     };
@@ -27,7 +27,7 @@ export function setUpChatRoomEventListenerWithValidation<
       const result = ChatRoomSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send updated ChatRoom data",
         );
     };
@@ -40,7 +40,7 @@ export function setUpChatRoomEventListenerWithValidation<
       const result = z.array(ChatRoomSchema).safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send updated ChatRoom data",
         );
     };

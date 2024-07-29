@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { getGithubOAuthUrl } from "@/utils/OAuth/getGithubOAuthURL";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { authVerify } from "@/utils/OAuth/authVerify";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 
 const GithubOAuthProviderButton = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
@@ -45,7 +45,7 @@ const GithubOAuthProviderButton = ({ children }: { children: ReactNode }) => {
       window.removeEventListener("message", receiveMessage);
       const serverMsg: any = event.data;
       if (serverMsg.success) authVerify(dispatch);
-      else toastDelegate.error("Authentication Error: " + serverMsg.error);
+      else toast.error("Authentication Error: " + serverMsg.error);
     }
   }
 

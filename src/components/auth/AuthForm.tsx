@@ -3,7 +3,7 @@ import Link from "next/link";
 import PasswordInput from "./PasswordInput";
 import Button from "../utility/Button";
 import Input from "./Input";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { useForm, SubmitHandler } from "react-hook-form";
 import {
   ILoginUser,
@@ -50,14 +50,14 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
       );
       if (!response.success) {
         if (response.errCode === "Email Verification Error") {
-          toastDelegate.warning(
+          toast.warning(
             "User must verify their account with an OTP sent to their email.",
           );
           dispatch(setQueryEmail(data.email));
           return router.push("/verifyaccount");
-        } else return toastDelegate.error(response.error);
+        } else return toast.error(response.error);
       }
-      toastDelegate.success(
+      toast.success(
         `${response.payload.data.name}, You have logged in successfully`,
       );
       dispatch(setUser(response.payload.data));
@@ -68,9 +68,9 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
         ...data,
         profilePicture,
       });
-      if (!response.success) return toastDelegate.error(response.error);
+      if (!response.success) return toast.error(response.error);
 
-      toastDelegate.success(
+      toast.success(
         `${response.payload.data.name}, Your account has been created successfully. Please verify the OTP to complete the verification process`,
       );
       dispatch(setQueryEmail(response.payload.data.email));

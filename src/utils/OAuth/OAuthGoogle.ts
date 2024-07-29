@@ -1,6 +1,6 @@
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { fetchData } from "../custom/customFetch";
-import { toastDelegate } from "../toastDelegate/ToastDelegate";
+import { toast } from "../toast/Toast";
 import { authVerify } from "./authVerify";
 import { UserSchema } from "@/schema/userSchema";
 import { AppDispatch } from "@/lib/store/store";
@@ -17,14 +17,14 @@ async function handleCredentialResponse(response: any, dispatch: AppDispatch) {
     if (servRes.success) authVerify(dispatch);
     else throw new Error(servRes.error);
   } catch (err) {
-    if (err instanceof Error) toastDelegate.error(err.message);
+    if (err instanceof Error) toast.error(err.message);
   }
 }
 
 function googleOAuth(dispatch: AppDispatch) {
   const globalThisVar = globalThis as any;
   if (!globalThisVar?.google)
-    return toastDelegate.error(
+    return toast.error(
       "Authentication Error: Google OAuth initialization Failed",
     );
   try {
@@ -41,9 +41,7 @@ function googleOAuth(dispatch: AppDispatch) {
     //Display one Tap Dailog
     globalThisVar.google.accounts.id.prompt();
   } catch (err) {
-    toastDelegate.error(
-      "Authentication Error: Google OAuth initialization Failed",
-    );
+    toast.error("Authentication Error: Google OAuth initialization Failed");
   }
 }
 export { googleOAuth };

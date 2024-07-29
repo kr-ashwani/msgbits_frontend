@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ExternalToast, ToastT, toast } from "sonner";
+import { ExternalToast, ToastT, toast as toastDelegate } from "sonner";
 
 declare namespace toastFn {
   export var success: (
@@ -41,7 +41,7 @@ function toastFn(
   message: string | React.ReactNode,
   data?: ExternalToast,
 ): string | number {
-  return toast(message, {
+  return toastDelegate(message, {
     description: format(new Date(), "EEEE, MMMM dd, yyyy 'at' h:mm a"),
     ...data,
   });
@@ -54,36 +54,36 @@ function toastFnWithType(
     message: string | React.ReactNode,
     data?: ExternalToast,
   ): string | number => {
-    return toast[type](message, {
+    return toastDelegate[type](message, {
       description: format(new Date(), "EEEE, MMMM dd, yyyy 'at' h:mm a"),
       ...data,
     });
   };
 }
 
-const toastDelegate = toastFn;
+const toast = toastFn;
 
-toastDelegate.success = toastFnWithType("success");
-toastDelegate.info = toastFnWithType("info");
-toastDelegate.error = toastFnWithType("error");
-toastDelegate.warning = toastFnWithType("warning");
-toastDelegate.message = toastFnWithType("message");
-toastDelegate.loading = toastFnWithType("loading");
-toastDelegate.getHistory = (): (ToastT | ToastToDismiss)[] => {
-  return toast.getHistory();
+toast.success = toastFnWithType("success");
+toast.info = toastFnWithType("info");
+toast.error = toastFnWithType("error");
+toast.warning = toastFnWithType("warning");
+toast.message = toastFnWithType("message");
+toast.loading = toastFnWithType("loading");
+toast.getHistory = (): (ToastT | ToastToDismiss)[] => {
+  return toastDelegate.getHistory();
 };
-toastDelegate.dismiss = (id?: number | string): string | number => {
-  return toast.dismiss(id);
+toast.dismiss = (id?: number | string): string | number => {
+  return toastDelegate.dismiss(id);
 };
-toastDelegate.custom;
-toastDelegate.promise = <ToastData>(
+toast.custom;
+toast.promise = <ToastData>(
   promise: PromiseT<ToastData>,
   data?: PromiseData<ToastData>,
 ): string | number => {
-  return toast.promise(promise, {
+  return toastDelegate.promise(promise, {
     description: format(new Date(), "EEEE, MMMM dd, yyyy 'at' h:mm a"),
     ...data,
   });
 };
 
-export { toastDelegate };
+export { toast };

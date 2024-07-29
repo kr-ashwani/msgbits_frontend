@@ -11,7 +11,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "@/utils/custom/customFetch";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -24,11 +24,9 @@ const VerifyAccount = () => {
     e.preventDefault();
     console.log(otp.current.length);
     if (otp.current.length !== 6)
-      return toastDelegate.error(
-        "Validation Error: OTP must be of six digits.",
-      );
+      return toast.error("Validation Error: OTP must be of six digits.");
     if (!query.email)
-      return toastDelegate.error("Validation Error: Email address is missing.");
+      return toast.error("Validation Error: Email address is missing.");
     setIsLoading(true);
     const response = await fetchData(
       "/verifyaccount",
@@ -39,9 +37,9 @@ const VerifyAccount = () => {
       },
     );
     setIsLoading(false);
-    if (!response.success) return toastDelegate.error(response.error);
+    if (!response.success) return toast.error(response.error);
 
-    toastDelegate.success(
+    toast.success(
       `${response.payload.data.name}, You have logged in successfully`,
     );
     dispatch(setUser(response.payload.data));

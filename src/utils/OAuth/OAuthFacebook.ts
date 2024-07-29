@@ -1,5 +1,5 @@
 import { RefObject } from "react";
-import { toastDelegate } from "../toastDelegate/ToastDelegate";
+import { toast } from "../toast/Toast";
 import { fetchData } from "../custom/customFetch";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { authVerify } from "./authVerify";
@@ -54,7 +54,7 @@ const facebookOAuth = (
       if (servRes.success) authVerify(dispatch);
       else throw new Error(servRes.error);
     } catch (err) {
-      if (err instanceof Error) toastDelegate.error(err.message);
+      if (err instanceof Error) toast.error(err.message);
     }
   }
 

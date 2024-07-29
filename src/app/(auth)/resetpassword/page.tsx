@@ -6,7 +6,7 @@ import { IResetPassword, resetPasswordSchema } from "@/schema/AuthUserSchema";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "@/utils/custom/customFetch";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -45,10 +45,8 @@ const ResetPasswordComponent = () => {
         ...data,
       },
     );
-    if (!response.success) return toastDelegate.error(response.error);
-    toastDelegate.success(
-      `Password has been successfully changed. Please log in `,
-    );
+    if (!response.success) return toast.error(response.error);
+    toast.success(`Password has been successfully changed. Please log in `);
   };
   return (
     <main className="mb-20 mt-14 flex flex-col items-center gap-10 px-4">

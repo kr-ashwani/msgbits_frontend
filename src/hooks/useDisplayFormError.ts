@@ -1,4 +1,4 @@
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { useEffect } from "react";
 import { FieldErrors, FieldValues } from "react-hook-form";
 
@@ -10,7 +10,7 @@ const useDisplayFormError = <T extends FieldValues>(errors: FieldErrors<T>) => {
         (err) =>
           (errStr = errStr.concat(err?.message?.toString() || "").concat("; ")),
       );
-      toastDelegate.error(`Validation Error: ${errStr}`);
+      toast.error(`Validation Error: ${errStr}`);
     }
   }, [errors]);
   return null;

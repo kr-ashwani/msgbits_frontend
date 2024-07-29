@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { ListenerMapping } from "../types";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { z } from "zod";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
 
@@ -14,7 +14,7 @@ export function setUpChatUserEventListenerWithValidation<
       const result = ChatUserSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send newly created ChatUser data",
         );
     };
@@ -27,7 +27,7 @@ export function setUpChatUserEventListenerWithValidation<
       const result = ChatUserSchema.safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send updated ChatUser data",
         );
     };
@@ -40,7 +40,7 @@ export function setUpChatUserEventListenerWithValidation<
       const result = z.array(ChatUserSchema).safeParse(payload);
       if (result.success) callbackFn(result.data);
       else
-        toastDelegate.error(
+        toast.error(
           "ValidationError: server did not correctly send ChatUser data",
         );
     };

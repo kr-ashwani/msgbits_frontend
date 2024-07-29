@@ -5,7 +5,7 @@ import useDisplayFormError from "@/hooks/useDisplayFormError";
 import { IForgotPassword, forgotPasswordSchema } from "@/schema/AuthUserSchema";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { fetchData } from "@/utils/custom/customFetch";
-import { toastDelegate } from "@/utils/toastDelegate/ToastDelegate";
+import { toast } from "@/utils/toast/Toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -26,8 +26,8 @@ const ForgotPassword = () => {
       serverResWapperSchema(z.string()),
       data,
     );
-    if (!response.success) return toastDelegate.error(response.error);
-    toastDelegate.success(
+    if (!response.success) return toast.error(response.error);
+    toast.success(
       `Password reset mail has been successfully sent to ${data.email}. Follow the instructions in the email to reset your password.`,
     );
   };
