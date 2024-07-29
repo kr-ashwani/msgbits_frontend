@@ -9,7 +9,7 @@ export const selectedChatSlice = createSlice({
   name: "Selected Chat",
   initialState,
   reducers: {
-    setSelectedChatId(state, action: PayloadAction<string>) {
+    setSelectedChatId(state, action: PayloadAction<string | null>) {
       return action.payload;
     },
   },
