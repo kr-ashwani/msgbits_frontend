@@ -14,7 +14,6 @@ const ChatRoomDetails = () => {
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
   useToggleChatRoomDetails(showChatRoomDetail);
 
-  console.log("chatRoomDetails");
   return (
     <section
       id="chatRoomDetails"

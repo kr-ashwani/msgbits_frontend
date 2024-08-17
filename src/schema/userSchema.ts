@@ -18,6 +18,9 @@ export const UserSchema = z.object({
   _id: z.string({
     required_error: "_id is required",
   }),
+  profilePicture: z.string({
+    required_error: "Profile picture is required",
+  }),
 });
 
 export const OAuthUserSchema = z.object({

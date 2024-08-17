@@ -28,7 +28,11 @@ const config: Config = {
       "amber-500": "#f59e0b",
       "blue-500": "#3b82f6",
       "chat-bg": "var(--theme-bg-color)",
+      "theme-color": "var(--theme-color)",
       "border-color": "var(--border-color)",
+      "setting-icon-color": "var(--settings-icon-color)",
+      "body-color": "var(--body-color)",
+      "msg-message": "var(--msg-message)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],
@@ -37,6 +41,9 @@ const config: Config = {
       manrope: ["var(--font-manrope)"],
     },
     extend: {
+      height: {
+        "chatRoom-height": "var(--chatRoom-height)",
+      },
       backgroundImage: {
         "gradient-button":
           "linear-gradient(100deg, theme(colors[yellow-600]), theme(colors[yellow-400]))",
@@ -58,6 +65,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
 };
 export default config;

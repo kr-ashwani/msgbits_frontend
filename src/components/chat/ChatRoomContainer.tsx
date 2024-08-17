@@ -4,16 +4,18 @@ import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import ChatRoom from "./ChatRoom";
 
 const ChatRoomContainer = () => {
-  const chatRoom = useChatRoomState();
-  console.log("chatRoomContainer");
+  const chatRoomState = useChatRoomState();
+
   return (
     <section
       id="chatRoomContainer"
-      className="h-full w-full bg-[--theme-bg-color]"
+      className="flex h-full w-full flex-col bg-[--theme-bg-color] p-2"
     >
-      <p>Chat Room Container</p>
-      {chatRoom.getChatRooms().map((chatRoom) => (
-        <ChatRoom key={chatRoom.chatRoomId} chatRoom={chatRoom} />
+      {chatRoomState.getChatRooms().map((chatRoomState) => (
+        <ChatRoom
+          key={chatRoomState.chatRoomId}
+          chatRoomState={chatRoomState}
+        />
       ))}
     </section>
   );

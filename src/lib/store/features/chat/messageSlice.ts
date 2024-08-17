@@ -16,7 +16,7 @@ export const messageSlice = createSlice({
       action: PayloadAction<Record<string, IMessage[]>>,
     ) {
       Object.values(action.payload).forEach((msgArr) => {
-        msgArr.forEach((msg) => (state[msg.chatRoomId] = msg));
+        msgArr.forEach((msg) => (state[msg.messageId] = msg));
       });
     },
   },

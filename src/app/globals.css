@@ -23,6 +23,7 @@
 :root {
   --chatRoomContainer-width: 350px;
   --chatRoomDetail-width: 350px;
+  --chatRoom-height: 85px;
 
   --body-bg-color: #e5ecef;
   --theme-bg-color: #fff;

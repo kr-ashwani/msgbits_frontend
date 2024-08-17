@@ -14,8 +14,6 @@ const ChatRoomMessages = () => {
   const selectedChatDispatch = useSelectedChatDispatch();
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
 
-  console.log("chatRoomMessages");
-
   return (
     <section
       id="chatRoomMessage"

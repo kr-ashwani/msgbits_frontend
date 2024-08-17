@@ -14,7 +14,7 @@ class SelectedChatState {
 
   getSelectedChatRoom() {
     const chatRoomId = this.selectedChatRoom.id;
-    return chatRoomId && this.chatRoom[chatRoomId];
+    return chatRoomId ? this.chatRoom[chatRoomId] || null : null;
   }
   isChatRoomSelected() {
     return this.getSelectedChatRoom() ? true : false;

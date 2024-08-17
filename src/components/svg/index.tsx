@@ -22,6 +22,7 @@ interface SvgOpts {
     | "Login"
     | "Logo"
     | "Signup";
+
   width: string;
   height: string;
   fill: string;

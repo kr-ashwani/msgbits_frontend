@@ -3,8 +3,26 @@ import { messageState } from "@/lib/store/features/chat/messageSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { IMessage } from "@/schema/MessageSchema";
 import { useMemo } from "react";
+import { formatTimeDifference } from "@/utils/custom/formatTimeDifference";
 
-class MessageState {
+export class MessageState {
+  public messageId: string;
+  private messageContainerState: MessageContainerState;
+
+  constructor(messageId: string, messageContainerState: MessageContainerState) {
+    this.messageId = messageId;
+    this.messageContainerState = messageContainerState;
+  }
+  getMessageText() {
+    return this.messageContainerState.getMessageTextById(this.messageId);
+  }
+  getLastMessageTimeFromNow() {
+    return this.messageContainerState.getLastMessageTimeFromNowById(
+      this.messageId,
+    );
+  }
+}
+class MessageContainerState {
   private message: messageState;
   private chatRoomToMessageMap: chatRoomToMessageMapState;
   constructor(
@@ -22,8 +40,8 @@ class MessageState {
     return messageArr;
   }
   getMessageById(messageId: string) {
-    if (this.message[messageId]) return this.message[messageId];
-    else return null;
+    if (this.message[messageId]) return new MessageState(messageId, this);
+    return null;
   }
   getAllMessages() {
     const message: { [p: string]: IMessage[] } = {};
@@ -39,6 +57,17 @@ class MessageState {
 
     return message;
   }
+  getMessageTextById(messageId: string) {
+    const fallbackMsg = "No Message";
+    if (this.message[messageId]) return this.message[messageId].message;
+    return fallbackMsg;
+  }
+  getLastMessageTimeFromNowById(messageId: string) {
+    const fallbackMsg = "No Timestamp";
+    if (this.message[messageId])
+      return formatTimeDifference(this.message[messageId].updatedAt);
+    return fallbackMsg;
+  }
 }
 
 const useMessageState = () => {
@@ -48,7 +77,7 @@ const useMessageState = () => {
   );
 
   return useMemo(
-    () => new MessageState(message, chatRoomToMessageMap),
+    () => new MessageContainerState(message, chatRoomToMessageMap),
     [message, chatRoomToMessageMap],
   );
 };

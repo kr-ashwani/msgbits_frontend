@@ -6,7 +6,7 @@ export function useToggleChatRoomDetails(
 ) {
   useEffect(() => {
     const chat = document.getElementById("chat");
-    console.log(chat);
+
     if (!chat) return;
     const showChatDetails =
       "lg:grid-cols-[var(--chatRoomContainer-width)_1fr_var(--chatRoomDetail-width)]";
