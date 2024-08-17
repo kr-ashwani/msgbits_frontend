@@ -2,6 +2,7 @@ import { chatRoomToMessageMapState } from "@/lib/store/features/chat/chatRoomToM
 import { messageState } from "@/lib/store/features/chat/messageSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { IMessage } from "@/schema/MessageSchema";
+import { useMemo } from "react";
 
 class MessageState {
   private message: messageState;
@@ -46,7 +47,10 @@ const useMessageState = () => {
     (state) => state.chat.chatRoomToMessageMap,
   );
 
-  return new MessageState(message, chatRoomToMessageMap);
+  return useMemo(
+    () => new MessageState(message, chatRoomToMessageMap),
+    [message, chatRoomToMessageMap],
+  );
 };
 
 export { useMessageState };

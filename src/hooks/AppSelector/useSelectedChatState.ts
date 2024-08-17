@@ -1,28 +1,33 @@
 import { chatRoomState } from "@/lib/store/features/chat/chatRoomSlice";
+import { selectedChatState } from "@/lib/store/features/chat/selectedChatSlice";
 import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
 
 class SelectedChatState {
-  private chatRoomId: string | null;
+  private selectedChatRoom: selectedChatState;
   private chatRoom: chatRoomState;
 
-  constructor(chatRoomId: string | null, chatRoom: chatRoomState) {
-    this.chatRoomId = chatRoomId;
+  constructor(selectedChatRoom: selectedChatState, chatRoom: chatRoomState) {
+    this.selectedChatRoom = selectedChatRoom;
     this.chatRoom = chatRoom;
   }
 
   getSelectedChatRoom() {
-    if (this.chatRoomId) {
-      if (this.chatRoom[this.chatRoomId]) return this.chatRoom[this.chatRoomId];
-      else return null;
-    }
-    return null;
+    const chatRoomId = this.selectedChatRoom.id;
+    return chatRoomId && this.chatRoom[chatRoomId];
+  }
+  isChatRoomSelected() {
+    return this.getSelectedChatRoom() ? true : false;
   }
 }
 const useSelectedChatState = () => {
   const selectedChatId = useAppSelector((state) => state.chat.selectedChat);
   const chatRoom = useAppSelector((state) => state.chat.chatRoom);
 
-  return new SelectedChatState(selectedChatId, chatRoom);
+  return useMemo(
+    () => new SelectedChatState(selectedChatId, chatRoom),
+    [selectedChatId, chatRoom],
+  );
 };
 
 export { useSelectedChatState };

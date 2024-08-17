@@ -2,21 +2,25 @@
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
-import useLeftSwipeToggle from "@/hooks/useLeftSwipeToggle";
+import { useRightSwipeToggle } from "@/hooks/useRightSwipeToggle";
 import { useRef } from "react";
 
 const ChatRoomMessages = () => {
   const component = useRef<HTMLElement>(null);
-  useLeftSwipeToggle(component);
+  useRightSwipeToggle(component, null, (state) => {
+    if (state) selectedChatDispatch.setSelectedChat(null);
+  });
   const selectedChat = useSelectedChatState();
   const selectedChatDispatch = useSelectedChatDispatch();
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
+
+  console.log("chatRoomMessages");
 
   return (
     <section
       id="chatRoomMessage"
       ref={component}
-      className={`absolute inset-0 h-full w-full transition-transform ${selectedChat.getSelectedChatRoom() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
+      className={`absolute inset-0 h-full w-full bg-[--theme-bg-color] transition-transform ${selectedChat.getSelectedChatRoom() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
     >
       <p>Chat Room Messages</p>
       <p

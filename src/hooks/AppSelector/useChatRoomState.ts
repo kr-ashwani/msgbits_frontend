@@ -3,6 +3,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserState, useChatUserState } from "./useChatUserState";
 import { IUser } from "@/schema/userSchema";
+import { use, useMemo } from "react";
 
 class ChatRoomState {
   private chatRoom: chatRoomState;
@@ -52,7 +53,10 @@ const useChatRoomState = () => {
   const chatUser = useChatUserState();
   const user = useAppSelector((state) => state.auth.user);
 
-  return new ChatRoomState(chatRoom, chatUser, user);
+  return useMemo(
+    () => new ChatRoomState(chatRoom, chatUser, user),
+    [chatRoom, chatUser, user],
+  );
 };
 
 export { useChatRoomState };

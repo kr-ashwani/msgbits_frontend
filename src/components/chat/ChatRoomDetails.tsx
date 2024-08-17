@@ -1,23 +1,25 @@
 "use client";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
-import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useShowChatRoomDetailsState } from "@/hooks/AppSelector/useShowChatRoomDetailsState";
-import useLeftSwipeToggle from "@/hooks/useLeftSwipeToggle";
-import { useEffect, useRef } from "react";
+import { useRightSwipeToggle } from "@/hooks/useRightSwipeToggle";
+import { useToggleChatRoomDetails } from "@/hooks/useToggleChatRoomDetails";
+import { useRef } from "react";
 
 const ChatRoomDetails = () => {
   const component = useRef<HTMLElement>(null);
-  useLeftSwipeToggle(component);
+  useRightSwipeToggle(component, null, (state) => {
+    if (state) showChatRoomDetailsDispatch.toggleChatRoomDetails(false);
+  });
   const showChatRoomDetail = useShowChatRoomDetailsState();
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
+  useToggleChatRoomDetails(showChatRoomDetail);
 
-  useEffect(() => {}, []);
-
+  console.log("chatRoomDetails");
   return (
     <section
       id="chatRoomDetails"
       ref={component}
-      className={`absolute inset-0 h-full w-[full] transition-transform ${showChatRoomDetail.showChatRoomDetails() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+      className={`absolute inset-0 h-full w-[full] bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <p>Chat Room Details</p>
       <p

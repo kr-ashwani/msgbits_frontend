@@ -1,10 +1,10 @@
 import { RefObject } from "react";
-import { toast } from "../toast/Toast";
 import { fetchData } from "../custom/customFetch";
 import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { authVerify } from "./authVerify";
 import { UserSchema } from "@/schema/userSchema";
 import { AppDispatch } from "@/lib/store/store";
+import { debug } from "../custom/Debug";
 
 const facebookOAuth = (
   facebookRef: RefObject<HTMLDivElement>,
@@ -18,13 +18,19 @@ const facebookOAuth = (
     }
   }
 
-  function checkLoginState() {
+  async function checkLoginState() {
     // Called when a person is finished with the Login Button.
-    const FB = (globalThis as any).FB;
-    (window as any).fbAsyncInit();
-    FB.login(function (response: any) {
-      statusChangeCallback(response);
-    });
+    try {
+      const FB = (globalThis as any).FB;
+      (window as any).fbAsyncInit();
+
+      FB.login((response: any) => {
+        statusChangeCallback(response);
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error)
+        debug("error", `Unable to login facebook due to ${err.message}`);
+    }
   }
 
   (window as any).fbAsyncInit = function () {
@@ -36,8 +42,9 @@ const facebookOAuth = (
         xfbml: true, // Parse social plugins on this webpage.
         version: "v20.0", // Use this Graph API version for this call.
       });
-    } catch (err) {
-      console.log("err init");
+    } catch (err: unknown) {
+      if (err instanceof Error)
+        debug("error", `Unable to initialize facebook due to ${err.message}`);
     }
   };
 
@@ -54,7 +61,7 @@ const facebookOAuth = (
       if (servRes.success) authVerify(dispatch);
       else throw new Error(servRes.error);
     } catch (err) {
-      if (err instanceof Error) toast.error(err.message);
+      if (err instanceof Error) debug("error", err.message);
     }
   }
 

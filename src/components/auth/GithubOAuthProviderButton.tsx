@@ -49,7 +49,11 @@ const GithubOAuthProviderButton = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  return <div onClick={() => openSignInWindow()}>{children}</div>;
+  return (
+    <div className="cursor-pointer" onClick={() => openSignInWindow()}>
+      {children}
+    </div>
+  );
 };
 
 export default GithubOAuthProviderButton;

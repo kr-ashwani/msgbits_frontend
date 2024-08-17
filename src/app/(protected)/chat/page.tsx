@@ -11,7 +11,8 @@ const Chat = () => {
 
   return (
     <main
-      className={`relative grid h-full w-full grid-cols-1 overflow-hidden bg-chat-bg font-manrope md:grid-cols-[var(--chatRoomContainer-width)_1fr] md:divide-x-[1px] md:divide-[--border-color] lg:transition-all`}
+      id="chat"
+      className={`relative grid h-full w-full grid-cols-1 overflow-hidden font-manrope md:grid-cols-[var(--chatRoomContainer-width)_1fr] md:divide-x-[1px] md:divide-[--border-color] lg:transition-all`}
     >
       <ChatRoomContainer />
       <ChatRoomMessages />

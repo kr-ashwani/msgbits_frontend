@@ -3,6 +3,7 @@ import { addMessageOfChatRoom } from "@/lib/store/features/chat/messageSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { IMessage } from "@/schema/MessageSchema";
+import { useMemo } from "react";
 
 class MessageDispatcher {
   private dispatch: AppDispatch;
@@ -22,7 +23,7 @@ class MessageDispatcher {
 const useMessageDispatch = () => {
   const dispatch = useAppDispatch();
 
-  return new MessageDispatcher(dispatch);
+  return useMemo(() => new MessageDispatcher(dispatch), [dispatch]);
 };
 
 export { useMessageDispatch };

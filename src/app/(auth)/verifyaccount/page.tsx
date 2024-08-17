@@ -22,7 +22,6 @@ const VerifyAccount = () => {
   const dispatch = useDispatch();
   async function verifOTP(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(otp.current.length);
     if (otp.current.length !== 6)
       return toast.error("Validation Error: OTP must be of six digits.");
     if (!query.email)

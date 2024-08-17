@@ -24,7 +24,7 @@ const OAuth = () => {
           id="buttonDiv"
         ></div>
       </div>
-      <div ref={facebookRef} className="relative">
+      <div ref={facebookRef} className="relative cursor-pointer">
         {Svg("AuthFacebook", { width: "53", height: "53" })}
       </div>
       <GithubOAuthProviderButton>

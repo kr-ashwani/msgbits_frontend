@@ -1,6 +1,7 @@
 import { showChatRoomDetails } from "@/lib/store/features/chat/showChatRoomDetails";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
+import { useMemo } from "react";
 
 class ShowChatRoomDetailsDispatcher {
   private dispatch: AppDispatch;
@@ -17,7 +18,7 @@ class ShowChatRoomDetailsDispatcher {
 const useShowChatRoomDetailsDispatch = () => {
   const dispatch = useAppDispatch();
 
-  return new ShowChatRoomDetailsDispatcher(dispatch);
+  return useMemo(() => new ShowChatRoomDetailsDispatcher(dispatch), [dispatch]);
 };
 
 export { useShowChatRoomDetailsDispatch };

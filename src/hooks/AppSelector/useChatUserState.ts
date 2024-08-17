@@ -1,5 +1,6 @@
 import { chatUserState } from "@/lib/store/features/chat/chatUserSlice";
 import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
 
 export class ChatUserState {
   private chatUser: chatUserState;
@@ -15,7 +16,7 @@ export class ChatUserState {
 const useChatUserState = () => {
   const chatUser = useAppSelector((state) => state.chat.chatUser);
 
-  return new ChatUserState(chatUser);
+  return useMemo(() => new ChatUserState(chatUser), [chatUser]);
 };
 
 export { useChatUserState };

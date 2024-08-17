@@ -1,13 +1,14 @@
 import { useAppSelector } from "@/lib/store/hooks";
+import { useMemo } from "react";
 
-class ChatRoomDetailsSelectedState {
+export class ChatRoomDetailsSelectedState {
   private chatRoomDetailsSelected: boolean;
 
   constructor(chatRoomDetailsSelected: boolean) {
     this.chatRoomDetailsSelected = chatRoomDetailsSelected;
   }
 
-  showChatRoomDetails() {
+  isChatRoomDetailsSelected() {
     return this.chatRoomDetailsSelected;
   }
 }
@@ -16,7 +17,10 @@ const useShowChatRoomDetailsState = () => {
     (state) => state.chat.showChatRoomDetails,
   );
 
-  return new ChatRoomDetailsSelectedState(chatRoomDetailsSelected);
+  return useMemo(
+    () => new ChatRoomDetailsSelectedState(chatRoomDetailsSelected),
+    [chatRoomDetailsSelected],
+  );
 };
 
 export { useShowChatRoomDetailsState };
