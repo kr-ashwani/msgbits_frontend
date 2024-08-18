@@ -1,7 +1,7 @@
 "use client";
-import ChatRoomDetails from "@/components/chat/ChatRoomDetails";
-import ChatRoomMessages from "@/components/chat/ChatRoomMessages";
-import ChatRoomWrapper from "@/components/chat/ChatRoomWrapper";
+import ChatRoomDetails from "@/components/chat/chatRoomDetails/ChatRoomDetails";
+import ChatRoomMessages from "@/components/chat/chatRoomMessage/ChatRoomMessages";
+import ChatRoomWrapper from "@/components/chat/chatRoom/ChatRoomWrapper";
 import useChatStyle from "@/hooks/useChatStyle";
 import { useSetUpSocketListners } from "@/hooks/useSetUpSocketListners";
 

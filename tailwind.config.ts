@@ -34,6 +34,8 @@ const config: Config = {
       "body-color": "var(--body-color)",
       "msg-message": "var(--msg-message)",
       "msg-hover-bg": "var(--msg-hover-bg)",
+      "theme-bg-color": "var(--theme-bg-color)",
+      "button-bg-color": "var(--button-bg-color)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],

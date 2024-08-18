@@ -1,11 +1,17 @@
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import React from "react";
-import UserAvatar from "../utility/UserAvatar";
+import UserAvatar from "../../utility/UserAvatar";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 
-const ChatRoom = ({ chatRoomState }: { chatRoomState: ChatRoomState }) => {
+const ChatRoom = ({
+  chatRoomState,
+  index,
+}: {
+  chatRoomState: ChatRoomState;
+  index: number;
+}) => {
   const selectChatDispatch = useSelectedChatDispatch();
   const selectChatState = useSelectedChatState();
   const messageContainerState = useMessageState();
@@ -17,7 +23,10 @@ const ChatRoom = ({ chatRoomState }: { chatRoomState: ChatRoomState }) => {
     chatRoomState.chatRoomId;
   return (
     <div
-      className={`hover:bg-msg-hover-bg relative h-chatRoom-height w-full shrink-0 cursor-pointer p-2 lg:p-4`}
+      className={`absolute flex h-chatRoom-height w-full shrink-0 cursor-pointer items-center p-2 hover:bg-msg-hover-bg lg:p-4`}
+      style={{
+        transform: `translateY(calc(${index} * var(--chatRoom-height)))`,
+      }}
       onClick={() =>
         selectChatDispatch.setSelectedChat(chatRoomState.chatRoomId)
       }

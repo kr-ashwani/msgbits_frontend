@@ -5,7 +5,7 @@ import { getCurrentTranslateX } from "../utils/getCurrentTanslateX";
 const useLeftSwipeToggle = (
   comp: RefObject<HTMLElement>,
   parent: RefObject<HTMLElement>,
-  setter: (a: boolean) => void
+  setter: (a: boolean) => void,
 ) => {
   const component = comp.current;
   const parentComponent = parent.current;
@@ -28,10 +28,14 @@ const useLeftSwipeToggle = (
       if (component) {
         offsetX = component.getBoundingClientRect().left;
         width = component.clientWidth;
-        childTranslatePercent = Math.ceil((getCurrentTranslateX(component) / width) * 100);
+        childTranslatePercent = Math.ceil(
+          (getCurrentTranslateX(component) / width) * 100,
+        );
         if (parentComponent)
           parentTranslatePercent = Math.ceil(
-            (getCurrentTranslateX(parentComponent) / parentComponent.clientWidth) * 100
+            (getCurrentTranslateX(parentComponent) /
+              parentComponent.clientWidth) *
+              100,
           );
       }
 
@@ -46,10 +50,13 @@ const useLeftSwipeToggle = (
     function touchMove(e: TouchEvent) {
       e.stopPropagation();
       if (!shouldMove) return;
-      vel = (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
+      vel =
+        (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
       prevTime = Date.now();
       prevDis = e.touches[0].clientX;
-      translatePercent = Math.ceil(((e.touches[0].clientX - offsetX - startBuff) / width) * 100);
+      translatePercent = Math.ceil(
+        ((e.touches[0].clientX - offsetX - startBuff) / width) * 100,
+      );
       // if (translatePercent < 0 || translatePercent > 100) return;
 
       if (Math.abs(translatePercent - prevTranslatePercent) < 1) return;
@@ -57,15 +64,28 @@ const useLeftSwipeToggle = (
 
       const childTranslateX = translatePercent + childTranslatePercent;
       if (childTranslateX <= 100 && childTranslateX >= 0) {
-        component?.style.setProperty("transform", `translateX(${childTranslateX}%)`);
-        component?.style.setProperty("transition-timing-function", "ease-in-out");
+        component?.style.setProperty(
+          "transform",
+          `translateX(${childTranslateX}%)`,
+        );
+        component?.style.setProperty(
+          "transition-timing-function",
+          "ease-in-out",
+        );
         component?.style.setProperty("transition-duration", "0ms");
       }
 
-      const parentTranslateX = parentTranslatePercent + Math.ceil((translatePercent * 60) / 100);
+      const parentTranslateX =
+        parentTranslatePercent + Math.ceil((translatePercent * 60) / 100);
       if (parentTranslateX <= 0 && parentTranslateX >= -60) {
-        parentComponent?.style.setProperty("transform", `translateX(${parentTranslateX}%)`);
-        parentComponent?.style.setProperty("transition-timing-function", "ease-in-out");
+        parentComponent?.style.setProperty(
+          "transform",
+          `translateX(${parentTranslateX}%)`,
+        );
+        parentComponent?.style.setProperty(
+          "transition-timing-function",
+          "ease-in-out",
+        );
         parentComponent?.style.setProperty("transition-duration", "0ms");
       }
     }
@@ -73,7 +93,7 @@ const useLeftSwipeToggle = (
       e.stopPropagation();
       if (!shouldMove) return;
       translatePercent = Math.ceil(
-        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100
+        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100,
       );
       translatePercent = translatePercent >= 50 ? 100 : 0;
 

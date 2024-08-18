@@ -1,10 +1,19 @@
 import React from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
-const UserAvatar = ({ src, size }: { src: string; size: number }) => {
+const UserAvatar = ({
+  src,
+  size,
+  className = "",
+}: {
+  src: string;
+  size: number;
+  className?: string;
+}) => {
   return (
     <div
-      className="shrink-0 rounded-[50%]"
+      className={cn("shrink-0 rounded-[50%]", className)}
       style={{ width: `${size}px`, height: `${size}px` }}
     >
       <Image

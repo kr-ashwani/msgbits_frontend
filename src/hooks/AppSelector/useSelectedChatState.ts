@@ -3,7 +3,7 @@ import { selectedChatState } from "@/lib/store/features/chat/selectedChatSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 
-class SelectedChatState {
+export class SelectedChatState {
   private selectedChatRoom: selectedChatState;
   private chatRoom: chatRoomState;
 

@@ -18,7 +18,7 @@ const ChatRoomDetails = () => {
     <section
       id="chatRoomDetails"
       ref={component}
-      className={`absolute inset-0 h-full w-[full] bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+      className={`absolute inset-0 h-full w-[full] overflow-y-auto bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <p>Chat Room Details</p>
       <p
