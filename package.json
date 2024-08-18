@@ -10,10 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
-    "@radix-ui/react-dialog": "^1.1.1",
     "@reduxjs/toolkit": "^2.2.5",
-    "@types/react-facebook-login": "^4.1.11",
-    "@types/uuid": "^10.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "config": "^3.3.12",
@@ -32,7 +29,6 @@
     "sonner": "^1.5.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
-    "vaul": "^0.9.1",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.0"
   },
@@ -41,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
     "postcss": "^8",
