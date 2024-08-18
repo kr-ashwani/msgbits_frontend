@@ -6,7 +6,7 @@ const ChatRoomWrapper = () => {
   return (
     <section
       id="chatRoomWrapper"
-      className="scrollbar-thin scrollbar-corner-rounded-full scrollbar-thumb-gray-500 scrollbar-track-rounded-full scrollbar-track-gray-200 h-full w-full overflow-y-scroll bg-[--theme-bg-color]"
+      className="scrollbar-thumb-gray-500 scrollbar-track-gray-200 h-full w-full overflow-y-scroll bg-[--theme-bg-color] scrollbar-thin scrollbar-track-rounded-full scrollbar-corner-rounded-full"
     >
       <ChatRoomHeader />
       <ChatRoomContainer />

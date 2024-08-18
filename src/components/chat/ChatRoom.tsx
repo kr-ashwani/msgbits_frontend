@@ -17,18 +17,21 @@ const ChatRoom = ({ chatRoomState }: { chatRoomState: ChatRoomState }) => {
     chatRoomState.chatRoomId;
   return (
     <div
-      className={`relative h-chatRoom-height w-full p-2 lg:p-4`}
+      className={`hover:bg-msg-hover-bg relative h-chatRoom-height w-full shrink-0 cursor-pointer p-2 lg:p-4`}
       onClick={() =>
         selectChatDispatch.setSelectedChat(chatRoomState.chatRoomId)
       }
     >
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className={`absolute bottom-0 left-[-8px] top-0 transition-transform duration-200 ${isChatSelected ? "translate-x-1" : "translate-x-0"} w-2 bg-theme-color`}
+          className={`absolute bottom-0 left-[-8px] top-0 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"} w-2 bg-theme-color`}
         ></div>
       </div>
       <div
-        className={`flex w-full gap-4 transition-transform duration-200 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
+        className={`absolute inset-0 overflow-hidden bg-theme-color ${isChatSelected ? "opacity-[0.08]" : "opacity-0"} transition-opacity duration-300`}
+      ></div>
+      <div
+        className={`flex w-full gap-4 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
       >
         <UserAvatar src={chatRoomState.getChatRoomPicture()} size={45} />
         <div className="w-full overflow-hidden">

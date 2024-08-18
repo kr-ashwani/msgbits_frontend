@@ -2,6 +2,7 @@
 
 import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import ChatRoom from "./ChatRoom";
+import ChatRoomAddButton from "./ChatRoomAddButton";
 
 const ChatRoomContainer = () => {
   const chatRoomState = useChatRoomState();
@@ -9,7 +10,7 @@ const ChatRoomContainer = () => {
   return (
     <section
       id="chatRoomContainer"
-      className="flex h-full w-full flex-col bg-[--theme-bg-color] p-2"
+      className="relative flex h-full w-full flex-col bg-[--theme-bg-color] p-2"
     >
       {chatRoomState.getChatRooms().map((chatRoomState) => (
         <ChatRoom
@@ -17,6 +18,7 @@ const ChatRoomContainer = () => {
           chatRoomState={chatRoomState}
         />
       ))}
+      <ChatRoomAddButton />
     </section>
   );
 };

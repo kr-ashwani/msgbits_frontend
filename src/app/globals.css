@@ -42,7 +42,7 @@
   --button-bg-color: #f0f7ff;
   --button-color: var(--theme-color);
   --detail-font-color: #919ca2;
-  --msg-hover-bg: rgba(238, 242, 244, 0.4);
+  --msg-hover-bg: rgba(235, 238, 239, 0.4);
   --active-conversation-bg: linear-gradient(
     to right,
     rgba(238, 242, 244, 0.4) 0%,

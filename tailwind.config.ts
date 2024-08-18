@@ -33,6 +33,7 @@ const config: Config = {
       "setting-icon-color": "var(--settings-icon-color)",
       "body-color": "var(--body-color)",
       "msg-message": "var(--msg-message)",
+      "msg-hover-bg": "var(--msg-hover-bg)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],
@@ -53,6 +54,10 @@ const config: Config = {
           "linear-gradient(100deg, theme(colors[yellow-800]), theme(colors[yellow-600]))",
         "gradient-button-disabled":
           "linear-gradient(100deg, theme(colors[yellow-400]), theme(colors[white-200]))",
+        "gradient-overlay-bg": "var(--overlay-bg)",
+      },
+      boxShadow: {
+        chatAddBtn: "0 0 16px var(--theme-color)",
       },
       keyframes: {
         "caret-blink": {
