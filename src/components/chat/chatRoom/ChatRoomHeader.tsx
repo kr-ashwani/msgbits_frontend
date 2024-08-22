@@ -8,7 +8,7 @@ const ChatRoomHeader = () => {
   const userProfilePic = userState?.profilePicture || "";
 
   return (
-    <div className="flex w-full items-center gap-4 px-2 py-5">
+    <div className="flex w-full items-center gap-4 border-b-[1px] border-border-color px-2 py-5">
       <div className="text-theme-color">
         {ChatSvg("ChatHeaderLogo", { width: "40px", height: "40px" })}
       </div>

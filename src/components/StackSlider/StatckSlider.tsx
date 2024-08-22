@@ -107,7 +107,7 @@ const StackSlider = ({
         {slideInfo.active && slides.current[slideInfo.ActiveComponentName] ? (
           <div
             ref={childSlide}
-            className={`${childStackClass} duration-stack-sliding-time ease-stack-slider-fnc absolute left-0 right-0 top-0 transition ${
+            className={`${childStackClass} duration-stack-sliding-time ease-stack-slider-fnc absolute inset-0 transition ${
               showSlides ? "translate-x-0" : "translate-x-full"
             }`}
           >

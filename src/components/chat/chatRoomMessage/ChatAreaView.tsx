@@ -3,7 +3,11 @@ import React, { ReactNode } from "react";
 function show() {
   const list: ReactNode[] = [];
   for (let i = 0; i <= 20; i++) {
-    list.push(<div className="p-8">{i}</div>);
+    list.push(
+      <div key={i} className="p-8">
+        {i}
+      </div>,
+    );
   }
   return list;
 }

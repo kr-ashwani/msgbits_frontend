@@ -44,7 +44,7 @@ const ChatRoom = ({
       >
         <UserAvatar src={chatRoomState.getChatRoomPicture()} size={45} />
         <div className="w-full overflow-hidden">
-          <p className="pb-[1px] text-[16px] font-semibold">
+          <p className="truncate pb-[1px] text-[16px] font-semibold">
             {chatRoomState.getChatRoomName()}
           </p>
           <div className="flex items-center justify-between text-sm font-medium text-msg-message">

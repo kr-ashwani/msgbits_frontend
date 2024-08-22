@@ -18,10 +18,8 @@ function getChatMembersPictures(
   const userList: ReactNode[] = [];
   const selectedChat = selectedChatState.getSelectedChatRoom();
   const membersLength = selectedChat ? selectedChat.members.length : 0;
-  console.log(selectedChat, membersLength);
   for (let i = 0; i < membersLength; i++) {
     const userId = selectedChat?.members[i] || "";
-    console.log(userId);
     if (i === 3) {
       userList.push(
         <div className="border-theme-bg-color bg-button-bg-color relative ml-[-5px] flex h-[32px] w-[32px] items-center justify-center rounded-full border-2 text-sm font-medium text-theme-color">

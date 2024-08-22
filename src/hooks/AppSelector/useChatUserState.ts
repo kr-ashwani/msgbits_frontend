@@ -1,5 +1,6 @@
 import { chatUserState } from "@/lib/store/features/chat/chatUserSlice";
 import { useAppSelector } from "@/lib/store/hooks";
+import { IChatUser } from "@/schema/ChatUserSchema";
 import { useMemo } from "react";
 
 export class ChatUserState {
@@ -10,6 +11,12 @@ export class ChatUserState {
   getUserById(messageId: string) {
     if (this.chatUser[messageId]) return this.chatUser[messageId];
     else return null;
+  }
+  getAllUsers() {
+    const users: IChatUser[] = [];
+
+    Object.values(this.chatUser).forEach((entry) => users.push(entry));
+    return users;
   }
 }
 

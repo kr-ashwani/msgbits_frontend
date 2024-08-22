@@ -1,9 +1,10 @@
 import React from "react";
 import ChatRoomHeader from "./ChatRoomHeader";
 import { StackSlider } from "../../StackSlider/StatckSlider";
-import ChatRoomManager from "./ChatRoomManager";
 import ChatRoomAddButton from "./ChatRoomAddButton";
 import ChatRoomContainer from "./ChatRoomContainer";
+import GroupChatCreate from "./GroupChatCreate";
+import PrivateChatCreate from "./PrivateChatCreate";
 
 const ChatRoomWrapper = () => {
   return (
@@ -16,7 +17,8 @@ const ChatRoomWrapper = () => {
         <ChatRoomContainer />
         <ChatRoomAddButton />
       </section>
-      <ChatRoomManager name="ChatRoomManager" />
+      <PrivateChatCreate name="PrivateChatCreate" />
+      <GroupChatCreate name="GroupChatCreate" />
     </StackSlider>
   );
 };
