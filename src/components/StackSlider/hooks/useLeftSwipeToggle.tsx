@@ -2,13 +2,8 @@
 import { RefObject, useEffect } from "react";
 import { getCurrentTranslateX } from "../utils/getCurrentTanslateX";
 
-const useLeftSwipeToggle = (
-  comp: RefObject<HTMLElement>,
-  parent: RefObject<HTMLElement>,
-  setter: (a: boolean) => void,
-) => {
+const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) => void) => {
   const component = comp.current;
-  const parentComponent = parent.current;
 
   useEffect(() => {
     if (!component) return;
@@ -22,21 +17,13 @@ const useLeftSwipeToggle = (
     let prevTime = 0;
     let vel = 0;
     let childTranslatePercent = 0;
-    let parentTranslatePercent = 0;
+
     function touchStart(e: TouchEvent) {
       e.stopPropagation();
       if (component) {
         offsetX = component.getBoundingClientRect().left;
         width = component.clientWidth;
-        childTranslatePercent = Math.ceil(
-          (getCurrentTranslateX(component) / width) * 100,
-        );
-        if (parentComponent)
-          parentTranslatePercent = Math.ceil(
-            (getCurrentTranslateX(parentComponent) /
-              parentComponent.clientWidth) *
-              100,
-          );
+        childTranslatePercent = Math.ceil((getCurrentTranslateX(component) / width) * 100);
       }
 
       startBuff = e.changedTouches[0].clientX - offsetX;
@@ -50,13 +37,10 @@ const useLeftSwipeToggle = (
     function touchMove(e: TouchEvent) {
       e.stopPropagation();
       if (!shouldMove) return;
-      vel =
-        (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
+      vel = (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
       prevTime = Date.now();
       prevDis = e.touches[0].clientX;
-      translatePercent = Math.ceil(
-        ((e.touches[0].clientX - offsetX - startBuff) / width) * 100,
-      );
+      translatePercent = Math.ceil(((e.touches[0].clientX - offsetX - startBuff) / width) * 100);
       // if (translatePercent < 0 || translatePercent > 100) return;
 
       if (Math.abs(translatePercent - prevTranslatePercent) < 1) return;
@@ -64,46 +48,22 @@ const useLeftSwipeToggle = (
 
       const childTranslateX = translatePercent + childTranslatePercent;
       if (childTranslateX <= 100 && childTranslateX >= 0) {
-        component?.style.setProperty(
-          "transform",
-          `translateX(${childTranslateX}%)`,
-        );
-        component?.style.setProperty(
-          "transition-timing-function",
-          "ease-in-out",
-        );
+        component?.style.setProperty("transform", `translateX(${childTranslateX}%)`);
+        component?.style.setProperty("transition-timing-function", "ease-in-out");
         component?.style.setProperty("transition-duration", "0ms");
-      }
-
-      const parentTranslateX =
-        parentTranslatePercent + Math.ceil((translatePercent * 60) / 100);
-      if (parentTranslateX <= 0 && parentTranslateX >= -60) {
-        parentComponent?.style.setProperty(
-          "transform",
-          `translateX(${parentTranslateX}%)`,
-        );
-        parentComponent?.style.setProperty(
-          "transition-timing-function",
-          "ease-in-out",
-        );
-        parentComponent?.style.setProperty("transition-duration", "0ms");
       }
     }
     function touchEnd(e: TouchEvent) {
       e.stopPropagation();
       if (!shouldMove) return;
       translatePercent = Math.ceil(
-        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100,
+        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100
       );
       translatePercent = translatePercent >= 50 ? 100 : 0;
 
       component?.style.removeProperty("transform");
       component?.style.removeProperty("transition-duration");
       component?.style.removeProperty("transition-timing-function");
-
-      parentComponent?.style.removeProperty("transform");
-      parentComponent?.style.removeProperty("transition-duration");
-      parentComponent?.style.removeProperty("transition-timing-function");
 
       if (translatePercent === 100 || vel >= 0.5) setter(true);
       else setter(false);
