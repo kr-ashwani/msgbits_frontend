@@ -1,17 +1,40 @@
 "use client";
 
-import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import {
+  ChatRoomState,
+  useChatRoomState,
+} from "@/hooks/AppSelector/useChatRoomState";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ChatRoom from "./ChatRoom";
 
-const ChatRoomContainer = () => {
+const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
   const chatRoomState = useChatRoomState();
 
-  const chatRoomList = useMemo(() => {
+  const originalChatRoomList = useMemo(() => {
     const list = chatRoomState.getChatRooms();
     return list;
   }, [chatRoomState]);
+
+  const [chatRoomList, setChatRoomList] = useState<ChatRoomState[]>([]);
+
+  useEffect(() => {
+    if (chatRoomSearch)
+      setChatRoomList(
+        originalChatRoomList.reduce<ChatRoomState[]>((acc, chatRoomState) => {
+          if (
+            chatRoomState
+              .getChatRoomName()
+              .toLowerCase()
+              .includes(chatRoomSearch.toLowerCase())
+          )
+            acc.push(chatRoomState);
+
+          return acc;
+        }, []),
+      );
+    else setChatRoomList(originalChatRoomList);
+  }, [setChatRoomList, originalChatRoomList, chatRoomSearch]);
 
   return (
     <section

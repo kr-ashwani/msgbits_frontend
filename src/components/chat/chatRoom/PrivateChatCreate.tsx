@@ -1,31 +1,50 @@
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 import { ChatSvg } from "@/components/svg/chatSvg";
 import UserAvatar from "@/components/utility/UserAvatar";
+import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
-import React from "react";
+import { IUser } from "@/schema/userSchema";
+import React, { useEffect, useMemo, useState } from "react";
+import SliderHeader from "./SliderHeader";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
   const chatuser = useChatUserState();
+  const selectChatDispatch = useSelectedChatDispatch();
+  const [searchUser, setSearchUser] = useState("");
+  const [chatUserList, setChatUserList] = useState<IUser[]>([]);
+  const originalChatUserList = useMemo(
+    () => chatuser.getAllUsers(),
+    [chatuser],
+  );
+
+  useEffect(() => {
+    if (searchUser)
+      setChatUserList(
+        originalChatUserList.reduce<IUser[]>((acc, user) => {
+          if (
+            user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
+            user.email
+              .split("@")[0]
+              .toLowerCase()
+              .includes(searchUser.toLowerCase())
+          )
+            acc.push(user);
+          return acc;
+        }, []),
+      );
+    else setChatUserList(originalChatUserList);
+  }, [originalChatUserList, searchUser, setChatUserList]);
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <div className="flex items-center border-b-[1px] border-border-color bg-chat-bg py-3">
-        <div
-          className="ml-[-8px] cursor-pointer pl-3"
-          onClick={() => slider.trigerSlider("close", "PrivateChatCreate")}
-        >
-          {ChatSvg("backArrow")}
-        </div>
-
-        <p className="text-xl font-semibold">Select User</p>
-      </div>
+      <SliderHeader heading="Select User" closingSliderName={name} />
 
       <div
-        className="flex items-center gap-3 px-3"
+        className="flex cursor-pointer items-center gap-3 px-3"
         onClick={() => slider.trigerSlider("open", "GroupChatCreate")}
       >
-        <div className="flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
+        <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-theme-color text-white">
           {ChatSvg("groupChatIcon", { height: "30", width: "30" })}
         </div>
         <p className="text-[16px] font-semibold"> New Group Chat</p>
@@ -40,16 +59,22 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
             {ChatSvg("search", { width: "20px", height: "20px" })}
           </div>
           <input
+            value={searchUser}
+            onChange={(e) => setSearchUser(e.target.value)}
             className="w-full border-none px-2 pl-7 text-[15px] font-semibold text-body-color outline-none"
             placeholder="Search..."
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 px-3">
-        {chatuser.getAllUsers().map((user) => {
+      <div className="flex flex-col gap-6 px-5">
+        {chatUserList.map((user) => {
           return (
-            <div key={user._id} className="flex w-full items-center gap-3">
+            <div
+              onClick={() => selectChatDispatch.setSelectedChat(user._id)}
+              key={user._id}
+              className="flex w-full cursor-pointer items-center gap-5"
+            >
               <UserAvatar src={user.profilePicture} size={45} />
               <div className="flex flex-col overflow-hidden">
                 <p className="truncate text-[16px] font-semibold">
@@ -63,6 +88,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
           );
         })}
       </div>
+      <div className="py-5"></div>
     </div>
   );
 };

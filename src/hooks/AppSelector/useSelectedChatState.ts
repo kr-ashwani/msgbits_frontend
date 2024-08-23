@@ -19,6 +19,9 @@ export class SelectedChatState {
   isChatRoomSelected() {
     return this.getSelectedChatRoom() ? true : false;
   }
+  getSelectedChatId() {
+    return this.selectedChatRoom.id;
+  }
 }
 const useSelectedChatState = () => {
   const selectedChatId = useAppSelector((state) => state.chat.selectedChat);

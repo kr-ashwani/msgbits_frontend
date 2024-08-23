@@ -6,10 +6,12 @@ const UserAvatar = ({
   src,
   size,
   className = "",
+  onClick,
 }: {
   src: string;
   size: number;
   className?: string;
+  onClick?: () => void;
 }) => {
   return (
     <div
@@ -20,6 +22,7 @@ const UserAvatar = ({
         className="rounded-[50%] object-cover object-center"
         src={`${src}`}
         width={size}
+        onClick={onClick}
         height={size}
         alt="user Avatar Image"
       />

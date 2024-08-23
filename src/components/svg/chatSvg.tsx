@@ -152,7 +152,7 @@ export const ChatSvg = (
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        enable-background="new 0 0 24 24"
+        enableBackground="new 0 0 24 24"
         width={opts.width ? opts.width : "30"}
         height={opts.height ? opts.height : "30"}
         viewBox="0 0 24 24"

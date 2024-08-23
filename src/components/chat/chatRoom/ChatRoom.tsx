@@ -23,7 +23,7 @@ const ChatRoom = ({
     chatRoomState.chatRoomId;
   return (
     <div
-      className={`absolute flex h-chatRoom-height w-full shrink-0 cursor-pointer items-center p-2 hover:bg-msg-hover-bg lg:p-4`}
+      className={`absolute flex h-chatRoom-height w-full shrink-0 cursor-pointer items-center p-2 transition-transform duration-300 hover:bg-msg-hover-bg lg:p-4`}
       style={{
         transform: `translateY(calc(${index} * var(--chatRoom-height)))`,
       }}

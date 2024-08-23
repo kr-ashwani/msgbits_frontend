@@ -1,4 +1,11 @@
-import React, { ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import getChildren from "./getChildren";
 import { sleep } from "./utils/sleep";
 import ChildSlider from "./ChildSlider";
@@ -45,8 +52,14 @@ const StackSlider = ({
 
   useEffect(() => {
     // add sliding time and fuction to root
-    document.documentElement.style.setProperty("--stack-sliding-time", `${SLIDING_TIME}ms`);
-    document.documentElement.style.setProperty("--stack-slider-fnc", SLIDER_FNC);
+    document.documentElement.style.setProperty(
+      "--stack-sliding-time",
+      `${SLIDING_TIME}ms`,
+    );
+    document.documentElement.style.setProperty(
+      "--stack-slider-fnc",
+      SLIDER_FNC,
+    );
   }, []);
 
   const value = { trigerSlider };
@@ -55,27 +68,29 @@ const StackSlider = ({
 
   return (
     <StackSliderContext.Provider value={value}>
-      <div className={cn(` relative overflow-hidden`, stackContainerClass)}>
+      <div className={cn(`relative overflow-hidden`, stackContainerClass)}>
         <div
           ref={parentSlide}
           className={cn(
-            ` transition relative duration-stack-sliding-time ease-stack-slider-fnc `,
-            mainStackClass
+            `duration-stack-sliding-time ease-stack-slider-fnc relative transition`,
+            mainStackClass,
           )}
         >
           {mainStack.current.map((elem) => elem)}
         </div>
 
-        {activeSlides.map((slideName) => (
-          <ChildSlider
-            key={slideName}
-            slideName={slideName}
-            childStackClass={childStackClass}
-            trigerSlider={trigerSlider}
-          >
-            {slides.current[slideName]}
-          </ChildSlider>
-        ))}
+        {activeSlides.map((slideName) =>
+          slides.current[slideName] ? (
+            <ChildSlider
+              key={slideName}
+              slideName={slideName}
+              childStackClass={childStackClass}
+              trigerSlider={trigerSlider}
+            >
+              {slides.current[slideName]}
+            </ChildSlider>
+          ) : null,
+        )}
       </div>
     </StackSliderContext.Provider>
   );
