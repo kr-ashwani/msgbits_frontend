@@ -2,7 +2,10 @@
 import { RefObject, useEffect } from "react";
 import { getCurrentTranslateX } from "../utils/getCurrentTanslateX";
 
-const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) => void) => {
+const useRightSwipeToggle = (
+  comp: RefObject<HTMLElement>,
+  setter: (a: boolean) => void,
+) => {
   const component = comp.current;
 
   useEffect(() => {
@@ -23,7 +26,9 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
       if (component) {
         offsetX = component.getBoundingClientRect().left;
         width = component.clientWidth;
-        childTranslatePercent = Math.ceil((getCurrentTranslateX(component) / width) * 100);
+        childTranslatePercent = Math.ceil(
+          (getCurrentTranslateX(component) / width) * 100,
+        );
       }
 
       startBuff = e.changedTouches[0].clientX - offsetX;
@@ -37,10 +42,13 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
     function touchMove(e: TouchEvent) {
       e.stopPropagation();
       if (!shouldMove) return;
-      vel = (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
+      vel =
+        (e.touches[0].clientX - offsetX - prevDis) / (Date.now() - prevTime);
       prevTime = Date.now();
       prevDis = e.touches[0].clientX;
-      translatePercent = Math.ceil(((e.touches[0].clientX - offsetX - startBuff) / width) * 100);
+      translatePercent = Math.ceil(
+        ((e.touches[0].clientX - offsetX - startBuff) / width) * 100,
+      );
       // if (translatePercent < 0 || translatePercent > 100) return;
 
       if (Math.abs(translatePercent - prevTranslatePercent) < 1) return;
@@ -48,8 +56,14 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
 
       const childTranslateX = translatePercent + childTranslatePercent;
       if (childTranslateX <= 100 && childTranslateX >= 0) {
-        component?.style.setProperty("transform", `translateX(${childTranslateX}%)`);
-        component?.style.setProperty("transition-timing-function", "ease-in-out");
+        component?.style.setProperty(
+          "transform",
+          `translateX(${childTranslateX}%)`,
+        );
+        component?.style.setProperty(
+          "transition-timing-function",
+          "ease-in-out",
+        );
         component?.style.setProperty("transition-duration", "0ms");
       }
     }
@@ -57,7 +71,7 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
       e.stopPropagation();
       if (!shouldMove) return;
       translatePercent = Math.ceil(
-        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100
+        ((e.changedTouches[0].clientX - offsetX - startBuff) / width) * 100,
       );
       translatePercent = translatePercent >= 50 ? 100 : 0;
 
@@ -84,8 +98,18 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
       elem.removeEventListener("touchmove", touchMove);
       elem.removeEventListener("touchend", touchEnd);
     }
+    unregisterTouchEvents(component);
     registerTouchEvents(component);
     window.addEventListener("resize", resize);
+    if (component) {
+      component.addEventListener("scrollend", () => {
+        unregisterTouchEvents(component);
+        registerTouchEvents(component);
+      });
+      component.addEventListener("scroll", () =>
+        unregisterTouchEvents(component),
+      );
+    }
     return () => {
       if (component) unregisterTouchEvents(component);
       window.removeEventListener("resize", resize);
@@ -93,4 +117,4 @@ const useLeftSwipeToggle = (comp: RefObject<HTMLElement>, setter: (a: boolean) =
   }, [comp, parent, setter]);
 };
 
-export default useLeftSwipeToggle;
+export default useRightSwipeToggle;

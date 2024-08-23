@@ -10,7 +10,7 @@ import ChatAreaFooter from "./ChatAreaFooter";
 
 const ChatRoomMessages = () => {
   const component = useRef<HTMLElement>(null);
-  useRightSwipeToggle(component, null, (state) => {
+  useRightSwipeToggle(component, (state) => {
     if (state) selectedChatDispatch.setSelectedChat(null);
   });
   const selectedChat = useSelectedChatState();

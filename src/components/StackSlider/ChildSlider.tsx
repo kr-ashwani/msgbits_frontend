@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { sleep } from "./utils/sleep";
-import useLeftSwipeToggle from "./hooks/useLeftSwipeToggle";
+import useRightSwipeToggle from "./hooks/useRightSwipeToggle";
 import { cn } from "./utils/utils";
 
 interface ChildSliderProps {
@@ -10,9 +10,14 @@ interface ChildSliderProps {
   trigerSlider: (state: "open" | "close", sliderName: string) => Promise<void>;
 }
 
-const ChildSlider = ({ children, slideName, childStackClass, trigerSlider }: ChildSliderProps) => {
+const ChildSlider = ({
+  children,
+  slideName,
+  childStackClass,
+  trigerSlider,
+}: ChildSliderProps) => {
   const childSlide = useRef<HTMLDivElement>(null);
-  useLeftSwipeToggle(childSlide, (state) => {
+  useRightSwipeToggle(childSlide, (state) => {
     if (state) trigerSlider("close", slideName);
   });
   const [showSlide, setShowSlide] = useState(false);
@@ -30,8 +35,8 @@ const ChildSlider = ({ children, slideName, childStackClass, trigerSlider }: Chi
       className={cn(
         `${
           showSlide ? "translate-x-0" : "translate-x-full"
-        } absolute inset-0 transition duration-stack-sliding-time ease-stack-slider-fnc `,
-        childStackClass
+        } duration-stack-sliding-time ease-stack-slider-fnc absolute inset-0 transition`,
+        childStackClass,
       )}
     >
       {children}

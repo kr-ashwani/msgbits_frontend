@@ -13,7 +13,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
       <div className="flex items-center border-b-[1px] border-border-color bg-chat-bg py-3">
         <div
           className="ml-[-8px] cursor-pointer pl-3"
-          onClick={() => slider.trigerSlider("")}
+          onClick={() => slider.trigerSlider("close", "PrivateChatCreate")}
         >
           {ChatSvg("backArrow")}
         </div>
@@ -23,7 +23,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
 
       <div
         className="flex items-center gap-3 px-3"
-        onClick={() => slider.trigerSlider("GroupChatCreate")}
+        onClick={() => slider.trigerSlider("open", "GroupChatCreate")}
       >
         <div className="flex h-[45px] w-[45px] cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
           {ChatSvg("groupChatIcon", { height: "30", width: "30" })}

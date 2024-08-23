@@ -4,11 +4,9 @@ import { RefObject, useEffect } from "react";
 
 const useRightSwipeToggle = (
   comp: RefObject<HTMLElement>,
-  parent: RefObject<HTMLElement> | null,
   setter: (a: boolean) => void,
 ) => {
   const component = comp.current;
-  const parentComponent = parent && parent.current;
 
   useEffect(() => {
     if (!component) return;
@@ -31,12 +29,6 @@ const useRightSwipeToggle = (
         childTranslatePercent = Math.ceil(
           (getCurrentTranslateX(component) / width) * 100,
         );
-        if (parentComponent)
-          parentTranslatePercent = Math.ceil(
-            (getCurrentTranslateX(parentComponent) /
-              parentComponent.clientWidth) *
-              100,
-          );
       }
 
       startBuff = e.changedTouches[0].clientX - offsetX;
@@ -74,20 +66,6 @@ const useRightSwipeToggle = (
         );
         component?.style.setProperty("transition-duration", "0ms");
       }
-
-      const parentTranslateX =
-        parentTranslatePercent + Math.ceil((translatePercent * 60) / 100);
-      if (parentTranslateX <= 0 && parentTranslateX >= -60) {
-        parentComponent?.style.setProperty(
-          "transform",
-          `translateX(${parentTranslateX}%)`,
-        );
-        parentComponent?.style.setProperty(
-          "transition-timing-function",
-          "ease-in-out",
-        );
-        parentComponent?.style.setProperty("transition-duration", "0ms");
-      }
     }
     function touchEnd(e: TouchEvent) {
       e.stopPropagation();
@@ -100,10 +78,6 @@ const useRightSwipeToggle = (
       component?.style.removeProperty("transform");
       component?.style.removeProperty("transition-duration");
       component?.style.removeProperty("transition-timing-function");
-
-      parentComponent?.style.removeProperty("transform");
-      parentComponent?.style.removeProperty("transition-duration");
-      parentComponent?.style.removeProperty("transition-timing-function");
 
       if (translatePercent === 100 || vel >= 0.5) setter(true);
       else setter(false);
@@ -126,6 +100,16 @@ const useRightSwipeToggle = (
     }
     registerTouchEvents(component);
     window.addEventListener("resize", resize);
+
+    if (component) {
+      component.addEventListener("scrollend", () => {
+        unregisterTouchEvents(component);
+        registerTouchEvents(component);
+      });
+      component.addEventListener("scroll", () =>
+        unregisterTouchEvents(component),
+      );
+    }
     return () => {
       if (component) unregisterTouchEvents(component);
       window.removeEventListener("resize", resize);

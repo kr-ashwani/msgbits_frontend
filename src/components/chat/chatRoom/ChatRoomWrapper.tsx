@@ -8,7 +8,7 @@ import PrivateChatCreate from "./PrivateChatCreate";
 
 const ChatRoomWrapper = () => {
   return (
-    <StackSlider>
+    <StackSlider mainStackClass="h-full">
       <section
         id="chatRoomWrapper"
         className="scrollbar-thumb-gray-500 scrollbar-track-gray-200 h-full w-full overflow-y-scroll bg-[--theme-bg-color] scrollbar-thin scrollbar-track-rounded-full scrollbar-corner-rounded-full"

@@ -7,7 +7,7 @@ import { useRef } from "react";
 
 const ChatRoomDetails = () => {
   const component = useRef<HTMLElement>(null);
-  useRightSwipeToggle(component, null, (state) => {
+  useRightSwipeToggle(component, (state) => {
     if (state) showChatRoomDetailsDispatch.toggleChatRoomDetails(false);
   });
   const showChatRoomDetail = useShowChatRoomDetailsState();
