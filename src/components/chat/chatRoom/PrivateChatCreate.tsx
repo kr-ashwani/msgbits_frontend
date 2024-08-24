@@ -6,6 +6,8 @@ import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
 import React, { useEffect, useMemo, useState } from "react";
 import SliderHeader from "./SliderHeader";
+import { sleep } from "@/components/StackSlider/utils/sleep";
+import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
@@ -37,12 +39,17 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
   }, [originalChatUserList, searchUser, setChatUserList]);
 
   return (
-    <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
+    <div className="relative flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
       <SliderHeader heading="Select User" closingSliderName={name} />
 
       <div
         className="flex cursor-pointer items-center gap-3 px-3"
-        onClick={() => slider.trigerSlider("open", "GroupChatCreate")}
+        onClick={async () => {
+          slider.trigerSlider("open", "GroupChatCreate");
+
+          await sleep(SLIDING_TIME);
+          slider.trigerSlider("close", name);
+        }}
       >
         <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-theme-color text-white">
           {ChatSvg("groupChatIcon", { height: "30", width: "30" })}
@@ -71,7 +78,11 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
         {chatUserList.map((user) => {
           return (
             <div
-              onClick={() => selectChatDispatch.setSelectedChat(user._id)}
+              onClick={async () => {
+                selectChatDispatch.setSelectedChat(user._id);
+                await sleep(SLIDING_TIME);
+                slider.trigerSlider("close", name);
+              }}
               key={user._id}
               className="flex w-full cursor-pointer items-center gap-5"
             >

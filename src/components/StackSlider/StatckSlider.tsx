@@ -11,11 +11,11 @@ import { sleep } from "./utils/sleep";
 import ChildSlider from "./ChildSlider";
 import { cn } from "./utils/utils";
 
-const SLIDING_TIME = 300;
+export const SLIDING_TIME = 300;
 const SLIDER_FNC = "cubic-bezier(0.12, 0.8, 0.32, 1)";
 
 export const StackSliderContext = React.createContext({
-  trigerSlider: (state: "open" | "close", sliderName: string): void => {},
+  trigerSlider: (state: "open" | "close", sliderName?: string): void => {},
 });
 
 const StackSlider = ({
@@ -36,17 +36,29 @@ const StackSlider = ({
 
   useMemo(() => getChildren({ children, slides, mainStack }), [children]);
 
-  async function trigerSlider(state: "open" | "close", sliderName: string) {
+  async function trigerSlider(
+    state: "open" | "close",
+    sliderName: string = "",
+  ) {
     if (state === "open") {
       setActiveSlides((state) => {
         if (state.includes(sliderName)) return state;
         return [...state, sliderName];
       });
     } else {
-      const slider = document.getElementById(`stackSlider__${sliderName}__`);
-      if (slider) slider.style.transform = "translateX(100%)";
-      await sleep(SLIDING_TIME);
-      setActiveSlides((state) => state.filter((name) => name !== sliderName));
+      if (sliderName === "") {
+        activeSlides.forEach((slide) => {
+          const slider = document.getElementById(`stackSlider__${slide}__`);
+          if (slider) slider.style.transform = "translateX(100%)";
+        });
+        await sleep(SLIDING_TIME);
+        setActiveSlides([]);
+      } else {
+        const slider = document.getElementById(`stackSlider__${sliderName}__`);
+        if (slider) slider.style.transform = "translateX(100%)";
+        await sleep(SLIDING_TIME);
+        setActiveSlides((state) => state.filter((name) => name !== sliderName));
+      }
     }
   }
 

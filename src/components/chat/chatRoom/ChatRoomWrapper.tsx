@@ -7,9 +7,20 @@ import GroupChatCreate from "./GroupChatCreate";
 import PrivateChatCreate from "./PrivateChatCreate";
 import Setting from "../chatUtilities/Setting";
 import Profile from "../chatUtilities/Profile";
+import { IUser } from "@/schema/userSchema";
+import GroupChatFinalCreate from "./GroupChatFinalCreate";
+
+export interface NewGroupType {
+  name: string;
+  members: IUser[];
+}
 
 const ChatRoomWrapper = () => {
   const [chatRoomSearch, setChatRoomSearch] = useState<string>("");
+  const [newGroup, setNewGroup] = useState<NewGroupType>({
+    name: "",
+    members: [],
+  });
 
   return (
     <StackSlider mainStackClass="h-full">
@@ -27,7 +38,16 @@ const ChatRoomWrapper = () => {
       <Setting name="Setting" />
       <Profile name="Profile" />
       <PrivateChatCreate name="PrivateChatCreate" />
-      <GroupChatCreate name="GroupChatCreate" />
+      <GroupChatCreate
+        newGroup={newGroup}
+        setNewGroup={setNewGroup}
+        name="GroupChatCreate"
+      />
+      <GroupChatFinalCreate
+        newGroup={newGroup}
+        setNewGroup={setNewGroup}
+        name="GroupChatFinalCreate"
+      />
     </StackSlider>
   );
 };
