@@ -80,7 +80,8 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
             <div
               onClick={async () => {
                 selectChatDispatch.setSelectedChat(user._id);
-                await sleep(SLIDING_TIME);
+                const body = document.getElementsByTagName("body")[0];
+                if (body && body.offsetWidth <= 768) await sleep(SLIDING_TIME);
                 slider.trigerSlider("close", name);
               }}
               key={user._id}

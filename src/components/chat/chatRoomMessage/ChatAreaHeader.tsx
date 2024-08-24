@@ -43,7 +43,7 @@ const ChatAreaHeader = () => {
   return (
     <div className="sticky left-0 right-0 top-0 flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">
       <div
-        className="cursor-pointer sm:hidden"
+        className="cursor-pointer md:hidden"
         onClick={() => selectedChatDispatch.setSelectedChat(null)}
       >
         {ChatSvg("backArrow")}
