@@ -74,7 +74,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 px-5">
+      <div className="flex flex-col">
         {chatUserList.map((user) => {
           return (
             <div
@@ -85,7 +85,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
                 slider.trigerSlider("close", name);
               }}
               key={user._id}
-              className="flex w-full cursor-pointer items-center gap-5"
+              className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
             >
               <UserAvatar src={user.profilePicture} size={45} />
               <div className="flex flex-col overflow-hidden">
