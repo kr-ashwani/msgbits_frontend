@@ -1,6 +1,6 @@
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
@@ -93,7 +93,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
               key={user._id}
               className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
             >
-              <UserAvatar src={user.profilePicture} size={45} />
+              <Avatar src={user.profilePicture} size={45} />
               <div className="flex flex-col overflow-hidden">
                 <p className="truncate text-[16px] font-semibold">
                   {user.name}

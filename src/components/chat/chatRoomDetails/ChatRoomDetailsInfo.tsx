@@ -1,5 +1,5 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import React from "react";
 import GroupChatMembers from "./GroupChatMembers";
 import GroupChatPrivacy from "./GroupChatPrivacy";
@@ -19,10 +19,7 @@ const ChatRoomDetailsInfo = ({
     <div className="flex flex-col gap-2 py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
-          <UserAvatar
-            src={chatRoomState.getChatRoomPicture() || ""}
-            size={60}
-          />
+          <Avatar src={chatRoomState.getChatRoomPicture() || ""} size={120} />
         </div>
         <div className="text-lg font-semibold">
           {chatRoomState.getChatRoomName()}

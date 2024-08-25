@@ -1,5 +1,5 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
@@ -17,7 +17,7 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
       userList.push(
         <div
           key="sudoUser"
-          className="relative ml-[-5px] flex h-[32px] w-[32px] items-center justify-center rounded-full border-2 border-theme-bg-color bg-button-bg-color text-sm font-medium text-theme-color"
+          className="relative ml-[-8px] flex h-10 w-10 items-center justify-center rounded-full border-2 border-theme-bg-color bg-button-bg-color text-sm font-medium text-theme-color"
         >
           +{membersLength - i}
         </div>,
@@ -25,11 +25,11 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
       break;
     }
     userList.push(
-      <UserAvatar
-        className="ml-[-5px] border-2 border-theme-bg-color"
+      <Avatar
+        className="ml-[-8px] border-2 border-theme-bg-color"
         key={user._id}
         src={user.profilePicture}
-        size={32}
+        size={40}
       />,
     );
   }
@@ -50,12 +50,12 @@ const ChatAreaHeader = () => {
 
       <div
         onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
-        className="grow truncate py-4 pl-2 text-xl font-semibold"
+        className="grow truncate py-2 pl-2 text-xl font-semibold"
       >
         {chatRoom?.getChatRoomName()}
       </div>
       <div
-        className="flex py-4"
+        className="flex py-2"
         onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
       >
         {chatRoom ? getChatMembersPictures(chatRoom) : null}

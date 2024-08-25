@@ -1,6 +1,6 @@
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import React from "react";
-import UserAvatar from "../../utility/UserAvatar";
+import Avatar from "../../utility/Avatar";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
@@ -41,7 +41,7 @@ const ChatRoom = ({
       <div
         className={`flex w-full gap-4 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
       >
-        <UserAvatar src={chatRoomState.getChatRoomPicture()} size={45} />
+        <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
         <div className="w-full overflow-hidden">
           <p className="truncate pb-[1px] text-[16px] font-semibold">
             {chatRoomState.getChatRoomName()}

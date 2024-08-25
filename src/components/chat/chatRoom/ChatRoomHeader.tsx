@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "@/lib/store/hooks";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 
 const ChatRoomHeader = ({
@@ -37,7 +37,7 @@ const ChatRoomHeader = ({
       >
         {ChatSvg("setting", { width: "25px", height: "25px" })}
       </div>
-      <UserAvatar
+      <Avatar
         onClick={() => slider.trigerSlider("open", "Profile")}
         src={userProfilePic}
         size={40}

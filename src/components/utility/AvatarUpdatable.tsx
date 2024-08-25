@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import UserAvatar from "./UserAvatar";
+import Avatar from "./Avatar";
 import { ChatSvg } from "../svg/chatSvg";
 import { cn } from "@/lib/utils";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
@@ -34,7 +34,7 @@ const AvatarUpdatable = ({
       )}
       style={{ width: size, height: size }}
     >
-      <UserAvatar
+      <Avatar
         src={imgSrc}
         size={size}
         className={avatarClassName}

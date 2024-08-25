@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import SliderHeader from "./SliderHeader";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
 import GroupChatNewMembers from "./GroupChatNewMembers";
@@ -102,7 +102,7 @@ const GroupChatCreate = ({
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
             <div className="relative">
-              <UserAvatar src={user.profilePicture} size={45} />
+              <Avatar src={user.profilePicture} size={45} />
               {newGroup.members.some((member) => member._id === user._id) ? (
                 <>
                   <div className="absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>

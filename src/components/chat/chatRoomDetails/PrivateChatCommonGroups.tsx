@@ -1,5 +1,5 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import UserAvatar from "@/components/utility/UserAvatar";
+import Avatar from "@/components/utility/Avatar";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import React from "react";
 
@@ -9,7 +9,6 @@ const PrivateChatCommonGroups = ({
   chatRoomState: ChatRoomState;
 }) => {
   const commonGroups = chatRoomState.getCommonGroupChat();
-  console.log(commonGroups);
 
   return (
     <div className="">
@@ -37,7 +36,7 @@ const PrivateChatCommonGroups = ({
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
             <div className="relative">
-              <UserAvatar src={chatRoom.chatRoomPicture} size={40} />
+              <Avatar src={chatRoom.chatRoomPicture} size={40} />
             </div>
             <div className="flex grow flex-col overflow-hidden">
               <p className="truncate text-sm font-semibold">

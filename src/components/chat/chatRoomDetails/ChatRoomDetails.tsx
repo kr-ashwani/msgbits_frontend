@@ -11,7 +11,7 @@ import AddUserToChatRoom from "./AddUserToChatRoom";
 import ChatRoomDetailsInfo from "./ChatRoomDetailsInfo";
 
 const ChatRoomDetails = () => {
-  const component = useRef<HTMLElement>(null);
+  const component = useRef<HTMLDivElement>(null);
   useRightSwipeToggle(component, (state) => {
     if (state) showChatRoomDetailsDispatch.toggleChatRoomDetails(false);
   });
@@ -22,12 +22,12 @@ const ChatRoomDetails = () => {
   useToggleChatRoomDetails(showChatRoomDetail);
 
   return (
-    <StackSlider mainStackClass="h-full">
-      <section
-        id="chatRoomDetails"
-        ref={component}
-        className={`absolute inset-0 h-full w-[full] overflow-y-auto bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
-      >
+    <StackSlider
+      ref={component}
+      stackElemId="chatRoomDetails"
+      stackContainerClass={`absolute inset-0 h-full w-[full] overflow-y-auto bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+    >
+      <section>
         <div className="flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">
           <div
             className="cursor-pointer"
