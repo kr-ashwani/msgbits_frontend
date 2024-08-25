@@ -20,7 +20,6 @@ const useRightSwipeToggle = (
     let prevTime = 0;
     let vel = 0;
     let childTranslatePercent = 0;
-    let parentTranslatePercent = 0;
     function touchStart(e: TouchEvent) {
       e.stopPropagation();
       if (component) {

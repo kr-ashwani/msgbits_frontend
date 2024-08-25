@@ -50,7 +50,7 @@ const ChatAreaHeader = () => {
 
       <div
         onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
-        className="grow truncate py-2 pl-2 text-xl font-semibold"
+        className="grow truncate py-2 pl-2 pr-2 text-xl font-semibold"
       >
         {chatRoom?.getChatRoomName()}
       </div>
