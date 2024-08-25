@@ -2,14 +2,13 @@ import { ChatSvg } from "@/components/svg/chatSvg";
 import UserAvatar from "@/components/utility/UserAvatar";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
-import {
-  SelectedChatRoomState,
-  useSelectedChatRoomState,
-} from "@/hooks/AppSelector/useSelectedChatRoomState";
+import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
+
 import React, { ReactNode } from "react";
 
-function getChatMembersPictures(selectedChatRoom: SelectedChatRoomState) {
-  const members = selectedChatRoom.getChatRoomMembers();
+function getChatMembersPictures(chatRoom: ChatRoomState) {
+  const members = chatRoom.getChatRoomMembers();
   const membersLength = members.length;
   const userList: ReactNode[] = [];
   for (let i = 0; i < membersLength; i++) {
@@ -38,24 +37,29 @@ function getChatMembersPictures(selectedChatRoom: SelectedChatRoomState) {
 }
 const ChatAreaHeader = () => {
   const selectedChatDispatch = useSelectedChatDispatch();
-  const selectedChatRoom = useSelectedChatRoomState();
-  const showChatRoom = useShowChatRoomDetailsDispatch();
+  const chatRoom = useSelectedChatState().getChatState();
+  const showChatRoomDispatch = useShowChatRoomDetailsDispatch();
   return (
-    <div className="sticky left-0 right-0 top-0 flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">
+    <div className="flex min-h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 lg:px-5">
       <div
-        className="cursor-pointer md:hidden"
+        className="cursor-pointer py-4 md:hidden"
         onClick={() => selectedChatDispatch.setSelectedChat(null)}
       >
         {ChatSvg("backArrow")}
       </div>
 
       <div
-        onClick={() => showChatRoom.toggleChatRoomDetails(true)}
-        className="grow truncate pl-2 text-xl font-semibold"
+        onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
+        className="grow truncate py-4 pl-2 text-xl font-semibold"
       >
-        {selectedChatRoom.getChatRoomName()}
+        {chatRoom?.getChatRoomName()}
       </div>
-      <div className="flex">{getChatMembersPictures(selectedChatRoom)}</div>
+      <div
+        className="flex py-4"
+        onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
+      >
+        {chatRoom ? getChatMembersPictures(chatRoom) : null}
+      </div>
     </div>
   );
 };

@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: 'cdn-icons-png.flaticon.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+        pathname: '/**',
+      },
     ],
   },
 };

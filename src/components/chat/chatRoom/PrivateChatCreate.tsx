@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import SliderHeader from "./SliderHeader";
 import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
+import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
@@ -15,8 +16,10 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
   const selectChatDispatch = useSelectedChatDispatch();
   const [searchUser, setSearchUser] = useState("");
   const [chatUserList, setChatUserList] = useState<IUser[]>([]);
+  const chatRoomContainer = useChatRoomState();
+
   const originalChatUserList = useMemo(
-    () => chatuser.getAllUsers(),
+    () => chatuser.getAllUsersExceptItself(),
     [chatuser],
   );
 
@@ -79,7 +82,10 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
           return (
             <div
               onClick={async () => {
-                selectChatDispatch.setSelectedChat(user._id);
+                const chatRoomId = chatRoomContainer.getPrivateChatWithMemberId(
+                  user._id,
+                );
+                selectChatDispatch.setSelectedChat(chatRoomId || user._id);
                 const body = document.getElementsByTagName("body")[0];
                 if (body && body.offsetWidth <= 768) await sleep(SLIDING_TIME);
                 slider.trigerSlider("close", name);

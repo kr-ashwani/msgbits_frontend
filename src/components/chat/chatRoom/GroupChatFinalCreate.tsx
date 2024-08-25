@@ -30,7 +30,7 @@ const GroupChatFinalCreate = ({
     focus();
   }, []);
   return (
-    <div className="relative flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
+    <div className="relativeflex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
       <SliderHeader heading="Group Description" closingSliderName={name} />
 
       {newGroup.name && newGroup.members.length ? (

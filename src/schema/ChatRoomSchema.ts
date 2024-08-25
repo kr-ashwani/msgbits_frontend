@@ -15,6 +15,9 @@ const ChatRoomBaseSchema = z.object({
   lastMessageId: z.string({
     required_error: "Last Message Id is required",
   }),
+  createdBy: z.string({
+    required_error: "createdBy is required",
+  }),
   createdAt: z.string({
     required_error: "createdAt is required",
   }),

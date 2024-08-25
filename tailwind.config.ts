@@ -36,6 +36,8 @@ const config: Config = {
       "msg-hover-bg": "var(--msg-hover-bg)",
       "theme-bg-color": "var(--theme-bg-color)",
       "button-bg-color": "var(--button-bg-color)",
+      "msg-date": "var(--msg-date)",
+      "alert-red-500": "#E53E3E",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],
@@ -57,6 +59,7 @@ const config: Config = {
         "gradient-button-disabled":
           "linear-gradient(100deg, theme(colors[yellow-400]), theme(colors[white-200]))",
         "gradient-overlay-bg": "var(--overlay-bg)",
+        "gradient-chat-header-bg": "var(--chat-header-bg)",
       },
       boxShadow: {
         chatAddBtn: "0 0 16px var(--theme-color)",

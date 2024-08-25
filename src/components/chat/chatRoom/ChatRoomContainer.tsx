@@ -9,12 +9,12 @@ import { useEffect, useMemo, useState } from "react";
 import ChatRoom from "./ChatRoom";
 
 const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
-  const chatRoomState = useChatRoomState();
+  const chatRoomContainerState = useChatRoomState();
 
   const originalChatRoomList = useMemo(() => {
-    const list = chatRoomState.getChatRooms();
+    const list = chatRoomContainerState.getChatRooms();
     return list;
-  }, [chatRoomState]);
+  }, [chatRoomContainerState]);
 
   const [chatRoomList, setChatRoomList] = useState<ChatRoomState[]>([]);
 

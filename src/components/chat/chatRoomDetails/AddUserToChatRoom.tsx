@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
-import SliderHeader from "./SliderHeader";
+import useSlide from "@/components/StackSlider/hooks/useSlide";
 import { ChatSvg } from "@/components/svg/chatSvg";
 import UserAvatar from "@/components/utility/UserAvatar";
-import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
+import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { IUser } from "@/schema/userSchema";
-import GroupChatNewMembers from "./GroupChatNewMembers";
-import { NewGroupType } from "./ChatRoomWrapper";
-import useSlide from "@/components/StackSlider/hooks/useSlide";
+import { useState, useMemo, useEffect } from "react";
+import { NewGroupType } from "../chatRoom/ChatRoomWrapper";
+import GroupChatNewMembers from "../chatRoom/GroupChatNewMembers";
+import SliderHeader from "../chatRoom/SliderHeader";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -18,28 +18,29 @@ export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   }
 }
 
-const GroupChatCreate = ({
+const AddUserToChatRoom = ({
   name,
-  newGroup,
-  setNewGroup,
+  chatRoomState,
 }: {
   name: string;
-  newGroup: NewGroupType;
-  setNewGroup: React.Dispatch<React.SetStateAction<NewGroupType>>;
+  chatRoomState: ChatRoomState;
 }) => {
-  const chatuser = useChatUserState();
   const slider = useSlide();
   const [searchUser, setSearchUser] = useState("");
-  const [chatUserList, setChatUserList] = useState<IUser[]>([]);
-  const originalChatUserList = useMemo(
-    () => chatuser.getAllUsersExceptItself(),
-    [chatuser],
+  const [userList, setUserList] = useState<IUser[]>([]);
+  const [newGroup, setNewGroup] = useState<NewGroupType>({
+    name: "",
+    members: [],
+  });
+  const originalUserList = useMemo(
+    () => chatRoomState.getUsersExceptChatMembers(),
+    [chatRoomState],
   );
 
   useEffect(() => {
     if (searchUser)
-      setChatUserList(
-        originalChatUserList.reduce<IUser[]>((acc, user) => {
+      setUserList(
+        originalUserList.reduce<IUser[]>((acc, user) => {
           if (
             user.name.toLowerCase().includes(searchUser.toLowerCase()) ||
             user.email
@@ -51,26 +52,19 @@ const GroupChatCreate = ({
           return acc;
         }, []),
       );
-    else setChatUserList(originalChatUserList);
-  }, [originalChatUserList, searchUser, setChatUserList]);
+    else setUserList(originalUserList);
+  }, [originalUserList, searchUser, setUserList]);
 
-  useEffect(() => {
-    // reset newGroup on component first mount
-    setNewGroup({
-      name: "",
-      members: [],
-    });
-  }, [setNewGroup]);
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <SliderHeader heading="Create Group" closingSliderName={name} />
+      <SliderHeader heading="Add Members" closingSliderName={name} />
 
       {newGroup.members.length ? (
         <div
-          onClick={() => slider.trigerSlider("open", "GroupChatFinalCreate")}
+          onClick={() => slider.trigerSlider("close", name)}
           className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
         >
-          {ChatSvg("rightArrow")}
+          {ChatSvg("checkIcon")}
         </div>
       ) : null}
 
@@ -90,7 +84,7 @@ const GroupChatCreate = ({
       </div>
 
       <div className="flex flex-col">
-        {chatUserList.map((user) => (
+        {userList.map((user) => (
           <div
             onClick={() =>
               setNewGroup((state) => ({
@@ -126,4 +120,4 @@ const GroupChatCreate = ({
   );
 };
 
-export default GroupChatCreate;
+export default AddUserToChatRoom;
