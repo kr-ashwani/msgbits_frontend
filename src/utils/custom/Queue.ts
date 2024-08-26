@@ -7,7 +7,7 @@ class NodeItem<T> {
   }
 }
 
-class Queue<T> {
+export class Queue<T> {
   private head: NodeItem<T> | null = null;
   private tail: NodeItem<T> | null = null;
 

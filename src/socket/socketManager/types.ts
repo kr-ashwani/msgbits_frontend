@@ -3,7 +3,9 @@ import { ChatUserSchema } from "@/schema/ChatUserSchema";
 import { MessageSchema } from "@/schema/MessageSchema";
 import { z } from "zod";
 
-export interface ChatRoomEmitterMapping {}
+export interface ChatRoomEmitterMapping {
+  "chatroom-op": string;
+}
 
 export interface MessageEmitterMapping {}
 

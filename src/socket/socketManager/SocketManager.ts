@@ -8,6 +8,9 @@ export class SocketManager {
 
   constructor(socket: Socket) {
     this.socket = socket;
+    this.init();
+  }
+  public init() {
     this.setupDefaultEventListeners();
   }
 
@@ -39,8 +42,9 @@ export class SocketManager {
   public emit<K extends keyof EmitterMapping>(
     event: K,
     data: EmitterMapping[K],
+    callback?: (err: any, ack: { success: boolean }) => void,
   ) {
-    this.socket.emit(event, data);
+    this.socket.emit(event, data, callback);
   }
 
   public on<K extends keyof ListenerSchema>(
@@ -78,6 +82,11 @@ export class SocketManager {
     if (!this.socket.connected) {
       this.socket.connect();
     }
+  }
+
+  public timeout(timeout: number) {
+    this.socket.timeout(timeout);
+    return this;
   }
 
   public disconnect(): void {

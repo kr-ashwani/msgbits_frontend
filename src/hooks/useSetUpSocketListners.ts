@@ -8,10 +8,14 @@ import { useChatUserDispatch } from "./AppDispatcher/useChatUserDispatch";
  * All socket listeners for the App must be registered here
  */
 export const useSetUpSocketListners = () => {
-  const socket = useSocket();
+  const { socket, socketQueue } = useSocket();
   const messageDispatch = useMessageDispatch();
   const chatRoomDispatch = useChatRoomDispatch();
   const chatUserDispatch = useChatUserDispatch();
+
+  useEffect(() => {
+    socketQueue.emitChatRoom("chatroom-op", "Hi from chat room");
+  }, [socketQueue]);
 
   useEffect(() => {
     const unsubListeners = [
