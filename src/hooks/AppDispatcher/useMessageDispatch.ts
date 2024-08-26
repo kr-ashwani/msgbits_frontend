@@ -12,8 +12,8 @@ class MessageDispatcher {
     this.dispatch = dispatch;
   }
 
-  createMessage = () => {};
-  updateMessage = () => {};
+  createMessage = (payload: IMessage) => {};
+  updateMessage = (payload: IMessage) => {};
   getAllMessageOfChatRoom = (payload: Record<string, IMessage[]>) => {
     this.dispatch(addMessageMappingOfChatRoom(payload));
     this.dispatch(addMessageOfChatRoom(payload));

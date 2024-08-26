@@ -1,25 +1,19 @@
+import { toast } from "sonner";
+import { EmitterMapping, ListenerSchema } from "./types";
 import { Socket } from "socket.io-client";
-import { EmitterMapping, ListenerMapping } from "./types";
 import { debug } from "@/utils/custom/Debug";
-import { SocketListeners } from "./socketListners";
 
 export class SocketManager {
   private socket: Socket;
-  private socketListeners: SocketListeners;
-  private eventQueue: { [event: string]: Queue<any> } = {};
-  private isProcessingQueue: { [event: string]: boolean } = {};
-  private timeoutDuration: number = 5000; // 5 seconds timeout duration
 
   constructor(socket: Socket) {
     this.socket = socket;
-    this.socketListeners = new SocketListeners(this.socket);
     this.setupDefaultEventListeners();
   }
 
   private setupDefaultEventListeners(): void {
     this.socket.on("connect", () => {
       debug("success", "Socket connected");
-      this.flushEventQueue();
     });
 
     this.socket.on("disconnect", (reason) => {
@@ -36,105 +30,38 @@ export class SocketManager {
 
     this.socket.on("reconnect", (attemptNumber) => {
       debug("success", `Reconnected on attempt #${attemptNumber}`);
-      this.flushEventQueue();
     });
 
     this.socket.on("reconnect_failed", () => {
       debug("error", "Reconnection failed");
     });
-
-    // Add more default event listeners as needed
   }
-
   public emit<K extends keyof EmitterMapping>(
     event: K,
     data: EmitterMapping[K],
-    bypassCache: boolean = false,
-  ): void {
-    if (bypassCache && this.socket.connected) {
-      this.emitDirectly(event, data);
-    } else {
-      this.cacheEvent(event, data);
-      if (this.socket.connected) {
-        this.processEventQueue(event);
-      }
-    }
-  }
-
-  private emitDirectly<K extends keyof EmitterMapping>(
-    event: K,
-    data: EmitterMapping[K],
-  ): void {
-    const timeoutId = setTimeout(() => {
-      debug("error", `Acknowledgment timeout for event "${event}"`);
-    }, this.timeoutDuration);
-
-    this.socket.emit(event as string, data, (ack: any) => {
-      clearTimeout(timeoutId); // Clear the timeout if acknowledgment is received
-      debug(`Acknowledgment received for event "${event}":`, ack);
-    });
-  }
-
-  private cacheEvent<T>(event: string, data: T): void {
-    if (!this.eventQueue[event]) {
-      this.eventQueue[event] = new Queue<any>();
-      this.isProcessingQueue[event] = false;
-    }
-    this.eventQueue[event].enqueue(data);
-  }
-
-  private dequeueEvent(event: string): void {
-    if (this.eventQueue[event] && !this.eventQueue[event].isEmpty()) {
-      this.eventQueue[event].dequeue();
-    }
-  }
-
-  private flushEventQueue(): void {
-    for (const event in this.eventQueue) {
-      if (this.eventQueue.hasOwnProperty(event)) {
-        this.processEventQueue(event as keyof EmitterMapping);
-      }
-    }
-  }
-
-  private processEventQueue(event: keyof EmitterMapping): void {
-    if (this.isProcessingQueue[event] || !this.socket.connected) {
-      return;
-    }
-
-    const data = this.eventQueue[event].peek();
-    if (data) {
-      this.isProcessingQueue[event] = true;
-      const timeoutId = setTimeout(() => {
-        debug("error", `Acknowledgment timeout for event "${event}"`);
-        this.isProcessingQueue[event] = false;
-        this.dequeueEvent(event); // Optionally remove the timed-out event
-        this.processEventQueue(event); // Continue processing the queue
-      }, this.timeoutDuration);
-
-      this.socket.emit(event as string, data, (ack: any) => {
-        clearTimeout(timeoutId); // Clear the timeout if acknowledgment is received
-        debug(
-          "success",
-          `Acknowledgment received for event "${event}": ${ack}`,
-        );
-        this.dequeueEvent(event);
-        this.isProcessingQueue[event] = false;
-        this.processEventQueue(event); // Continue processing the queue
-      });
-    }
-  }
-
-  public on<K extends keyof ListenerMapping>(
-    event: K,
-    callback: ListenerMapping[K],
   ) {
-    return this.socketListeners.setUpListenersWithValidation(event, callback);
+    this.socket.emit(event, data);
   }
 
-  public off<K extends keyof ListenerMapping>(
+  public on<K extends keyof ListenerSchema>(
     event: K,
-    callback?: ListenerMapping[K],
+    callback: (payload: Zod.infer<ListenerSchema[K]>) => void,
+  ) {
+    const eventHandler = (payload: any) => {
+      const result = ListenerSchema[event].safeParse(payload);
+      if (result.success) callback(result.data);
+      else
+        toast.error(
+          `ValidationError: server did not correctly send ${event} event data`,
+        );
+    };
+    this.socket.on(event as string, eventHandler);
+    return { event, eventHandler };
+  }
+
+  public off<K extends keyof ListenerSchema>(
+    event: K,
+    callback?: (payload: Zod.infer<ListenerSchema[K]>) => void,
   ): void {
     if (callback) {
       this.socket.off(event as string, callback);
@@ -163,10 +90,9 @@ export class SocketManager {
     return this.socket.id;
   }
 
-  // Additional functionality for advanced use cases
-  public once<K extends keyof ListenerMapping>(
+  public once<K extends keyof ListenerSchema>(
     event: K,
-    callback: ListenerMapping[K],
+    callback: (payload: Zod.infer<ListenerSchema[K]>) => void,
   ): void {
     this.socket.once(event as string, callback);
   }
