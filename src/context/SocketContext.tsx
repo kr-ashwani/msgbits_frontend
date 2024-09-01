@@ -1,7 +1,7 @@
 "use client";
 import { SocketManager } from "@/socket/socketManager/SocketManager";
 import SocketSingleton from "@/socket/socketManager/SocketSingleton";
-import { SocketEmitterQueue } from "@/socket/socketQueue/SocketEmitterQueue";
+import { SocketEmitterQueue } from "@/service/socketQueue/SocketEmitterQueue";
 import React, { ReactNode, useEffect, useRef } from "react";
 
 export const SocketContext = React.createContext(

@@ -1,10 +1,10 @@
 import { Queue } from "@/utils/custom/Queue";
-import { SocketManager } from "../socketManager/SocketManager";
+import { SocketManager } from "../../socket/socketManager/SocketManager";
 import {
   ChatRoomEmitterMapping,
   EmitterMapping,
   MessageEmitterMapping,
-} from "../socketManager/types";
+} from "../../socket/socketManager/types";
 import { debug } from "@/utils/custom/Debug";
 
 interface SocketQueueData<T extends keyof EmitterMapping> {
@@ -12,6 +12,7 @@ interface SocketQueueData<T extends keyof EmitterMapping> {
   Data: EmitterMapping[T];
   noOfRetries: number;
   firstAttemptTimestamp: number;
+  isDataComplete: boolean;
 }
 
 export class SocketEmitterQueue {
@@ -47,6 +48,7 @@ export class SocketEmitterQueue {
       Data: data,
       noOfRetries: 0,
       firstAttemptTimestamp: Date.now(),
+      isDataComplete: true,
     });
 
     this.processEventQueue(queueId);
@@ -83,6 +85,8 @@ export class SocketEmitterQueue {
       this.cleanupQueue(queueId);
       return;
     }
+
+    if (!data.isDataComplete) return;
 
     this.queueProcessingMap.set(queueId, true);
 
