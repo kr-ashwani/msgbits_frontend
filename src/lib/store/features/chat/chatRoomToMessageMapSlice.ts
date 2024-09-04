@@ -17,7 +17,8 @@ export const chatRoomToMessageMapSlice = createSlice({
     ) {
       Object.values(action.payload).forEach((msgArr) => {
         msgArr.forEach((msg) =>
-          state[msg.chatRoomId]
+          state[msg.chatRoomId] &&
+          !state[msg.chatRoomId].includes(msg.messageId)
             ? state[msg.chatRoomId].push(msg.messageId)
             : (state[msg.chatRoomId] = [msg.messageId]),
         );

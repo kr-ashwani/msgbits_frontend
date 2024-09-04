@@ -26,7 +26,7 @@ const ChatRoomWrapper = () => {
     <StackSlider mainStackClass="h-full">
       <section
         id="chatRoomWrapper"
-        className="scrollbar-thumb-gray-500 scrollbar-track-gray-200 h-full w-full overflow-y-scroll bg-[--theme-bg-color] scrollbar-thin scrollbar-track-rounded-full scrollbar-corner-rounded-full"
+        className="h-full w-full overflow-y-scroll bg-[--theme-bg-color]"
       >
         <ChatRoomHeader
           chatRoomSearch={chatRoomSearch}

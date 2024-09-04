@@ -30,6 +30,10 @@ const TextMessageSchema = MessageBaseSchema.extend({
   type: z.literal("text"),
 });
 
+const TimestampMessageSchema = MessageBaseSchema.extend({
+  type: z.literal("timestamp"),
+});
+
 const FileMessageSchema = MessageBaseSchema.extend({
   type: z.literal("file"),
   file: FileSchema,
@@ -37,10 +41,12 @@ const FileMessageSchema = MessageBaseSchema.extend({
 
 export const MessageSchema = z.discriminatedUnion("type", [
   TextMessageSchema,
+  TimestampMessageSchema,
   FileMessageSchema,
 ]);
 
 export type IMessageBase = z.infer<typeof MessageBaseSchema>;
 export type ITextMessage = z.infer<typeof TextMessageSchema>;
+export type ITimestampMessage = z.infer<typeof TimestampMessageSchema>;
 export type IFileMessage = z.infer<typeof FileMessageSchema>;
 export type IMessage = z.infer<typeof MessageSchema>;

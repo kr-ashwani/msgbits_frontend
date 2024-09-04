@@ -24,6 +24,8 @@ const cousine = Cousine({
 });
 const manrope = Manrope({
   display: "swap",
+  style: "normal",
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
   variable: "--font-manrope",
 });

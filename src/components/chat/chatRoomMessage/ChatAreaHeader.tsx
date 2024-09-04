@@ -26,10 +26,10 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
     }
     userList.push(
       <Avatar
-        className="ml-[-8px] border-2 border-theme-bg-color"
+        className="ml-[-12px] border-2 border-theme-bg-color"
         key={user._id}
         src={user.profilePicture}
-        size={40}
+        size={35}
       />,
     );
   }

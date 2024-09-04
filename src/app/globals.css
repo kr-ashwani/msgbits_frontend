@@ -6,6 +6,23 @@
   .btn-primary {
     @apply rounded-full bg-gradient-button px-6 py-2 font-cousine text-lg font-bold text-white;
   }
+  .hyphenate {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+}
+
+body ::-webkit-scrollbar {
+  width: 3px;
+  height: 2px;
+}
+
+body ::-webkit-scrollbar-thumb {
+  background-color: #c4c6c8;
+  border-radius: 10px;
 }
 
 /* setting style to body only for chat route */
@@ -76,3 +93,4 @@
   --button-color: #ed8936;
   --button-bg-color: rgba(237, 137, 54, 0.12);
 }
+

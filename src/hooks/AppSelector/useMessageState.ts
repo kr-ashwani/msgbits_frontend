@@ -1,9 +1,11 @@
 import { chatRoomToMessageMapState } from "@/lib/store/features/chat/chatRoomToMessageMapSlice";
 import { messageState } from "@/lib/store/features/chat/messageSlice";
 import { useAppSelector } from "@/lib/store/hooks";
-import { IMessage } from "@/schema/MessageSchema";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import { formatTimeDifference } from "@/utils/custom/formatTimeDifference";
+import { ChatUserState, useChatUserState } from "./useChatUserState";
+import { IUser } from "@/schema/userSchema";
+import { format } from "date-fns";
 
 export class MessageState {
   public messageId: string;
@@ -16,26 +18,46 @@ export class MessageState {
   getMessageText() {
     return this.messageContainerState.getMessageTextById(this.messageId);
   }
+  isMessageFromSelf() {
+    return this.messageContainerState.isMessageFromSelf(this.messageId);
+  }
+  getUser() {
+    return this.messageContainerState.getUser(this.messageId);
+  }
   getLastMessageTimeFromNow() {
     return this.messageContainerState.getLastMessageTimeFromNowById(
       this.messageId,
     );
   }
+  getRawMessage() {
+    return this.messageContainerState.getRawMessage(this.messageId);
+  }
+  getTime() {
+    return this.messageContainerState.getTime(this.messageId);
+  }
 }
 class MessageContainerState {
   private message: messageState;
   private chatRoomToMessageMap: chatRoomToMessageMapState;
+  private chatUser: ChatUserState;
+  private user: IUser | null;
+
   constructor(
     message: messageState,
     chatRoomToMessageMap: chatRoomToMessageMapState,
+    chatUser: ChatUserState,
+    user: IUser | null,
   ) {
     this.message = message;
     this.chatRoomToMessageMap = chatRoomToMessageMap;
+    this.chatUser = chatUser;
+    this.user = user;
   }
   getMessagesOfChatRoom(chatRoomId: string) {
-    const messageArr: IMessage[] = [];
+    const messageArr: MessageState[] = [];
     this.chatRoomToMessageMap[chatRoomId].map((messageId) => {
-      if (this.message[messageId]) messageArr.push(this.message[messageId]);
+      const msgState = this.getMessageById(messageId);
+      if (msgState) messageArr.push(msgState);
     });
     return messageArr;
   }
@@ -44,14 +66,15 @@ class MessageContainerState {
     return null;
   }
   getAllMessages() {
-    const message: { [p: string]: IMessage[] } = {};
+    const message: { [p: string]: MessageState[] } = {};
 
     Object.entries(this.chatRoomToMessageMap).forEach((entry) => {
-      const messageArr: IMessage[] = [];
+      const messageArr: MessageState[] = [];
       message[entry[0]] = messageArr;
 
       entry[1].forEach((messageId) => {
-        if (this.message[messageId]) messageArr.push(this.message[messageId]);
+        const msgState = this.getMessageById(messageId);
+        if (msgState) messageArr.push(msgState);
       });
     });
 
@@ -68,6 +91,24 @@ class MessageContainerState {
       return formatTimeDifference(this.message[messageId].updatedAt);
     return fallbackMsg;
   }
+
+  isMessageFromSelf(messageId: string) {
+    if (!this.user || !this.message[messageId]) return false;
+
+    return this.message[messageId].senderId === this.user._id;
+  }
+  getUser(messageId: string) {
+    if (!this.message[messageId]) return null;
+    return this.chatUser.getUserById(this.message[messageId].senderId);
+  }
+  getRawMessage(messageId: string) {
+    if (!this.message[messageId]) return null;
+    return this.message[messageId];
+  }
+  getTime(messageId: string) {
+    if (!this.message[messageId]) return null;
+    return format(this.message[messageId].updatedAt, "hh:mm a");
+  }
 }
 
 const useMessageState = () => {
@@ -75,10 +116,13 @@ const useMessageState = () => {
   const chatRoomToMessageMap = useAppSelector(
     (state) => state.chat.chatRoomToMessageMap,
   );
+  const chatUser = useChatUserState();
+  const user = useAppSelector((state) => state.auth.user);
 
   return useMemo(
-    () => new MessageContainerState(message, chatRoomToMessageMap),
-    [message, chatRoomToMessageMap],
+    () =>
+      new MessageContainerState(message, chatRoomToMessageMap, chatUser, user),
+    [message, chatRoomToMessageMap, chatUser, user],
   );
 };
 

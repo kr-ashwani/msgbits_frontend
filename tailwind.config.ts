@@ -19,8 +19,7 @@ const config: Config = {
       "slate-300": "#c2bcbc",
       "slate-600": "#A1A1AA",
       black: "#151515",
-      "grey-400": "#707079",
-      "grey-100": "#F2F2F2",
+
       "yellow-100": "#FFDFCD",
       "slate-gray": "#6D6D6D",
       "red-500": "#ef4444",
@@ -38,6 +37,12 @@ const config: Config = {
       "button-bg-color": "var(--button-bg-color)",
       "msg-date": "var(--msg-date)",
       "alert-red-500": "#E53E3E",
+      "input-bg": "var(--input-bg)",
+      "gray-300": "#d1d5db",
+      "gray-200": "#e5e7eb",
+      "grey-400": "#707079",
+      "grey-100": "#F2F2F2",
+      "chat-text-bg": "var(--chat-text-bg)",
     },
     fontFamily: {
       roboSlab: ["var(--font-robotoSlab)"],
@@ -46,6 +51,10 @@ const config: Config = {
       manrope: ["var(--font-manrope)"],
     },
     extend: {
+      borderRadius: {
+        "sender-chat-radus": "20px 0 20px 20px",
+        "user-chat-radius": "0 20px 20px 20px",
+      },
       height: {
         "chatRoom-height": "var(--chatRoom-height)",
       },
@@ -75,6 +84,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
+
 };
 export default config;
