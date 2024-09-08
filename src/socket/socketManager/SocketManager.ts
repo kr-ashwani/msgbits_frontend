@@ -54,10 +54,12 @@ export class SocketManager {
     const eventHandler = (payload: any) => {
       const result = ListenerSchema[event].safeParse(payload);
       if (result.success) callback(result.data);
-      else
+      else {
+        console.log(result.error);
         toast.error(
           `ValidationError: server did not correctly send ${event} event data`,
         );
+      }
     };
     this.socket.on(event as string, eventHandler);
     return { event, eventHandler };

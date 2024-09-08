@@ -15,8 +15,8 @@ const ChatRoom = ({
   const selectChatDispatch = useSelectedChatDispatch();
   const selectChatState = useSelectedChatState();
   const messageContainerState = useMessageState();
-  const messageState = messageContainerState.getMessageById(
-    chatRoomState.getLastChatRoomMessage(),
+  const messageState = messageContainerState.getLastMessage(
+    selectChatState.getSelectedChatId() || "",
   );
   const isChatSelected =
     selectChatState.getSelectedChatId() === chatRoomState.chatRoomId;

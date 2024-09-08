@@ -70,7 +70,7 @@ export class SocketEmitterQueue {
     eventName: T,
     data: ChatRoomEmitterMapping[T],
   ) {
-    this.emitWithQueueId("chatroom", eventName, data);
+    this.emitWithQueueId("chatroom", eventName as keyof EmitterMapping, data);
   }
 
   private processEventQueue(queueId: string): void {

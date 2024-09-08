@@ -35,6 +35,9 @@ export class MessageState {
   getTime() {
     return this.messageContainerState.getTime(this.messageId);
   }
+  getCreatedAtTime() {
+    return this.messageContainerState.getCreatedAtTime(this.messageId);
+  }
 }
 class MessageContainerState {
   private message: messageState;
@@ -53,17 +56,30 @@ class MessageContainerState {
     this.chatUser = chatUser;
     this.user = user;
   }
+  getCreatedAtTime(messageId: string) {
+    const msg = this.message[messageId];
+    if (!msg) return 0;
+    return new Date(msg.createdAt).getTime();
+  }
   getMessagesOfChatRoom(chatRoomId: string) {
     const messageArr: MessageState[] = [];
+    if (!this.chatRoomToMessageMap[chatRoomId]) return messageArr;
     this.chatRoomToMessageMap[chatRoomId].map((messageId) => {
       const msgState = this.getMessageById(messageId);
       if (msgState) messageArr.push(msgState);
     });
+    messageArr.sort(
+      (msg1, msg2) => msg1.getCreatedAtTime() - msg2.getCreatedAtTime(),
+    );
     return messageArr;
   }
   getMessageById(messageId: string) {
     if (this.message[messageId]) return new MessageState(messageId, this);
     return null;
+  }
+  getLastMessage(chatRoomId: string) {
+    const messages = this.getMessagesOfChatRoom(chatRoomId);
+    return messages.length ? messages.pop() : null;
   }
   getAllMessages() {
     const message: { [p: string]: MessageState[] } = {};

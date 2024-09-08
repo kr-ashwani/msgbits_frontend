@@ -19,9 +19,6 @@ export class ChatRoomState {
   getChatRoomPicture() {
     return this.chatRoomContainer.getChatRoomPictureById(this.chatRoomId);
   }
-  getLastChatRoomMessage() {
-    return this.chatRoomContainer.getLastChatRoomMessageById(this.chatRoomId);
-  }
   getChatRoomCreatorName() {
     return this.chatRoomContainer.getChatRoomCreatorName(this.chatRoomId);
   }
@@ -115,10 +112,6 @@ export class ChatRoomContainerState {
 
       return otherUser ? otherUser.profilePicture : fallbackChatRoomImage;
     }
-  }
-  getLastChatRoomMessageById(chatRoomId: string) {
-    const chatRoom = this.chatRoom[chatRoomId];
-    return chatRoom.lastMessageId;
   }
   getChatRoomCreatorName(chatRoomId: string) {
     const chatRoom = this.chatRoom[chatRoomId];

@@ -3,6 +3,8 @@ import { useMessageDispatch } from "./AppDispatcher/useMessageDispatch";
 import { useChatRoomDispatch } from "./AppDispatcher/useChatRoomDispatch";
 import { useSocket } from "./useSocket";
 import { useChatUserDispatch } from "./AppDispatcher/useChatUserDispatch";
+import { useSocketSyncService } from "./useSocketSyncService";
+import { IMessage } from "@/schema/MessageSchema";
 
 /**
  * All socket listeners for the App must be registered here
@@ -12,6 +14,7 @@ export const useSetUpSocketListners = () => {
   const messageDispatch = useMessageDispatch();
   const chatRoomDispatch = useChatRoomDispatch();
   const chatUserDispatch = useChatUserDispatch();
+  const socketSyncService = useSocketSyncService();
 
   useEffect(() => {
     socketQueue.emitChatRoom("chatroom-op", "Hi from chat room");
@@ -31,6 +34,16 @@ export const useSetUpSocketListners = () => {
       socket.on("chatuser-create", chatUserDispatch.createChatUser),
       socket.on("chatuser-update", chatUserDispatch.updateChatUser),
       socket.on("chatuser-getall", chatUserDispatch.getAllChatUser),
+      //Listening to Sync Service
+      socket.on("sync-update", (payload) => {
+        console.log(payload);
+        socketSyncService.listenForSyncInitiator();
+      }),
+      socket.on("sync-updateChatRoomAndMessages", (payload) => {
+        console.log(payload);
+        chatRoomDispatch.getAllChatRoom(payload.chatRoom);
+        messageDispatch.getAllMessageOfChatRoom(payload.message);
+      }),
     ];
 
     return () => {
@@ -39,5 +52,11 @@ export const useSetUpSocketListners = () => {
         socket.off(event, eventHandler);
       });
     };
-  }, [messageDispatch, chatRoomDispatch, chatUserDispatch, socket]);
+  }, [
+    messageDispatch,
+    chatRoomDispatch,
+    chatUserDispatch,
+    socket,
+    socketSyncService,
+  ]);
 };

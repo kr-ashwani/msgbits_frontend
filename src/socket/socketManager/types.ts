@@ -1,15 +1,24 @@
-import { ChatRoomSchema } from "@/schema/ChatRoomSchema";
+import { SyncUpdateInput } from "@/hooks/useSocketSyncService";
+import { ChatRoomSchema, IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
-import { MessageSchema } from "@/schema/MessageSchema";
+import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { z } from "zod";
 
 export interface ChatRoomEmitterMapping {
   "chatroom-op": string;
+  "chatroom-create": IChatRoom;
 }
 
-export interface MessageEmitterMapping {}
+export interface MessageEmitterMapping {
+  "message-create": IMessage;
+}
+export interface SyncEmitterMapping {
+  "sync-updateChatRoomAndMessages": SyncUpdateInput;
+}
 
-export type EmitterMapping = ChatRoomEmitterMapping & MessageEmitterMapping;
+export type EmitterMapping = ChatRoomEmitterMapping &
+  MessageEmitterMapping &
+  SyncEmitterMapping;
 
 const ChatRoomListenerSchema = {
   "chatroom-create": ChatRoomSchema,
@@ -28,10 +37,19 @@ const ChatUserListenerSchema = {
   "chatuser-getall": z.array(ChatUserSchema),
 };
 
+const SyncListenerSchema = {
+  "sync-update": z.string(),
+  "sync-updateChatRoomAndMessages": z.object({
+    chatRoom: z.array(ChatRoomSchema),
+    message: z.record(z.string(), z.array(MessageSchema)),
+  }),
+};
+
 const ListenerSchema = {
   ...ChatRoomListenerSchema,
   ...MessageListenerSchema,
   ...ChatUserListenerSchema,
+  ...SyncListenerSchema,
 };
 
 export type ListenerSchema = typeof ListenerSchema;
@@ -43,4 +61,5 @@ export {
   ChatRoomListenerSchema,
   MessageListenerSchema,
   ChatUserListenerSchema,
+  SyncListenerSchema,
 };

@@ -11,6 +11,12 @@ export const chatRoomToMessageMapSlice = createSlice({
   name: "Chat Room To Message Mapping",
   initialState,
   reducers: {
+    addMessageMapping(state, action: PayloadAction<IMessage>) {
+      const msg = action.payload;
+      state[msg.chatRoomId] && !state[msg.chatRoomId].includes(msg.messageId)
+        ? state[msg.chatRoomId].push(msg.messageId)
+        : (state[msg.chatRoomId] = [msg.messageId]);
+    },
     addMessageMappingOfChatRoom(
       state,
       action: PayloadAction<Record<string, IMessage[]>>,
@@ -27,7 +33,7 @@ export const chatRoomToMessageMapSlice = createSlice({
   },
 });
 
-export const { addMessageMappingOfChatRoom } =
+export const { addMessageMappingOfChatRoom, addMessageMapping } =
   chatRoomToMessageMapSlice.actions;
 
 export default chatRoomToMessageMapSlice.reducer;

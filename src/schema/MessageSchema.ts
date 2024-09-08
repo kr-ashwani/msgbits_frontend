@@ -14,7 +14,7 @@ const MessageBaseSchema = z.object({
   senderId: z.string({
     required_error: "SenderId is required",
   }),
-  status: z.enum(["pending", "sent", "delivered", "read", "failed"], {
+  status: z.enum(["pending", "sent"], {
     required_error: "Status is required",
   }),
   repliedTo: z.union([z.string(), z.null()]),
@@ -24,6 +24,19 @@ const MessageBaseSchema = z.object({
   updatedAt: z.string({
     required_error: "updatedAt is required",
   }),
+
+  deliveredTo: z.array(
+    z.string({
+      required_error: "deliveredTo is required",
+    }),
+    { required_error: "deliveredTo is missing" },
+  ),
+  seenBy: z.array(
+    z.string({
+      required_error: "seenBy is required",
+    }),
+    { required_error: "seenBy is missing" },
+  ),
 });
 
 const TextMessageSchema = MessageBaseSchema.extend({

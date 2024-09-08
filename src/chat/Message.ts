@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import {
   IFileMessage,
+  IMessage,
   IMessageBase,
   ITextMessage,
 } from "@/schema/MessageSchema";
@@ -11,10 +12,12 @@ class Message implements IMessageBase {
   chatRoomId: string;
   message: string;
   senderId: string;
-  status: "pending" | "sent" | "delivered" | "read" | "failed";
+  status: "pending" | "sent";
   repliedTo: string | null;
   createdAt: string;
   updatedAt: string;
+  deliveredTo: string[];
+  seenBy: string[];
 
   constructor(
     message: string,
@@ -28,12 +31,29 @@ class Message implements IMessageBase {
     this.senderId = senderId;
     this.status = "pending";
     this.repliedTo = repliedTo;
-    this.createdAt = Date.now().toString();
-    this.updatedAt = Date.now().toString();
+    this.createdAt = new Date().toISOString();
+    this.updatedAt = new Date().toISOString();
+    this.deliveredTo = [];
+    this.seenBy = [];
+  }
+
+  toObject(): IMessageBase {
+    return {
+      messageId: this.messageId,
+      chatRoomId: this.chatRoomId,
+      message: this.message,
+      senderId: this.senderId,
+      status: this.status,
+      repliedTo: this.repliedTo,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      deliveredTo: this.deliveredTo,
+      seenBy: this.seenBy,
+    };
   }
 }
 
-class TextMessage extends Message implements ITextMessage {
+export class TextMessage extends Message implements ITextMessage {
   type: "text";
 
   constructor(
@@ -45,9 +65,16 @@ class TextMessage extends Message implements ITextMessage {
     super(message, senderId, chatRoomId, repliedTo);
     this.type = "text";
   }
+
+  toObject(): IMessage {
+    return {
+      type: this.type,
+      ...super.toObject(),
+    };
+  }
 }
 
-class FileMessage extends Message implements IFileMessage {
+export class FileMessage extends Message implements IFileMessage {
   type: "file";
   file: IFile;
 
@@ -61,5 +88,13 @@ class FileMessage extends Message implements IFileMessage {
     super(message, senderId, chatRoomId, repliedTo);
     this.type = "file";
     this.file = file;
+  }
+
+  toObject(): IMessage {
+    return {
+      type: this.type,
+      file: this.file,
+      ...super.toObject(),
+    };
   }
 }
