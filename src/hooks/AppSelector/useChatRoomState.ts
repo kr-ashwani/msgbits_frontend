@@ -46,6 +46,12 @@ export class ChatRoomState {
   getCommonGroupChat() {
     return this.chatRoomContainer.getCommonGroupChatById(this.chatRoomId);
   }
+  getLastMessageId() {
+    return this.chatRoomContainer.getLastMessageId(this.chatRoomId);
+  }
+  getUpdatedTime() {
+    return this.chatRoomContainer.getUpdatedTime(this.chatRoomId);
+  }
 }
 
 export class ChatRoomContainerState {
@@ -224,6 +230,16 @@ export class ChatRoomContainerState {
         groupChatList.push(chatRoom);
     });
     return groupChatList;
+  }
+
+  getLastMessageId(chatRoomId: string) {
+    return this.chatRoom[chatRoomId]
+      ? this.chatRoom[chatRoomId].lastMessageId
+      : null;
+  }
+  getUpdatedTime(chatRoomId: string) {
+    if (!this.chatRoom[chatRoomId]) return 0;
+    return new Date(this.chatRoom[chatRoomId].updatedAt).getTime();
   }
 }
 const useChatRoomState = () => {

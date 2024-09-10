@@ -3,7 +3,7 @@ import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { useMemo } from "react";
 
-class SelectedChatDispatcher {
+export class SelectedChatDispatcher {
   private dispatch: AppDispatch;
 
   constructor(dispatch: AppDispatch) {

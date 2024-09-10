@@ -1,12 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 import {
-  IFileMessage,
-  IMessage,
-  IMessageBase,
-  ITextMessage,
-} from "@/schema/MessageSchema";
-import { IFile } from "@/schema/FileSchema";
-import {
   IChatRoom,
   IChatRoomBase,
   IGroupChatRoom,
@@ -19,13 +12,20 @@ class ChatRoom implements IChatRoomBase {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
+  lastMessageId: string;
 
-  constructor(members: string[], createdBy: string) {
+  constructor(
+    members: string[],
+    createdBy: string,
+    lastMessageId: string,
+    updateAt?: string,
+  ) {
     this.chatRoomId = uuidv4();
     this.members = members;
     this.createdBy = createdBy;
+    this.lastMessageId = lastMessageId;
     this.createdAt = new Date().toISOString();
-    this.updatedAt = new Date().toISOString();
+    this.updatedAt = updateAt || new Date().toISOString();
   }
 
   toObject() {
@@ -35,6 +35,7 @@ class ChatRoom implements IChatRoomBase {
       createdBy: this.createdBy,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      lastMessageId: this.lastMessageId,
     };
   }
 }
@@ -42,8 +43,13 @@ class ChatRoom implements IChatRoomBase {
 export class PrivateChatRoom extends ChatRoom implements IPrivateChatRoom {
   type: "private";
 
-  constructor(members: string[], createdBy: string) {
-    super(members, createdBy);
+  constructor(
+    members: string[],
+    createdBy: string,
+    lastMessageId: string,
+    updateAt?: string,
+  ) {
+    super(members, createdBy, lastMessageId, updateAt);
     this.type = "private";
   }
 
@@ -67,8 +73,10 @@ export class GroupChatRoom extends ChatRoom implements IGroupChatRoom {
     admins: string[],
     members: string[],
     createdBy: string,
+    lastMessageId: string,
+    updateAt?: string,
   ) {
-    super(members, createdBy);
+    super(members, createdBy, lastMessageId, updateAt);
     this.type = "group";
     this.admins = admins;
     this.chatRoomPicture = chatRoomPicture;

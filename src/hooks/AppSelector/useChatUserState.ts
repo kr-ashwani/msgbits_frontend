@@ -33,6 +33,15 @@ export class ChatUserState {
     });
     return users;
   }
+  getLatestUserCreationTimestamp() {
+    let createdAt: number = 0;
+
+    Object.values(this.chatUser).forEach((user) => {
+      const userCreatedAt = new Date(user.createdAt).getTime();
+      if (userCreatedAt > createdAt) createdAt = userCreatedAt;
+    });
+    return createdAt === 0 ? null : new Date(createdAt).toISOString();
+  }
 }
 
 const useChatUserState = () => {

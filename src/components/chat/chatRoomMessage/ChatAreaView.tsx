@@ -5,10 +5,11 @@ import {
 } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode, useMemo, useRef } from "react";
 import TextMessage from "./TextMessage";
 import TimestampMessage from "./TimestampMessage";
 import FileMessage from "./FileMessage";
+import { useChatViewScrollAnimation } from "@/hooks/useChatViewScrollAnimation";
 
 function renderMessageWithType(messageState: MessageState): ReactNode {
   const rawMessage = messageState.getRawMessage();
@@ -39,9 +40,9 @@ function renderMessages(messageStateArr: MessageState[]): ReactNode {
     message.push(
       <div
         key={rawMessage.messageId}
-        className={`flex w-full ${showAvatar ? "mt-2 md:mt-3" : ""} gap-1 md:gap-3 ${messageState.isMessageFromSelf() ? "flex-row-reverse" : ""}`}
+        className={`flex w-full gap-1 md:gap-3 ${messageState.isMessageFromSelf() ? "flex-row-reverse" : ""} ${showAvatar ? "mt-4" : ""}`}
       >
-        <div>
+        <div className="mt-[4px]">
           {showAvatar ? (
             Avatar({ src: user.profilePicture, size: 30 })
           ) : (
@@ -66,9 +67,15 @@ const ChatAreaView = () => {
       ? messageContainer.getAllMessages()[selectedChatId] || []
       : [];
   }, [messageContainer, selectedChat]);
-  console.log(messageStateArr);
+  const chatView = useRef<HTMLDivElement>(null);
+  useChatViewScrollAnimation(chatView, messageStateArr);
+
   return (
-    <div className="flex grow flex-col overflow-y-auto px-1 pb-5 pt-2 font-manrope md:px-5">
+    <div
+      ref={chatView}
+      className="flex grow flex-col overflow-y-auto px-1 pb-5 pt-2 font-manrope md:px-5"
+    >
+      <div className="w-full grow"></div>
       {renderMessages(messageStateArr)}
     </div>
   );

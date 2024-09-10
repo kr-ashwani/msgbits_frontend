@@ -4,15 +4,15 @@ import { AppDispatch } from "@/lib/store/store";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { useMemo } from "react";
 
-class ChatRoomDispatcher {
+export class ChatRoomDispatcher {
   private dispatch: AppDispatch;
 
   createChatRoom = (payload: IChatRoom) => {
     this.dispatch(addChatRoom(payload));
   };
   updateChatRoom = () => {};
-  getAllChatRoom = (payload: IChatRoom[]) => {
-    this.dispatch(addChatRoom(payload));
+  setChatRooms = (payload: IChatRoom[]) => {
+    if (payload.length) this.dispatch(addChatRoom(payload));
   };
 
   constructor(dispatch: AppDispatch) {

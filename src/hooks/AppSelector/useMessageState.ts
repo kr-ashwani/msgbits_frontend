@@ -24,11 +24,6 @@ export class MessageState {
   getUser() {
     return this.messageContainerState.getUser(this.messageId);
   }
-  getLastMessageTimeFromNow() {
-    return this.messageContainerState.getLastMessageTimeFromNowById(
-      this.messageId,
-    );
-  }
   getRawMessage() {
     return this.messageContainerState.getRawMessage(this.messageId);
   }
@@ -37,6 +32,11 @@ export class MessageState {
   }
   getCreatedAtTime() {
     return this.messageContainerState.getCreatedAtTime(this.messageId);
+  }
+  getLastMessageTimeFromNow() {
+    return this.messageContainerState.getLastMessageTimeFromNowById(
+      this.messageId,
+    );
   }
 }
 class MessageContainerState {
@@ -77,10 +77,6 @@ class MessageContainerState {
     if (this.message[messageId]) return new MessageState(messageId, this);
     return null;
   }
-  getLastMessage(chatRoomId: string) {
-    const messages = this.getMessagesOfChatRoom(chatRoomId);
-    return messages.length ? messages.pop() : null;
-  }
   getAllMessages() {
     const message: { [p: string]: MessageState[] } = {};
 
@@ -102,12 +98,14 @@ class MessageContainerState {
     return fallbackMsg;
   }
   getLastMessageTimeFromNowById(messageId: string) {
-    const fallbackMsg = "No Timestamp";
+    const fallbackMsg = "NA";
     if (this.message[messageId])
       return formatTimeDifference(this.message[messageId].updatedAt);
     return fallbackMsg;
   }
-
+  getLastMessage(messageId: string) {
+    return this.message[messageId] ? new MessageState(messageId, this) : null;
+  }
   isMessageFromSelf(messageId: string) {
     if (!this.user || !this.message[messageId]) return false;
 

@@ -16,16 +16,15 @@ const ChatRoom = ({
   const selectChatState = useSelectedChatState();
   const messageContainerState = useMessageState();
   const messageState = messageContainerState.getLastMessage(
-    selectChatState.getSelectedChatId() || "",
+    chatRoomState.getLastMessageId() || "",
   );
   const isChatSelected =
     selectChatState.getSelectedChatId() === chatRoomState.chatRoomId;
+
   return (
     <div
-      className={`absolute flex h-chatRoom-height w-full shrink-0 cursor-pointer items-center p-2 transition-transform duration-300 hover:bg-msg-hover-bg lg:p-4`}
-      style={{
-        transform: `translateY(calc(${index} * var(--chatRoom-height)))`,
-      }}
+      className={`absolute flex h-chatRoom-height w-full shrink-0 cursor-pointer items-center bg-theme-bg-color p-2 hover:bg-msg-hover-bg lg:p-4`}
+      id={chatRoomState.chatRoomId}
       onClick={() =>
         selectChatDispatch.setSelectedChat(chatRoomState.chatRoomId)
       }

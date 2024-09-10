@@ -49,18 +49,18 @@ const ResetPasswordComponent = () => {
     toast.success(`Password has been successfully changed. Please log in `);
   };
   return (
-    <main className="mb-20 mt-14 flex flex-col items-center gap-10 px-4">
+    <main className="mb-20 mt-14 flex flex-col items-center gap-8 px-4">
       <h2 className="text-center font-cousine text-xl font-bold leading-tight text-black md:text-2xl">
         Reset Your Password
       </h2>
-      <div className="flex flex-col items-center gap-10">
+      <div className="flex flex-col items-center">
         <p className="text-center font-montserrat text-lg">
           Please enter your new password below.
         </p>
       </div>
 
       <form
-        className="flex w-full max-w-sm flex-col gap-10"
+        className="mt-[-10px] flex w-full max-w-sm flex-col gap-5"
         onSubmit={handleSubmit(onSubmit)}
       >
         <PasswordInput

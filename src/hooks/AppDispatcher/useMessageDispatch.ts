@@ -1,3 +1,4 @@
+import { updateLastMessageIdOfChatRoom } from "@/lib/store/features/chat/chatRoomSlice";
 import {
   addMessageMapping,
   addMessageMappingOfChatRoom,
@@ -11,7 +12,7 @@ import { AppDispatch } from "@/lib/store/store";
 import { IMessage } from "@/schema/MessageSchema";
 import { useMemo } from "react";
 
-class MessageDispatcher {
+export class MessageDispatcher {
   private dispatch: AppDispatch;
 
   constructor(dispatch: AppDispatch) {
@@ -21,9 +22,12 @@ class MessageDispatcher {
   createMessage = (payload: IMessage) => {
     this.dispatch(addMessage(payload));
     this.dispatch(addMessageMapping(payload));
+
+    this.dispatch(updateLastMessageIdOfChatRoom(payload));
   };
   updateMessage = (payload: IMessage) => {};
-  getAllMessageOfChatRoom = (payload: Record<string, IMessage[]>) => {
+  setMessagesOfChatRoom = (payload: Record<string, IMessage[]>) => {
+    if (!Object.keys(payload).length) return;
     this.dispatch(addMessageMappingOfChatRoom(payload));
     this.dispatch(addMessageOfChatRoom(payload));
   };

@@ -40,7 +40,7 @@ body ::-webkit-scrollbar-thumb {
 :root {
   --chatRoomContainer-width: 350px;
   --chatRoomDetail-width: 350px;
-  --chatRoom-height: 85px;
+  --chatRoom-height: 82px;
 
   --body-bg-color: #e5ecef;
   --theme-bg-color: #fff;

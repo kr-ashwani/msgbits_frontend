@@ -89,9 +89,9 @@ const useRightSwipeToggle = (
       if (component) registerTouchEvents(component);
     }
     function registerTouchEvents(elem: HTMLElement) {
-      elem.addEventListener("touchstart", touchStart);
-      elem.addEventListener("touchmove", touchMove);
-      elem.addEventListener("touchend", touchEnd);
+      elem.addEventListener("touchstart", touchStart, { passive: true });
+      elem.addEventListener("touchmove", touchMove, { passive: true });
+      elem.addEventListener("touchend", touchEnd, { passive: true });
     }
     function unregisterTouchEvents(elem: HTMLElement) {
       elem.removeEventListener("touchstart", touchStart);

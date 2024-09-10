@@ -5,7 +5,6 @@ import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { z } from "zod";
 
 export interface ChatRoomEmitterMapping {
-  "chatroom-op": string;
   "chatroom-create": IChatRoom;
 }
 
@@ -13,7 +12,7 @@ export interface MessageEmitterMapping {
   "message-create": IMessage;
 }
 export interface SyncEmitterMapping {
-  "sync-updateChatRoomAndMessages": SyncUpdateInput;
+  "sync-updateChatRoom:Messages:ChatUsers": SyncUpdateInput;
 }
 
 export type EmitterMapping = ChatRoomEmitterMapping &
@@ -39,9 +38,10 @@ const ChatUserListenerSchema = {
 
 const SyncListenerSchema = {
   "sync-update": z.string(),
-  "sync-updateChatRoomAndMessages": z.object({
+  "sync-updateChatRoom:Messages:ChatUsers": z.object({
     chatRoom: z.array(ChatRoomSchema),
     message: z.record(z.string(), z.array(MessageSchema)),
+    chatUser: z.array(ChatUserSchema),
   }),
 };
 

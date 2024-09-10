@@ -8,14 +8,14 @@ const TextMessage = ({ messageState }: { messageState: MessageState }) => {
 
   return (
     <div
-      className={`relative mt-3 max-w-[75%] p-3 text-[15px] md:max-w-[60%] md:p-4 ${selfMsg ? "rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
+      className={`relative mt-[6px] max-w-[75%] whitespace-pre-wrap p-2 px-3 text-[15px] md:max-w-[60%] ${selfMsg ? "rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
     >
-      <span className="hyphenate font-medium leading-[21px] md:text-base">
+      <span className="hyphenate font-medium leading-[21px] md:text-sm">
         {rawMessage.message}
       </span>
-      <span className="inline-block h-auto w-[68px]"></span>
+      <span className="inline-block h-auto w-[54px]"></span>
       <div
-        className={`absolute bottom-[6px] right-[14px] font-manrope text-xs font-medium ${selfMsg ? "text-white-200" : "text-msg-message"}`}
+        className={`absolute bottom-[2px] right-[12px] font-manrope text-[10px] font-medium ${selfMsg ? "text-white-200" : "text-msg-message"}`}
       >
         {messageState.getTime()}
       </div>

@@ -1,5 +1,4 @@
 "use client";
-
 import {
   ChatRoomState,
   useChatRoomState,
@@ -7,16 +6,17 @@ import {
 
 import { useEffect, useMemo, useState } from "react";
 import ChatRoom from "./ChatRoom";
+import { useAnimateChatRooms } from "@/hooks/useAnimateChatRooms";
 
 const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
   const chatRoomContainerState = useChatRoomState();
-
   const originalChatRoomList = useMemo(() => {
     const list = chatRoomContainerState.getChatRooms();
     return list;
   }, [chatRoomContainerState]);
 
   const [chatRoomList, setChatRoomList] = useState<ChatRoomState[]>([]);
+  useAnimateChatRooms(chatRoomList);
 
   useEffect(() => {
     if (chatRoomSearch)
@@ -34,12 +34,17 @@ const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
         }, []),
       );
     else setChatRoomList(originalChatRoomList);
+
+    // sorted by updatedAt desc
+    setChatRoomList((state) =>
+      [...state].sort((a, b) => b.getUpdatedTime() - a.getUpdatedTime()),
+    );
   }, [setChatRoomList, originalChatRoomList, chatRoomSearch]);
 
   return (
     <section
       id="chatRoomContainer"
-      className="relative flex w-full flex-col bg-[--theme-bg-color]"
+      className="relative z-0 flex w-full flex-col bg-[--theme-bg-color]"
     >
       {chatRoomList.map((chatRoomState, index) => (
         <ChatRoom

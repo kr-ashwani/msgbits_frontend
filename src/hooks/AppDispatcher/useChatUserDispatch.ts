@@ -13,7 +13,7 @@ class ChatUserDispatcher {
   createChatUser = () => {};
   updateChatUser = () => {};
   getAllChatUser = (payload: IChatUser[]) => {
-    this.dispatch(addChatUser(payload));
+    if (payload.length) this.dispatch(addChatUser(payload));
   };
 }
 
