@@ -12,6 +12,8 @@
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@hookform/resolvers": "^3.6.0",
+    "@radix-ui/react-alert-dialog": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
     "@reduxjs/toolkit": "^2.2.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

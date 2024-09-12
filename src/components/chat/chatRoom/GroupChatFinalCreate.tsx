@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SliderHeader from "./SliderHeader";
 import { NewGroupType } from "./ChatRoomWrapper";
 import useSlide from "@/components/StackSlider/hooks/useSlide";
@@ -7,7 +7,9 @@ import AvatarUpdatable from "@/components/utility/AvatarUpdatable";
 import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import GroupChatNewMembers from "./GroupChatNewMembers";
+import { useChatService } from "@/hooks/chat/useChatService";
 
+const DefaultUrl = "/assets/groupChat.png";
 const GroupChatFinalCreate = ({
   name,
   newGroup,
@@ -19,6 +21,8 @@ const GroupChatFinalCreate = ({
 }) => {
   const slider = useSlide();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [chatRoomPicture, setChatRoomPicture] = useState(DefaultUrl);
+  const chatService = useChatService();
 
   useEffect(() => {
     async function focus() {
@@ -29,13 +33,23 @@ const GroupChatFinalCreate = ({
     }
     focus();
   }, []);
+
+  function handleGroupChatCreation() {
+    const members = newGroup.members.map((memb) => memb._id);
+    chatService.createNewGroupChat({
+      chatName: newGroup.name,
+      chatRoomPicture,
+      members,
+    });
+    slider.trigerSlider("close");
+  }
   return (
     <div className="relativeflex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
       <SliderHeader heading="Group Description" closingSliderName={name} />
 
       {newGroup.name && newGroup.members.length ? (
         <div
-          onClick={() => slider.trigerSlider("close")}
+          onClick={handleGroupChatCreation}
           className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
         >
           {ChatSvg("checkIcon")}
@@ -45,7 +59,8 @@ const GroupChatFinalCreate = ({
         <AvatarUpdatable
           className="self-center text-white"
           avatarClassName="text-white"
-          src="/icons/groupIcon.png"
+          src={chatRoomPicture}
+          setSrc={setChatRoomPicture}
           size={250}
           processImageFn={(e) => {
             return new Promise<string>((res, rej) => {
@@ -56,13 +71,13 @@ const GroupChatFinalCreate = ({
 
                 reader.onload = function (e) {
                   const dataURL = e.target?.result; // Data URL of the file
-                  if (typeof dataURL === "string") res(dataURL || "");
-                  else res("");
+                  if (typeof dataURL === "string") res(dataURL || DefaultUrl);
+                  else res(DefaultUrl);
                 };
 
                 reader.readAsDataURL(file); // Read the file as a data URL
               } else {
-                res("");
+                res(DefaultUrl);
               }
             });
           }}

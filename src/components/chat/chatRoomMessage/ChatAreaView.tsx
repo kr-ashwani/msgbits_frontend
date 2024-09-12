@@ -8,7 +8,7 @@ import {
   resetMsgStatus,
   updateMsgStatusToDom,
 } from "./utils/updateMsgStatusToDom";
-import { useEmitMessageDelivered } from "@/hooks/useEmitMessageDelivered";
+import { useEmitMessageSeen } from "@/hooks/useEmitMessageSeen";
 
 const ChatAreaView = () => {
   const messageContainer = useMessageState();
@@ -22,7 +22,7 @@ const ChatAreaView = () => {
   const chatView = useRef<HTMLDivElement>(null);
   useChatViewScrollAnimation(chatView, messageStateArr);
   const msgStatus = useRef<MsgStatus>(resetMsgStatus());
-  useEmitMessageDelivered(messageStateArr, selectedChat);
+  useEmitMessageSeen(messageStateArr, selectedChat);
 
   useEffect(() => {
     updateMsgStatusToDom(msgStatus.current, "show");

@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "./Avatar";
 import { ChatSvg } from "../svg/chatSvg";
 import { cn } from "@/lib/utils";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Svg from "../svg";
 
 const AvatarUpdatable = ({
   src,
   size,
+  setSrc,
   className = "",
   avatarClassName = "",
   onClick,
   processImageFn,
 }: {
-  src: string | StaticImport;
+  src: string;
   size: number;
+  setSrc: React.Dispatch<React.SetStateAction<string>>;
   className?: string;
   avatarClassName?: string;
   onClick?: () => void;
   processImageFn?: (e: React.ChangeEvent<HTMLInputElement>) => Promise<string>;
 }) => {
-  const [imgSrc, setImgSrc] = useState(src);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setImgSrc(src);
-  }, [src]);
 
   return (
     <div
@@ -35,7 +32,7 @@ const AvatarUpdatable = ({
       style={{ width: size, height: size }}
     >
       <Avatar
-        src={imgSrc}
+        src={src}
         size={size}
         className={avatarClassName}
         onClick={onClick}
@@ -58,7 +55,7 @@ const AvatarUpdatable = ({
             onChange={async (e) => {
               setLoading(true);
               try {
-                if (processImageFn) setImgSrc(await processImageFn(e));
+                if (processImageFn) setSrc(await processImageFn(e));
               } finally {
                 setLoading(false);
               }

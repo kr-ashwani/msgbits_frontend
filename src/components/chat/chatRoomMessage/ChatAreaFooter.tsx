@@ -1,6 +1,7 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
 import { MessageSvg } from "@/components/svg/MessageSvg";
-import { useMessageService } from "@/hooks/chat/useMessageService";
+import { useChatService } from "@/hooks/chat/useChatService";
+
 import { useGetEmojiPickerHeight } from "@/hooks/useGetEmojiPickerHeight";
 import EmojiPicker from "@emoji-mart/react";
 import React, { useCallback, useRef, useState } from "react";
@@ -8,7 +9,7 @@ import React, { useCallback, useRef, useState } from "react";
 const ChatAreaFooter = () => {
   const messageDiv = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState<string>("");
-  const messageService = useMessageService();
+  const chatService = useChatService();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const pickerHeight = useGetEmojiPickerHeight();
 
@@ -19,7 +20,7 @@ const ChatAreaFooter = () => {
     if (!message.trim()) return setMessage("");
     setMessage("");
     messageDiv.current.innerText = "";
-    messageService.sendNewTextMessage(message.trim());
+    chatService.sendNewTextMessage(message.trim());
   }
 
   const toggleEmojiPicker = useCallback(() => {

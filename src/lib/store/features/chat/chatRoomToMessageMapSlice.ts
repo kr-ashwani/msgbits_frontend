@@ -13,21 +13,23 @@ export const chatRoomToMessageMapSlice = createSlice({
   reducers: {
     addMessageMapping(state, action: PayloadAction<IMessage>) {
       const msg = action.payload;
-      state[msg.chatRoomId] && !state[msg.chatRoomId].includes(msg.messageId)
-        ? state[msg.chatRoomId].push(msg.messageId)
-        : (state[msg.chatRoomId] = [msg.messageId]);
+      const msgMapping = state[msg.chatRoomId];
+      if (msgMapping) {
+        if (!msgMapping.includes(msg.messageId)) msgMapping.push(msg.messageId);
+      } else state[msg.chatRoomId] = [msg.messageId];
     },
     addMessageMappingOfChatRoom(
       state,
       action: PayloadAction<Record<string, IMessage[]>>,
     ) {
       Object.values(action.payload).forEach((msgArr) => {
-        msgArr.forEach((msg) =>
-          state[msg.chatRoomId] &&
-          !state[msg.chatRoomId].includes(msg.messageId)
-            ? state[msg.chatRoomId].push(msg.messageId)
-            : (state[msg.chatRoomId] = [msg.messageId]),
-        );
+        msgArr.forEach((msg) => {
+          const msgMapping = state[msg.chatRoomId];
+          if (msgMapping) {
+            if (!msgMapping.includes(msg.messageId))
+              msgMapping.push(msg.messageId);
+          } else state[msg.chatRoomId] = [msg.messageId];
+        });
       });
     },
   },

@@ -1,6 +1,10 @@
-import { addChatRoom } from "@/lib/store/features/chat/chatRoomSlice";
+import {
+  addChatRoom,
+  addNewMembers,
+} from "@/lib/store/features/chat/chatRoomSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
+import { ChatAddNewMember } from "@/schema/ChatAddNewMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { useMemo } from "react";
 
@@ -13,6 +17,10 @@ export class ChatRoomDispatcher {
   updateChatRoom = () => {};
   setChatRooms = (payload: IChatRoom[]) => {
     if (payload.length) this.dispatch(addChatRoom(payload));
+  };
+
+  addNewMembers = (payload: ChatAddNewMember) => {
+    this.dispatch(addNewMembers(payload));
   };
 
   constructor(dispatch: AppDispatch) {

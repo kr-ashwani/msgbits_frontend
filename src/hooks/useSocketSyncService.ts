@@ -11,6 +11,7 @@ import {
   ChatUserState,
   useChatUserState,
 } from "./AppSelector/useChatUserState";
+import { socketState } from "@/lib/store/features/socket/socketSlice";
 
 export type SyncUpdateInput = {
   chatRoom: {
@@ -20,6 +21,7 @@ export type SyncUpdateInput = {
     };
   };
   lastChatUserCreatedAt: string | null;
+  socketLastDisconnectedAt: string | null;
 };
 
 class SocketSyncService {
@@ -27,17 +29,20 @@ class SocketSyncService {
   private chatRoomContainer: ChatRoomContainerState;
   private messageState: messageState;
   private chatUserState: ChatUserState;
+  private socketState: socketState;
 
   constructor(
     socketQueue: SocketEmitterQueue,
     chatRoomContainer: ChatRoomContainerState,
     messageState: messageState,
     chatUserState: ChatUserState,
+    socketState: socketState,
   ) {
     this.socketQueue = socketQueue;
     this.chatRoomContainer = chatRoomContainer;
     this.messageState = messageState;
     this.chatUserState = chatUserState;
+    this.socketState = socketState;
   }
 
   listenForSyncInitiator = (payload: string) => {
@@ -45,6 +50,7 @@ class SocketSyncService {
       chatRoom: {},
       lastChatUserCreatedAt:
         this.chatUserState.getLatestUserCreationTimestamp(),
+      socketLastDisconnectedAt: this.socketState.socketLastDisconnectedAt,
     };
 
     this.chatRoomContainer.getChatRooms().forEach((chatRoomState) => {
@@ -68,6 +74,7 @@ export const useSocketSyncService = () => {
   const chatRoomContainer = useChatRoomState();
   const messageState = useAppSelector((state) => state.chat.message);
   const chatUserState = useChatUserState();
+  const socketState = useAppSelector((state) => state.chat.socket);
 
   const socketSyncService = useMemo(
     () =>
@@ -76,8 +83,9 @@ export const useSocketSyncService = () => {
         chatRoomContainer,
         messageState,
         chatUserState,
+        socketState,
       ),
-    [socketQueue, chatRoomContainer, messageState, chatUserState],
+    [socketQueue, chatRoomContainer, messageState, chatUserState, socketState],
   );
 
   return socketSyncService;

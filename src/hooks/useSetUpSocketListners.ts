@@ -6,11 +6,13 @@ import { useChatUserDispatch } from "./AppDispatcher/useChatUserDispatch";
 import { useSocketSyncService } from "./useSocketSyncService";
 import { useSocketEmiterService } from "./useSocketEmiterService";
 import { IMessage } from "@/schema/MessageSchema";
+import { useUpdateSocketLastDisconnect } from "./useUpdateSocketLastDisconnect";
 
 /**
  * All socket listeners for the App must be registered here
  */
 export const useSetUpSocketListners = () => {
+  useUpdateSocketLastDisconnect();
   const { socket } = useSocket();
   const messageDispatch = useMessageDispatch();
   const chatRoomDispatch = useChatRoomDispatch();
@@ -23,13 +25,14 @@ export const useSetUpSocketListners = () => {
       // Listening to all message events
       socket.on("message-create", (payload) => {
         messageDispatch.createMessage(payload);
-        socketService.msgDeliveredTo(payload);
+        socketService.updateMsgStatus("delivered", payload);
       }),
       socket.on("message-delivered", messageDispatch.updateDeliveredTo),
       socket.on("message-seen", messageDispatch.updateSeenBy),
       socket.on("message-sent", messageDispatch.updateMsgSent),
       // Listening to all chatRoom events
       socket.on("chatroom-create", chatRoomDispatch.createChatRoom),
+      socket.on("chatroom-addNewMembers", chatRoomDispatch.addNewMembers),
       // Listening to all chatUser events
       socket.on("chatuser-create", chatUserDispatch.createChatUser),
       //Listening to Sync Service
@@ -43,7 +46,7 @@ export const useSetUpSocketListners = () => {
           totalMsg.push(...msgArr),
         );
 
-        socketService.msgDeliveredTo(totalMsg);
+        socketService.updateMsgStatus("delivered", totalMsg);
         chatUserDispatch.getAllChatUser(payload.chatUser);
       }),
     ];

@@ -7,6 +7,8 @@ import { useState, useMemo, useEffect } from "react";
 import { NewGroupType } from "../chatRoom/ChatRoomWrapper";
 import GroupChatNewMembers from "../chatRoom/GroupChatNewMembers";
 import SliderHeader from "../chatRoom/SliderHeader";
+import { Dialog } from "@/components/utility/Dialog";
+import { useChatService } from "@/hooks/chat/useChatService";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -36,6 +38,7 @@ const AddUserToChatRoom = ({
     () => chatRoomState.getUsersExceptChatMembers(),
     [chatRoomState],
   );
+  const chatService = useChatService();
 
   useEffect(() => {
     if (searchUser)
@@ -55,17 +58,27 @@ const AddUserToChatRoom = ({
     else setUserList(originalUserList);
   }, [originalUserList, searchUser, setUserList]);
 
+  function handleAddChatRoomUser() {
+    chatService.addMoreMembersToChatRoom(
+      chatRoomState.chatRoomId,
+      newGroup.members,
+    );
+    slider.trigerSlider("close", name);
+  }
+
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
       <SliderHeader heading="Add Members" closingSliderName={name} />
 
       {newGroup.members.length ? (
-        <div
-          onClick={() => slider.trigerSlider("close", name)}
-          className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
+        <Dialog
+          description={`You are about to add ${newGroup.members.length} members to ${chatRoomState.getChatRoomName()} Group.`}
+          continueCallback={handleAddChatRoomUser}
         >
-          {ChatSvg("checkIcon")}
-        </div>
+          <div className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
+            {ChatSvg("checkIcon")}
+          </div>
+        </Dialog>
       ) : null}
 
       <GroupChatNewMembers newGroup={newGroup} setNewGroup={setNewGroup} />

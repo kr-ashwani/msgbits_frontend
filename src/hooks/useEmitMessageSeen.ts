@@ -4,7 +4,7 @@ import { SelectedChatState } from "./AppSelector/useSelectedChatState";
 import { useSocketEmiterService } from "./useSocketEmiterService";
 import { IMessage } from "@/schema/MessageSchema";
 
-export const useEmitMessageDelivered = (
+export const useEmitMessageSeen = (
   messageStateArr: MessageState[],
   selectedChat: SelectedChatState,
 ) => {
@@ -39,6 +39,6 @@ export const useEmitMessageDelivered = (
     if (tempLastDeliveredMsg)
       chatRoomLastDeliveredMsg.current[chatRoom] = tempLastDeliveredMsg;
     // emit all message which needs to be marked as delivered
-    socketService.msgSeenBy(emitMsgArr);
+    socketService.updateMsgStatus("seen", emitMsgArr);
   }, [msgArr, chatRoom, socketService, selectedChat]);
 };

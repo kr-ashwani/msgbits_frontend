@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import {
   IFileMessage,
+  IInfoMessage,
   IMessage,
   IMessageBase,
   ITextMessage,
@@ -64,6 +65,47 @@ export class TextMessage extends Message implements ITextMessage {
   ) {
     super(message, senderId, chatRoomId, repliedTo);
     this.type = "text";
+  }
+
+  toObject(): IMessage {
+    return {
+      type: this.type,
+      ...super.toObject(),
+    };
+  }
+}
+
+export class InfoMessage extends Message implements IInfoMessage {
+  type: "info";
+
+  constructor(
+    message: string,
+    senderId: string,
+    chatRoomId: string,
+    repliedTo: string | null = null,
+  ) {
+    super(message, senderId, chatRoomId, repliedTo);
+    this.type = "info";
+  }
+
+  toObject(): IMessage {
+    return {
+      type: this.type,
+      ...super.toObject(),
+    };
+  }
+}
+
+export class TimestampMessage extends Message implements IInfoMessage {
+  type: "info";
+
+  constructor(
+    senderId: string,
+    chatRoomId: string,
+    repliedTo: string | null = null,
+  ) {
+    super("TIMESTAMP", senderId, chatRoomId, repliedTo);
+    this.type = "info";
   }
 
   toObject(): IMessage {

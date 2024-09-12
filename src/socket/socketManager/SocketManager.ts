@@ -55,7 +55,6 @@ export class SocketManager {
       const result = ListenerSchema[event].safeParse(payload);
       if (result.success) callback(result.data);
       else {
-        console.log(result.error);
         toast.error(
           `ValidationError: server did not correctly send ${event} event data`,
         );
@@ -114,6 +113,18 @@ export class SocketManager {
     } else {
       this.socket.removeAllListeners();
     }
+  }
+
+  public onDisconnect(callback: (reason: string) => void) {
+    function handler(reason: string) {
+      callback(reason);
+    }
+    this.socket.on("disconnect", handler);
+    return handler;
+  }
+
+  public offDisconnect(callback: (reason: string) => void) {
+    this.socket.off("disconnect", callback);
   }
 
   public send(data: any, callback?: (error: any) => void): void {

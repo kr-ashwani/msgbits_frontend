@@ -6,6 +6,7 @@ import FileMessage from "../FileMessage";
 import TextMessage from "../TextMessage";
 import TimestampMessage from "../TimestampMessage";
 import { MsgStatus, resetMsgStatus } from "./updateMsgStatusToDom";
+import InfoMessage from "../InfoMessage";
 
 function renderMessageWithType(messageState: MessageState): ReactNode {
   const rawMessage = messageState.getRawMessage();
@@ -14,8 +15,12 @@ function renderMessageWithType(messageState: MessageState): ReactNode {
   switch (rawMessage.type) {
     case "text":
       return <TextMessage messageState={messageState} />;
-    case "timestamp":
-      return <TimestampMessage messageState={messageState} />;
+    case "info":
+      return rawMessage.message === "TIMESTAMP" ? (
+        <TimestampMessage messageState={messageState} />
+      ) : (
+        <InfoMessage messageState={messageState} />
+      );
     case "file":
       return <FileMessage messageState={messageState} />;
     default:
@@ -38,11 +43,13 @@ export function renderMessages(
     const rawMessage = messageState.getRawMessage();
     if (!user || !rawMessage) return;
 
-    const showAvatar = userId !== rawMessage.senderId;
+    const showAvatar =
+      rawMessage.type === "info" ? false : userId !== rawMessage.senderId;
     const selfMessage = messageState.isMessageFromSelf();
     const msgId = rawMessage.messageId;
 
     const renderAvatar = () => {
+      if (rawMessage.type === "info") return null;
       if (!selfMessage) {
         return showAvatar ? (
           Avatar({ src: user.profilePicture, size: 30 })
@@ -74,11 +81,30 @@ export function renderMessages(
     if (showAvatar) userId = rawMessage.senderId;
 
     const status = messageState.getSelfMessageStatus(selectedChat);
-    if (status === "pending") msgStatus.current.lastPendingMsg = msgId;
-    else if (status === "sent") msgStatus.current.lastSentMsg = msgId;
-    else if (status === "delivered") msgStatus.current.lastDeliveredMsg = msgId;
-    else if (status === "seen") msgStatus.current.lastSeenMsg = msgId;
+    if (status) updateMsgStatus(status, msgStatus, msgId);
   });
 
   return message;
 }
+type Status = "pending" | "sent" | "seen" | "delivered";
+const updateMsgStatus = (
+  status: Status,
+  msgStatus: React.MutableRefObject<MsgStatus>,
+  messageId: string,
+) => {
+  const obj: Record<Status, keyof MsgStatus> = {
+    pending: "lastPendingMsg",
+    sent: "lastSentMsg",
+    delivered: "lastDeliveredMsg",
+    seen: "lastSeenMsg",
+  };
+
+  const entries = Object.entries(obj);
+  for (let i = 0; i < entries.length; i++) {
+    const [key, value] = entries[i];
+    if (key === status) {
+      msgStatus.current[value] = messageId;
+      break;
+    } else msgStatus.current[value] = null;
+  }
+};

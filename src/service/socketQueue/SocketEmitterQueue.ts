@@ -90,7 +90,7 @@ export class SocketEmitterQueue {
   }
 
   private processEventQueue(queueId: string): void {
-    if (this.queueProcessingMap.get(queueId) || !this.socket.isConnected)
+    if (this.queueProcessingMap.get(queueId) || !this.socket.isConnected())
       return;
 
     const queue = this.queueMap.get(queueId)!;
