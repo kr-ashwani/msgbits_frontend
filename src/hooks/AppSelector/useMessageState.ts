@@ -6,6 +6,7 @@ import { formatTimeDifference } from "@/utils/custom/formatTimeDifference";
 import { ChatUserState, useChatUserState } from "./useChatUserState";
 import { IUser } from "@/schema/userSchema";
 import { format } from "date-fns";
+import { SelectedChatState } from "./useSelectedChatState";
 
 export class MessageState {
   public messageId: string;
@@ -37,6 +38,21 @@ export class MessageState {
     return this.messageContainerState.getLastMessageTimeFromNowById(
       this.messageId,
     );
+  }
+  getMessageStatus(selectedChat: SelectedChatState) {
+    return this.messageContainerState.getMessageStatus(
+      this.messageId,
+      selectedChat,
+    );
+  }
+  getSelfMessageStatus(selectedChat: SelectedChatState) {
+    return this.messageContainerState.getSelfMessageStatus(
+      this.messageId,
+      selectedChat,
+    );
+  }
+  isMessageAlreadySeen() {
+    return this.messageContainerState.isMessageAlreadySeen(this.messageId);
   }
 }
 class MessageContainerState {
@@ -122,6 +138,31 @@ class MessageContainerState {
   getTime(messageId: string) {
     if (!this.message[messageId]) return null;
     return format(this.message[messageId].updatedAt, "hh:mm a");
+  }
+  getMessageStatus(messageId: string, selectedChat: SelectedChatState) {
+    const msg = this.message[messageId];
+    const chatRoom = selectedChat.getChatState()?.getRawChatRoom();
+    if (!msg || !chatRoom) return "pending";
+
+    if (msg.status === "pending") return "pending";
+    else if (msg.seenBy.length === chatRoom.members.length - 1) return "seen";
+    else if (msg.deliveredTo.length === chatRoom.members.length - 1)
+      return "delivered";
+    else return "sent";
+  }
+  getSelfMessageStatus(messageId: string, selectedChat: SelectedChatState) {
+    const msg = this.message[messageId];
+    if (!msg) return null;
+    if (msg.senderId === this.user?._id)
+      return this.getMessageStatus(messageId, selectedChat);
+    return null;
+  }
+  isMessageAlreadySeen(messageId: string) {
+    const msg = this.message[messageId];
+    if (!msg || !this.user) return false;
+    if (msg.senderId === this.user._id) return false;
+    if (msg.seenBy.includes(this.user._id)) return true;
+    return false;
   }
 }
 

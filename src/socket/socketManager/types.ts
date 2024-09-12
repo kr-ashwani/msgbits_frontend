@@ -1,7 +1,12 @@
+import { MessageStatusEmit } from "@/hooks/useSocketEmiterService";
 import { SyncUpdateInput } from "@/hooks/useSocketSyncService";
 import { ChatRoomSchema, IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
 import { IMessage, MessageSchema } from "@/schema/MessageSchema";
+import {
+  MessageStatus,
+  MessageStatusSchema,
+} from "@/schema/MessageStatusSchema";
 import { z } from "zod";
 
 export interface ChatRoomEmitterMapping {
@@ -10,6 +15,8 @@ export interface ChatRoomEmitterMapping {
 
 export interface MessageEmitterMapping {
   "message-create": IMessage;
+  "message-delivered": MessageStatusEmit[];
+  "message-seen": MessageStatusEmit[];
 }
 export interface SyncEmitterMapping {
   "sync-updateChatRoom:Messages:ChatUsers": SyncUpdateInput;
@@ -29,6 +36,9 @@ const MessageListenerSchema = {
   "message-create": MessageSchema,
   "message-update": MessageSchema,
   "message-chatroom": z.record(z.string(), z.array(MessageSchema)),
+  "message-delivered": MessageStatusSchema,
+  "message-seen": MessageStatusSchema,
+  "message-sent": z.string(),
 };
 const ChatUserListenerSchema = {
   "chatuser-create": ChatUserSchema,

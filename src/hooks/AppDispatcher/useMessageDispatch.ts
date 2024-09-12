@@ -6,10 +6,14 @@ import {
 import {
   addMessage,
   addMessageOfChatRoom,
+  updateDeliveredTo,
+  updateMsgSent,
+  updateSeenBy,
 } from "@/lib/store/features/chat/messageSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { IMessage } from "@/schema/MessageSchema";
+import { MessageStatus } from "@/schema/MessageStatusSchema";
 import { useMemo } from "react";
 
 export class MessageDispatcher {
@@ -30,6 +34,15 @@ export class MessageDispatcher {
     if (!Object.keys(payload).length) return;
     this.dispatch(addMessageMappingOfChatRoom(payload));
     this.dispatch(addMessageOfChatRoom(payload));
+  };
+  updateDeliveredTo = (payload: MessageStatus) => {
+    this.dispatch(updateDeliveredTo(payload));
+  };
+  updateSeenBy = (payload: MessageStatus) => {
+    this.dispatch(updateSeenBy(payload));
+  };
+  updateMsgSent = (payload: string) => {
+    this.dispatch(updateMsgSent(payload));
   };
 }
 

@@ -32,6 +32,18 @@ export class SocketEmitterQueue {
     this.socket.io().on("connect", () => this.processAllQueues());
   }
 
+  /**
+   * Emit directly will emit event instantly if socket is connected
+   * if Socket is bot connected then it will ignore
+   * @param eventName
+   * @param data
+   */
+  emitDirectly<T extends keyof EmitterMapping>(
+    eventName: T,
+    data: EmitterMapping[T],
+  ) {
+    if (this.socket.isConnected()) this.socket.emit(eventName, data);
+  }
   emitWithQueueId<T extends keyof EmitterMapping>(
     queueId: string,
     eventName: T,
@@ -63,7 +75,11 @@ export class SocketEmitterQueue {
     eventName: T,
     data: MessageEmitterMapping[T],
   ) {
-    this.emitWithQueueId(`${chatRoomId}-msg`, eventName, data);
+    this.emitWithQueueId(
+      `${chatRoomId}-msg`,
+      eventName as keyof EmitterMapping,
+      data,
+    );
   }
 
   emitChatRoom<T extends keyof ChatRoomEmitterMapping>(
