@@ -25,8 +25,8 @@ import { messageState } from "@/lib/store/features/chat/messageSlice";
 import { IMessage } from "@/schema/MessageSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { joinArrayWithAnd } from "@/utils/custom/joinArrayWithAnd";
-import { LeaveChatRoom } from "@/schema/LeaveChatRoomSchema";
-import { sleep } from "@/components/StackSlider/utils/sleep";
+import { toast } from "@/utils/toast/Toast";
+import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 
 interface NewGroupChatParams {
   chatName: string;
@@ -167,7 +167,7 @@ class ChatService {
     });
 
     const infoMsg = new InfoMessage(
-      `${capitalizeStr(this.user.name)} added ${joinArrayWithAnd(membersName)}`,
+      `${capitalizeStr(this.user.name)} added ${joinArrayWithAnd(membersName, true)}`,
       this.user._id,
       chatRoom.chatRoomId,
     );
@@ -180,9 +180,13 @@ class ChatService {
     this.addToStoreAndEmitMsg(infoMsg.toObject());
   }
   async exitChatRoom(chatRoomId: string) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom) return;
     if (this.selectedChat.id !== chatRoomId || !this.user) return;
+    if (!this.chatRoom[this.selectedChat.id]?.members?.includes(this.user._id))
+      return;
 
-    const payload: LeaveChatRoom = {
+    const payload: ChatRoomAndMember = {
       chatRoomId,
       memberId: this.user._id,
     };
@@ -197,9 +201,78 @@ class ChatService {
     this.messageDispatch.createMessage(msg);
     this.chatRoomDispatch.exitChatRoom(payload);
 
-    // emitting both to common queue which after info message is process then only remove user
+    // emitting both to common queue which ensures after info message is processed then only remove user
     this.socketQueue.emit("message-create", msg);
     this.socketQueue.emit("chatroom-leave", payload);
+  }
+
+  async removeUserFromChatRoom(
+    chatRoomId: string,
+    memberId: string,
+    memberName: string,
+  ) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom || chatRoom.type === "private" || !this.user) return;
+    // user itself must be admin to perform this action
+    if (!chatRoom.admins.includes(this.user._id || ""))
+      toast.error("User doesnot have privilege to remove user");
+
+    const infoMsg = new InfoMessage(
+      `${capitalizeStr(this.user.name)} removed ${capitalizeStr(memberName)}`,
+      this.user._id,
+      chatRoom.chatRoomId,
+    );
+
+    const payload = { chatRoomId, memberId };
+    this.chatRoomDispatch.exitChatRoom(payload);
+
+    // emitting both to common queue which ensures after info message is processed then only remove user
+    this.socketQueue.emit("message-create", infoMsg.toObject());
+    this.socketQueue.emit("chatroom-removeUser", payload);
+  }
+  async demoteAdminInChatRoom(
+    chatRoomId: string,
+    memberId: string,
+    memberName: string,
+  ) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom || chatRoom.type === "private" || !this.user) return;
+    // user itself must be admin to perform this action
+    if (!chatRoom.admins.includes(this.user?._id || ""))
+      toast.error("User doesnot have privilege to demote user to admin");
+
+    const infoMsg = new InfoMessage(
+      `${capitalizeStr(this.user.name)} demoted ${capitalizeStr(memberName)} from admin`,
+      this.user._id,
+      chatRoom.chatRoomId,
+    );
+
+    const payload = { chatRoomId, memberId };
+    this.chatRoomDispatch.removeAdmin(payload);
+    this.socketQueue.emitChatRoom("chatroom-removeAdmin", payload);
+    this.addToStoreAndEmitMsg(infoMsg.toObject());
+  }
+  async promoteToAdminInChatRoom(
+    chatRoomId: string,
+    memberId: string,
+    memberName: string,
+  ) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom || chatRoom.type === "private" || !this.user) return;
+    // user itself must be admin to perform this action
+    if (!chatRoom.admins.includes(this.user?._id || ""))
+      toast.error("User doesnot have privilege to promote user to admin");
+
+    const infoMsg = new InfoMessage(
+      `${capitalizeStr(this.user.name)} made ${capitalizeStr(memberName)} admin`,
+      this.user._id,
+      chatRoom.chatRoomId,
+    );
+
+    const payload = { chatRoomId, memberId };
+    this.chatRoomDispatch.makeAdmin(payload);
+    this.socketQueue.emitChatRoom("chatroom-makeAdmin", payload);
+    this.addToStoreAndEmitMsg(infoMsg.toObject());
   }
 }
 

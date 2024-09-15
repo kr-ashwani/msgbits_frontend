@@ -1,4 +1,4 @@
-import { LeaveChatRoom } from "@/schema/LeaveChatRoomSchema";
+import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { ChatAddNewMember } from "./../../../../schema/ChatAddNewMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { IMessage } from "@/schema/MessageSchema";
@@ -38,7 +38,7 @@ export const chatRoomSlice = createSlice({
         if (!chatRoom.members.includes(membId)) chatRoom.members.push(membId);
       });
     },
-    exitChatRoom(state, action: PayloadAction<LeaveChatRoom>) {
+    exitChatRoom(state, action: PayloadAction<ChatRoomAndMember>) {
       const chatRoom = state[action.payload.chatRoomId];
       if (!chatRoom) return;
 
@@ -52,6 +52,23 @@ export const chatRoomSlice = createSlice({
         delete state[chatRoom.chatRoomId];
       }
     },
+    chatRoomMakeAdmin(state, action: PayloadAction<ChatRoomAndMember>) {
+      const chatRoom = state[action.payload.chatRoomId];
+      if (!chatRoom || chatRoom.type === "private") return;
+
+      // Add the memberId in admin array
+      if (!chatRoom.admins.includes(action.payload.memberId))
+        chatRoom.admins.push(action.payload.memberId);
+    },
+    chatRoomRemoveAdmin(state, action: PayloadAction<ChatRoomAndMember>) {
+      const chatRoom = state[action.payload.chatRoomId];
+      if (!chatRoom || chatRoom.type === "private") return;
+
+      // Remove the memberId from the admin array
+      chatRoom.admins = chatRoom.admins.filter(
+        (id) => id !== action.payload.memberId,
+      );
+    },
   },
 });
 
@@ -60,6 +77,8 @@ export const {
   updateLastMessageIdOfChatRoom,
   addNewMembers,
   exitChatRoom,
+  chatRoomMakeAdmin,
+  chatRoomRemoveAdmin,
 } = chatRoomSlice.actions;
 
 export default chatRoomSlice.reducer;
