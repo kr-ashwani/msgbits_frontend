@@ -15,31 +15,65 @@ interface DialogProps {
   children: ReactNode;
   title?: string;
   description: string;
-  continueCallback: () => void;
-  cancelCallback?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  cancelButtonText?: string;
+  confirmButtonText?: string;
+  confirmClassName?: string;
+  cancelClassName?: string;
+  className?: string;
+  reverseButtonOrder?: boolean;
+  alertDialogProps?: Omit<React.ComponentProps<typeof AlertDialog>, "children">;
 }
 
 export function Dialog({
   children,
   title = "Are you sure?",
   description,
-  continueCallback,
-  cancelCallback,
+  onConfirm,
+  onCancel,
+  cancelButtonText = "Cancel",
+  confirmButtonText = "Continue",
+  className = "",
+  cancelClassName = "",
+  confirmClassName = "",
+  reverseButtonOrder = false,
+  alertDialogProps = {},
 }: DialogProps) {
+  const buttons = [
+    cancelButtonText.trim().length ? (
+      <AlertDialogCancel
+        key="cancel"
+        onClick={onCancel}
+        className={cancelClassName}
+      >
+        {cancelButtonText}
+      </AlertDialogCancel>
+    ) : null,
+    confirmButtonText.trim().length ? (
+      <AlertDialogAction
+        key="confirm"
+        onClick={onConfirm}
+        className={confirmClassName}
+      >
+        {confirmButtonText}
+      </AlertDialogAction>
+    ) : null,
+  ];
+
+  if (reverseButtonOrder) {
+    buttons.reverse();
+  }
+
   return (
-    <AlertDialog>
+    <AlertDialog {...alertDialogProps}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className={className}>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={cancelCallback}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={continueCallback}>
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
+        <AlertDialogFooter>{buttons}</AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );

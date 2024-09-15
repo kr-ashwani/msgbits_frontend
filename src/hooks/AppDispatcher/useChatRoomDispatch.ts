@@ -1,11 +1,13 @@
 import {
   addChatRoom,
   addNewMembers,
+  exitChatRoom,
 } from "@/lib/store/features/chat/chatRoomSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { ChatAddNewMember } from "@/schema/ChatAddNewMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
+import { LeaveChatRoom } from "@/schema/LeaveChatRoomSchema";
 import { useMemo } from "react";
 
 export class ChatRoomDispatcher {
@@ -21,6 +23,10 @@ export class ChatRoomDispatcher {
 
   addNewMembers = (payload: ChatAddNewMember) => {
     this.dispatch(addNewMembers(payload));
+  };
+
+  exitChatRoom = (payload: LeaveChatRoom) => {
+    this.dispatch(exitChatRoom(payload));
   };
 
   constructor(dispatch: AppDispatch) {

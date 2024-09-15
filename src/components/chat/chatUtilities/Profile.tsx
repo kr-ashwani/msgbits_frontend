@@ -1,11 +1,11 @@
 import React from "react";
-import SliderHeader from "../chatRoom/SliderHeader";
+import Slider from "@/components/utility/Slider";
 
 const Profile = ({ name }: { name: string }) => {
   return (
-    <div className="h-full bg-theme-bg-color">
-      <SliderHeader heading="Profile" closingSliderName={name} />
-    </div>
+    <Slider heading="Profile" name={name} className="flex flex-col gap-5">
+      {null}
+    </Slider>
   );
 };
 

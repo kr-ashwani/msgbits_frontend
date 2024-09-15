@@ -144,9 +144,16 @@ class MessageContainerState {
     const chatRoom = selectedChat.getChatState()?.getRawChatRoom();
     if (!msg || !chatRoom) return "pending";
 
+    const msgSeenArr = msg.seenBy.filter((userId) =>
+      chatRoom.members.includes(userId),
+    );
+    const msgDeliveredArr = msg.deliveredTo.filter((userId) =>
+      chatRoom.members.includes(userId),
+    );
+
     if (msg.status === "pending") return "pending";
-    else if (msg.seenBy.length === chatRoom.members.length - 1) return "seen";
-    else if (msg.deliveredTo.length === chatRoom.members.length - 1)
+    else if (msgSeenArr.length === chatRoom.members.length - 1) return "seen";
+    else if (msgDeliveredArr.length === chatRoom.members.length - 1)
       return "delivered";
     else return "sent";
   }

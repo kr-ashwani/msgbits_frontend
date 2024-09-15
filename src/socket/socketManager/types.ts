@@ -6,6 +6,10 @@ import {
 } from "@/schema/ChatAddNewMemberSchema";
 import { ChatRoomSchema, IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
+import {
+  LeaveChatRoom,
+  LeaveChatRoomSchema,
+} from "@/schema/LeaveChatRoomSchema";
 import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { MessageStatusSchema } from "@/schema/MessageStatusSchema";
 import { z } from "zod";
@@ -13,6 +17,7 @@ import { z } from "zod";
 export interface ChatRoomEmitterMapping {
   "chatroom-create": IChatRoom;
   "chatroom-addNewMembers": ChatAddNewMember;
+  "chatroom-leave": LeaveChatRoom;
 }
 
 export interface MessageEmitterMapping {
@@ -33,6 +38,7 @@ const ChatRoomListenerSchema = {
   "chatroom-update": ChatRoomSchema,
   "chatroom-getall": z.array(ChatRoomSchema),
   "chatroom-addNewMembers": ChatAddNewMemberSchema,
+  "chatroom-leave": LeaveChatRoomSchema,
 };
 
 const MessageListenerSchema = {
@@ -76,3 +82,12 @@ export {
   ChatUserListenerSchema,
   SyncListenerSchema,
 };
+
+interface SuccessAckMessage {
+  success: true;
+}
+interface FailureAckMessage {
+  success: false;
+  error: string;
+}
+export type AckMessage = SuccessAckMessage | FailureAckMessage;

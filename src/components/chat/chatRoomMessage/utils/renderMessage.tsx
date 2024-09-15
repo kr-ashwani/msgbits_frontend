@@ -33,7 +33,7 @@ export function renderMessages(
   msgStatus: React.MutableRefObject<MsgStatus>,
   selectedChat: SelectedChatState,
 ): ReactNode {
-  resetMsgStatus();
+  msgStatus.current = resetMsgStatus();
 
   const message: ReactNode[] = [];
   let userId: string = "xxxNULLxxx";
@@ -52,7 +52,7 @@ export function renderMessages(
       if (rawMessage.type === "info") return null;
       if (!selfMessage) {
         return showAvatar ? (
-          Avatar({ src: user.profilePicture, size: 30 })
+          Avatar({ src: user.profilePicture, size: 30, className: "mt-1" })
         ) : (
           <div className="h-[30px] w-[30px]"></div>
         );
@@ -66,26 +66,52 @@ export function renderMessages(
       }
     };
 
+    const renderMessageFrame = () => {
+      return (
+        <div
+          className={`flex flex-grow flex-col overflow-hidden ${selfMessage ? "items-end" : "items-start"}`}
+        >
+          {renderUserInfo()}
+          {renderMessageWithType(messageState)}
+        </div>
+      );
+    };
+    const renderUserInfo = () => {
+      return showAvatar &&
+        !selfMessage &&
+        selectedChat.getChatState()?.getChatType() === "group" ? (
+        <div className="w-52 translate-y-[2px] truncate text-xs font-semibold text-msg-message">
+          {messageState.getUser()?.name}
+        </div>
+      ) : null;
+    };
+
     message.push(
       <div
         key={msgId}
         className={`flex w-full gap-1 ${selfMessage ? "flex-row-reverse gap-[6px]" : "md:gap-3"} ${
-          showAvatar ? "mt-[10px]" : ""
+          showAvatar ? "mt-[8px]" : ""
         }`}
       >
         {renderAvatar()}
-        {renderMessageWithType(messageState)}
+        {renderMessageFrame()}
       </div>,
     );
 
+    // for which user avatar has been shown
     if (showAvatar) userId = rawMessage.senderId;
-
-    const status = messageState.getSelfMessageStatus(selectedChat);
-    if (status) updateMsgStatus(status, msgStatus, msgId);
+    // if message is info msg then reset userid
+    if (rawMessage.type === "info") userId = "xxxNULLxxx";
+    else {
+      // as we only show avatar and status for non-info msg
+      const status = messageState.getSelfMessageStatus(selectedChat);
+      if (status) updateMsgStatus(status, msgStatus, msgId);
+    }
   });
 
   return message;
 }
+
 type Status = "pending" | "sent" | "seen" | "delivered";
 const updateMsgStatus = (
   status: Status,

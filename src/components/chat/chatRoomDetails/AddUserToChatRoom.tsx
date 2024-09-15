@@ -6,9 +6,10 @@ import { IUser } from "@/schema/userSchema";
 import { useState, useMemo, useEffect } from "react";
 import { NewGroupType } from "../chatRoom/ChatRoomWrapper";
 import GroupChatNewMembers from "../chatRoom/GroupChatNewMembers";
-import SliderHeader from "../chatRoom/SliderHeader";
 import { Dialog } from "@/components/utility/Dialog";
 import { useChatService } from "@/hooks/chat/useChatService";
+import Slider from "@/components/utility/Slider";
+import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -67,13 +68,13 @@ const AddUserToChatRoom = ({
   }
 
   return (
-    <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <SliderHeader heading="Add Members" closingSliderName={name} />
-
+    <Slider heading="Add Members" name={name} className="flex flex-col gap-5">
       {newGroup.members.length ? (
         <Dialog
-          description={`You are about to add ${newGroup.members.length} members to ${chatRoomState.getChatRoomName()} Group.`}
-          continueCallback={handleAddChatRoomUser}
+          description={`Do you want to add ${newGroup.members.length} member${newGroup.members.length === 1 ? "" : "s"} to ${capitalizeStr(chatRoomState.getChatRoomName())} group?`}
+          onConfirm={handleAddChatRoomUser}
+          cancelButtonText="Go Back"
+          confirmButtonText="Add"
         >
           <div className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
             {ChatSvg("checkIcon")}
@@ -129,7 +130,7 @@ const AddUserToChatRoom = ({
         ))}
       </div>
       <div className="py-5"></div>
-    </div>
+    </Slider>
   );
 };
 

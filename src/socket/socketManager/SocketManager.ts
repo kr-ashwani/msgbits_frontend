@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { EmitterMapping, ListenerSchema } from "./types";
+import { AckMessage, EmitterMapping, ListenerSchema } from "./types";
 import { Socket } from "socket.io-client";
 import { debug } from "@/utils/custom/Debug";
 
@@ -42,7 +42,7 @@ export class SocketManager {
   public emit<K extends keyof EmitterMapping>(
     event: K,
     data: EmitterMapping[K],
-    callback?: (err: any, ack: { success: boolean }) => void,
+    callback?: (err: any, ack: AckMessage) => void,
   ) {
     this.socket.emit(event, data, callback);
   }

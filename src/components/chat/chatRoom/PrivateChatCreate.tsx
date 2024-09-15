@@ -5,10 +5,10 @@ import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDi
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
 import React, { useEffect, useMemo, useState } from "react";
-import SliderHeader from "./SliderHeader";
 import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import Slider from "../../utility/Slider";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
@@ -42,9 +42,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
   }, [originalChatUserList, searchUser, setChatUserList]);
 
   return (
-    <div className="relative flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <SliderHeader heading="Select User" closingSliderName={name} />
-
+    <Slider heading="Select User" name={name} className="flex flex-col gap-5">
       <div
         className="flex cursor-pointer items-center gap-3 px-3"
         onClick={async () => {
@@ -106,8 +104,9 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
           );
         })}
       </div>
+
       <div className="py-5"></div>
-    </div>
+    </Slider>
   );
 };
 

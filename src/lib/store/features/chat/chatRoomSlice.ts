@@ -1,3 +1,4 @@
+import { LeaveChatRoom } from "@/schema/LeaveChatRoomSchema";
 import { ChatAddNewMember } from "./../../../../schema/ChatAddNewMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { IMessage } from "@/schema/MessageSchema";
@@ -37,10 +38,28 @@ export const chatRoomSlice = createSlice({
         if (!chatRoom.members.includes(membId)) chatRoom.members.push(membId);
       });
     },
+    exitChatRoom(state, action: PayloadAction<LeaveChatRoom>) {
+      const chatRoom = state[action.payload.chatRoomId];
+      if (!chatRoom) return;
+
+      // Remove the memberId from the members array
+      chatRoom.members = chatRoom.members.filter(
+        (id) => id !== action.payload.memberId,
+      );
+
+      // deleting chatRoom if no members left
+      if (chatRoom.members.length === 0) {
+        delete state[chatRoom.chatRoomId];
+      }
+    },
   },
 });
 
-export const { addChatRoom, updateLastMessageIdOfChatRoom, addNewMembers } =
-  chatRoomSlice.actions;
+export const {
+  addChatRoom,
+  updateLastMessageIdOfChatRoom,
+  addNewMembers,
+  exitChatRoom,
+} = chatRoomSlice.actions;
 
 export default chatRoomSlice.reducer;

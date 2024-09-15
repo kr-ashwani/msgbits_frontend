@@ -34,7 +34,7 @@ export class ChatRoomState {
   getChatRoomName() {
     return this.chatRoomContainer.getChatRoomName(this.chatRoomId);
   }
-  isChatRoomAdmin(memberId: string) {
+  isChatRoomAdmin(memberId?: string) {
     return this.chatRoomContainer.isChatRoomAdmin(this.chatRoomId, memberId);
   }
   getUsersExceptChatMembers() {
@@ -51,6 +51,15 @@ export class ChatRoomState {
   }
   getUpdatedTime() {
     return this.chatRoomContainer.getUpdatedTime(this.chatRoomId);
+  }
+  getChatType() {
+    return this.chatRoomContainer.getChatType(this.chatRoomId);
+  }
+  areYouTheOnlyAdmin() {
+    return this.chatRoomContainer.areYouTheOnlyAdmin(this.chatRoomId);
+  }
+  getUserInfo() {
+    return this.chatRoomContainer.getUserInfo();
   }
 }
 
@@ -179,12 +188,14 @@ export class ChatRoomContainerState {
       return otherUser ? otherUser.name : fallbackChatName;
     }
   }
-  isChatRoomAdmin(chatRoomId: string, memberId: string) {
+  isChatRoomAdmin(chatRoomId: string, memberId: string | undefined) {
     const chatRoom = this.chatRoom[chatRoomId];
     if (!chatRoom) return false;
-    return chatRoom.type === "group"
-      ? chatRoom.admins.includes(memberId)
-      : false;
+
+    //if id is not provided then use id of logged in user
+    const id = memberId || this.getUserInfo()?._id;
+    if (!id) return false;
+    return chatRoom.type === "group" ? chatRoom.admins.includes(id) : false;
   }
   getUsersExceptChatMembers(chatRoomId: string) {
     const userList: IUser[] = [];
@@ -240,6 +251,19 @@ export class ChatRoomContainerState {
   getUpdatedTime(chatRoomId: string) {
     if (!this.chatRoom[chatRoomId]) return 0;
     return new Date(this.chatRoom[chatRoomId].updatedAt).getTime();
+  }
+  getChatType(chatRoomId: string) {
+    if (!this.chatRoom[chatRoomId]) return null;
+    return this.chatRoom[chatRoomId].type;
+  }
+  areYouTheOnlyAdmin(chatRoomId: string) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom || chatRoom.type === "private") return false;
+
+    return chatRoom.admins.includes(this.user?._id || "");
+  }
+  getUserInfo() {
+    return this.user;
   }
 }
 const useChatRoomState = () => {

@@ -8,7 +8,7 @@ const TextMessage = ({ messageState }: { messageState: MessageState }) => {
 
   return (
     <div
-      className={`relative mt-[6px] max-w-[75%] whitespace-pre-wrap p-2 px-3 text-[15px] md:max-w-[60%] ${selfMsg ? "rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
+      className={`relative mt-[6px] w-auto max-w-[80%] whitespace-pre-wrap p-2 px-3 text-[15px] md:max-w-[60%] ${selfMsg ? "rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
     >
       <span className="hyphenate font-medium leading-[21px] md:text-sm">
         {rawMessage.message}

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import SliderHeader from "./SliderHeader";
 import { NewGroupType } from "./ChatRoomWrapper";
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 import { ChatSvg } from "@/components/svg/chatSvg";
@@ -8,6 +7,7 @@ import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import GroupChatNewMembers from "./GroupChatNewMembers";
 import { useChatService } from "@/hooks/chat/useChatService";
+import Slider from "../../utility/Slider";
 
 const DefaultUrl = "/assets/groupChat.png";
 const GroupChatFinalCreate = ({
@@ -37,17 +37,26 @@ const GroupChatFinalCreate = ({
   function handleGroupChatCreation() {
     const members = newGroup.members.map((memb) => memb._id);
     chatService.createNewGroupChat({
-      chatName: newGroup.name,
+      chatName: newGroup.name.trim(),
       chatRoomPicture,
       members,
     });
     slider.trigerSlider("close");
   }
-  return (
-    <div className="relativeflex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <SliderHeader heading="Group Description" closingSliderName={name} />
 
-      {newGroup.name && newGroup.members.length ? (
+  function handleGroupName(e: React.ChangeEvent<HTMLInputElement>) {
+    setNewGroup((state) => ({
+      ...state,
+      name: state.name.trim() ? e.target.value : e.target.value.trim(),
+    }));
+  }
+  return (
+    <Slider
+      heading="Group Description"
+      name={name}
+      className="flex flex-col gap-5"
+    >
+      {newGroup.name.trim() && newGroup.members.length ? (
         <div
           onClick={handleGroupChatCreation}
           className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
@@ -87,9 +96,7 @@ const GroupChatFinalCreate = ({
           <input
             ref={inputRef}
             value={newGroup.name}
-            onChange={(e) =>
-              setNewGroup((state) => ({ ...state, name: e.target.value }))
-            }
+            onChange={handleGroupName}
             className="h-7 w-0 grow border-theme-color pb-[2px] text-base font-semibold text-body-color outline-none focus:border-b-[3px]"
             placeholder="Group Name..."
           />
@@ -99,7 +106,7 @@ const GroupChatFinalCreate = ({
           <GroupChatNewMembers newGroup={newGroup} setNewGroup={setNewGroup} />
         </div>
       </div>
-    </div>
+    </Slider>
   );
 };
 

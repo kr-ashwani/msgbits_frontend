@@ -1,3 +1,4 @@
+import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 import { selectedChatState } from "@/lib/store/features/chat/selectedChatSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { IUser } from "@/schema/userSchema";
@@ -23,6 +24,9 @@ import { isToday } from "date-fns";
 import { messageState } from "@/lib/store/features/chat/messageSlice";
 import { IMessage } from "@/schema/MessageSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
+import { joinArrayWithAnd } from "@/utils/custom/joinArrayWithAnd";
+import { LeaveChatRoom } from "@/schema/LeaveChatRoomSchema";
+import { sleep } from "@/components/StackSlider/utils/sleep";
 
 interface NewGroupChatParams {
   chatName: string;
@@ -59,6 +63,19 @@ class ChatService {
     this.chatRoomDispatch = chatRoomDispatch;
     this.selectedChatDispatch = selectedChatDispatch;
   }
+  private addToStoreAndEmitMsg(message: IMessage) {
+    this.messageDispatch.createMessage(message);
+    this.socketQueue.emitChatRoomMessage(
+      message.chatRoomId,
+      "message-create",
+      message,
+    );
+  }
+  private addToStoreAndEmitChatRoom(chatRoom: IChatRoom) {
+    this.chatRoomDispatch.createChatRoom(chatRoom);
+    this.socketQueue.emitChatRoom("chatroom-create", chatRoom);
+  }
+
   sendNewTextMessage(message: string) {
     if (!this.user || !this.selectedChat.id) return;
     let chatRoomId = this.selectedChat.id;
@@ -67,7 +84,7 @@ class ChatService {
     const lastMsgId = this.chatRoom[chatRoomId]?.lastMessageId || null;
     const lastMessage = lastMsgId ? this.message[lastMsgId] : null;
     let timeStampMsg: TimestampMessage | null = null;
-    if (!lastMessage || (lastMessage && !this.isToday(lastMessage.createdAt)))
+    if (!lastMessage || (lastMessage && !isToday(lastMessage.createdAt)))
       timeStampMsg = new TimestampMessage(this.user._id, chatRoomId);
 
     //chatRoomId can be user id so dont forget to update it
@@ -118,7 +135,7 @@ class ChatService {
       chatRoom.chatRoomId,
     );
     const infoMsg = new InfoMessage(
-      `${this.user.name} created the Group`,
+      `${capitalizeStr(this.user.name)} created the Group`,
       this.user._id,
       chatRoom.chatRoomId,
     );
@@ -150,7 +167,7 @@ class ChatService {
     });
 
     const infoMsg = new InfoMessage(
-      `${this.user.name} added ${this.joinArrayWithAnd(membersName)}`,
+      `${capitalizeStr(this.user.name)} added ${joinArrayWithAnd(membersName)}`,
       this.user._id,
       chatRoom.chatRoomId,
     );
@@ -160,38 +177,29 @@ class ChatService {
     const payload = { chatRoomId, newMember: memberId };
     this.chatRoomDispatch.addNewMembers(payload);
     this.socketQueue.emitChatRoom("chatroom-addNewMembers", payload);
-    this.addToStoreAndEmitMsg(infoMsg);
+    this.addToStoreAndEmitMsg(infoMsg.toObject());
   }
+  async exitChatRoom(chatRoomId: string) {
+    if (this.selectedChat.id !== chatRoomId || !this.user) return;
 
-  private joinArrayWithAnd(array: string[]) {
-    if (array.length === 0) return "";
+    const payload: LeaveChatRoom = {
+      chatRoomId,
+      memberId: this.user._id,
+    };
 
-    if (array.length === 1) return array[0];
-
-    if (array.length === 2) return array.join(" and ");
-
-    // For more than two items
-    const allButLast = array.slice(0, -1).join(", ");
-    const lastItem = array[array.length - 1];
-
-    return `${allButLast} and ${lastItem}`;
-  }
-
-  private addToStoreAndEmitMsg(message: IMessage) {
-    this.messageDispatch.createMessage(message);
-    this.socketQueue.emitChatRoomMessage(
-      message.chatRoomId,
-      "message-create",
-      message,
+    const infoMsg = new InfoMessage(
+      `${capitalizeStr(this.user.name)} has left the group`,
+      this.user._id,
+      chatRoomId,
     );
-  }
-  private addToStoreAndEmitChatRoom(chatRoom: IChatRoom) {
-    this.chatRoomDispatch.createChatRoom(chatRoom);
-    this.socketQueue.emitChatRoom("chatroom-create", chatRoom);
-  }
-  private isToday(date: string): boolean {
-    // Check if the given date is today or earlier
-    return isToday(date);
+    const msg = infoMsg.toObject();
+
+    this.messageDispatch.createMessage(msg);
+    this.chatRoomDispatch.exitChatRoom(payload);
+
+    // emitting both to common queue which after info message is process then only remove user
+    this.socketQueue.emit("message-create", msg);
+    this.socketQueue.emit("chatroom-leave", payload);
   }
 }
 

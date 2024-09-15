@@ -108,10 +108,16 @@ export class SocketEmitterQueue {
 
     this.socket
       .timeout(SocketEmitterQueue.EVENT_TIMEOUT)
-      .emit(data.eventName, data.Data, (err) => {
+      .emit(data.eventName, data.Data, (err, ack) => {
         if (err) {
+          debug("error", `Event ${data.eventName} failed beacuse ${err}`);
           this.handleRetry(queueId, data);
         } else {
+          if (ack && !ack?.success)
+            debug(
+              "error",
+              `Server failed to acknowledge event ${data.eventName} due to ${ack?.error}`,
+            );
           queue.dequeue();
           this.queueProcessingMap.set(queueId, false);
           this.processEventQueue(queueId);

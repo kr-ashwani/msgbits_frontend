@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import SliderHeader from "./SliderHeader";
 import { ChatSvg } from "@/components/svg/chatSvg";
 import Avatar from "@/components/utility/Avatar";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
@@ -7,6 +6,7 @@ import { IUser } from "@/schema/userSchema";
 import GroupChatNewMembers from "./GroupChatNewMembers";
 import { NewGroupType } from "./ChatRoomWrapper";
 import useSlide from "@/components/StackSlider/hooks/useSlide";
+import Slider from "../../utility/Slider";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -62,9 +62,7 @@ const GroupChatCreate = ({
     });
   }, [setNewGroup]);
   return (
-    <div className="flex h-full flex-col gap-5 overflow-y-auto bg-chat-bg">
-      <SliderHeader heading="Create Group" closingSliderName={name} />
-
+    <Slider heading="Create Group" name={name} className="flex flex-col gap-5">
       {newGroup.members.length ? (
         <div
           onClick={() => slider.trigerSlider("open", "GroupChatFinalCreate")}
@@ -122,7 +120,7 @@ const GroupChatCreate = ({
         ))}
       </div>
       <div className="py-5"></div>
-    </div>
+    </Slider>
   );
 };
 

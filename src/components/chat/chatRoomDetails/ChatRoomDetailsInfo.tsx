@@ -16,7 +16,7 @@ const ChatRoomDetailsInfo = ({
   if (!rawChatRoom) return null;
 
   return (
-    <div className="flex flex-col gap-2 py-7">
+    <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
           <Avatar src={chatRoomState.getChatRoomPicture() || ""} size={120} />
@@ -24,7 +24,7 @@ const ChatRoomDetailsInfo = ({
         <div className="text-lg font-semibold">
           {chatRoomState.getChatRoomName()}
         </div>
-        <div className="text-msg-date mt-[-5px] text-xs font-semibold">{`Created by ${chatRoomState?.getChatRoomCreatorName()}, ${chatRoomState?.getChatRoomCreatorDate()}`}</div>
+        <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Created by ${chatRoomState?.getChatRoomCreatorName()}, ${chatRoomState?.getChatRoomCreatorDate()}`}</div>
         <div className="mt-[10px] flex w-full gap-2 text-theme-color">
           <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
             <div className="absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
@@ -54,11 +54,13 @@ const ChatRoomDetailsInfo = ({
       {rawChatRoom.type === "group" ? (
         <>
           <GroupChatMembers chatRoomState={chatRoomState} />
-          <GroupChatPrivacy />
+          <GroupChatPrivacy chatRoomState={chatRoomState} />
         </>
       ) : (
         <PrivateChatCommonGroups chatRoomState={chatRoomState} />
       )}
+
+      <div className="h-16 w-full shrink-0"></div>
     </div>
   );
 };

@@ -44,7 +44,7 @@ const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
   return (
     <section
       id="chatRoomContainer"
-      className="relative z-0 flex w-full flex-col bg-[--theme-bg-color]"
+      className="relative z-0 flex h-full w-full flex-col overflow-y-auto bg-[--theme-bg-color]"
     >
       {chatRoomList.map((chatRoomState, index) => (
         <ChatRoom
@@ -57,6 +57,12 @@ const ChatRoomContainer = ({ chatRoomSearch }: { chatRoomSearch: string }) => {
         className={`absolute h-chatRoom-height w-full shrink-0`}
         style={{
           transform: `translateY(calc(${chatRoomList.length} * var(--chatRoom-height)))`,
+        }}
+      ></div>
+      <div
+        className="absolute h-16 w-full shrink-0"
+        style={{
+          transform: `translateY(calc(${chatRoomList.length + 1} * var(--chatRoom-height)))`,
         }}
       ></div>
     </section>
