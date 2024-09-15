@@ -8,40 +8,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ChatMemberDropdown from "./ChatMemberDropdown";
-
-const PRESS_DELAY = 300;
+import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 
 const ChatMember: React.FC<{
   member: IUser;
   chatRoomState: ChatRoomState;
 }> = ({ member, chatRoomState }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const longPressTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isLongPress = useRef(false);
+  const user = chatRoomState.getUserInfo();
 
-  const handlePointerDown = useCallback(() => {
-    isLongPress.current = false;
-    longPressTimeoutRef.current = setTimeout(() => {
-      isLongPress.current = true;
-      if (chatRoomState.getUserInfo()?._id !== member._id)
-        setIsDropdownOpen(true);
-    }, PRESS_DELAY); //  long press
-  }, [chatRoomState, member._id]);
-
-  const handlePointerUp = useCallback(() => {
-    if (longPressTimeoutRef.current) {
-      clearTimeout(longPressTimeoutRef.current);
-    }
-    if (!isLongPress.current) {
-      setIsDropdownOpen(false);
-    }
-  }, []);
-
-  const handlePointerLeave = useCallback(() => {
-    if (longPressTimeoutRef.current) {
-      clearTimeout(longPressTimeoutRef.current);
-    }
-  }, []);
+  const handleShowDropdown = useCallback(() => {
+    if (chatRoomState.getUserInfo()?._id !== member._id)
+      setIsDropdownOpen(true);
+  }, [chatRoomState, member]);
 
   const handleDropdownChange = useCallback((open: boolean) => {
     if (!open) {
@@ -49,20 +28,25 @@ const ChatMember: React.FC<{
     }
   }, []);
 
+  function getMemberName(member: IUser) {
+    const { _id: memberId, name: memberName } = member;
+    return user?._id === memberId ? "You" : capitalizeStr(memberName);
+  }
+
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={handleDropdownChange}>
       <DropdownMenuTrigger asChild>
         <div
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerLeave}
+          onClick={handleShowDropdown}
           className="flex h-full w-full cursor-pointer select-none items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg focus:bg-msg-hover-bg"
         >
           <div className="relative">
             <Avatar src={member.profilePicture} size={40} />
           </div>
           <div className="flex grow flex-col items-start overflow-hidden">
-            <p className="truncate text-sm font-semibold">{member.name}</p>
+            <p className="truncate text-sm font-semibold">
+              {getMemberName(member)}
+            </p>
             <p className="truncate text-xs font-medium text-msg-message">
               {member.email}
             </p>

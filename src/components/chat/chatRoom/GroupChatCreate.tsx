@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ChatSvg } from "@/components/svg/chatSvg";
 import Avatar from "@/components/utility/Avatar";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
@@ -7,6 +7,8 @@ import GroupChatNewMembers from "./GroupChatNewMembers";
 import { NewGroupType } from "./ChatRoomWrapper";
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 import Slider from "../../utility/Slider";
+import { useNewGroupMembersState } from "@/hooks/AppSelector/useNewGroupMembersState";
+import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -35,6 +37,21 @@ const GroupChatCreate = ({
     () => chatuser.getAllUsersExceptItself(),
     [chatuser],
   );
+  const newGroupMembersState = useNewGroupMembersState();
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    if (!firstRender.current) return;
+    const members = newGroupMembersState.getMembers();
+    setNewGroup({
+      name: "",
+      members: members.length ? members : [],
+    });
+    chatRoomDataDispatch.resetNewGroupMembers();
+
+    firstRender.current = false;
+  }, [newGroupMembersState, setNewGroup, chatRoomDataDispatch]);
 
   useEffect(() => {
     if (searchUser)
@@ -54,13 +71,6 @@ const GroupChatCreate = ({
     else setChatUserList(originalChatUserList);
   }, [originalChatUserList, searchUser, setChatUserList]);
 
-  useEffect(() => {
-    // reset newGroup on component first mount
-    setNewGroup({
-      name: "",
-      members: [],
-    });
-  }, [setNewGroup]);
   return (
     <Slider heading="Create Group" name={name} className="flex flex-col gap-5">
       {newGroup.members.length ? (

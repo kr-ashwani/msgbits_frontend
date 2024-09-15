@@ -6,6 +6,7 @@ import selectedChatReducer from "./selectedChatSlice";
 import chatUserReducer from "./chatUserSlice";
 import showChatRoomDetailsReducer from "./showChatRoomDetails";
 import socketReducer from "../socket/socketSlice";
+import chatRoomDataReducer from "./chatRoomDataSlice";
 
 const chatReducer = combineReducers({
   chatRoom: chatRoomReducer,
@@ -15,6 +16,7 @@ const chatReducer = combineReducers({
   chatUser: chatUserReducer,
   showChatRoomDetails: showChatRoomDetailsReducer,
   socket: socketReducer,
+  chatRoomData: chatRoomDataReducer,
 });
 
 export default chatReducer;

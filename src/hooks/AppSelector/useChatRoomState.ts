@@ -61,6 +61,9 @@ export class ChatRoomState {
   getUserInfo() {
     return this.chatRoomContainer.getUserInfo();
   }
+  getOtherUserIdInPrivateChat() {
+    return this.chatRoomContainer.getOtherUserIdInPrivateChat(this.chatRoomId);
+  }
 }
 
 export class ChatRoomContainerState {
@@ -79,7 +82,6 @@ export class ChatRoomContainerState {
   }
   getChatRoomById(chatId: string) {
     return new ChatRoomState(chatId, this);
-    //return null;
   }
   getRawChatRoomById(chatId: string) {
     if (this.chatRoom[chatId]) return this.chatRoom[chatId];
@@ -220,25 +222,14 @@ export class ChatRoomContainerState {
     return memberName;
   }
 
-  getCommonGroupChatById(chatRoomId: string) {
+  getCommonGroupChatById(memberId: string) {
     const groupChatList: IGroupChatRoom[] = [];
     const user = this.user;
-    const chatRoom = this.chatRoom[chatRoomId];
-    if (!(user && chatRoom)) return groupChatList;
-    if (chatRoom.type === "group") return groupChatList;
-
-    const memberId = chatRoom.members.filter(
-      (member) => member !== user._id,
-    )[0];
-    if (!memberId) return groupChatList;
+    if (!user) return groupChatList;
 
     Object.values(this.chatRoom).forEach((chatRoom) => {
       if (chatRoom.type === "private") return;
-      if (
-        chatRoom.members.includes(user._id) &&
-        chatRoom.members.includes(memberId)
-      )
-        groupChatList.push(chatRoom);
+      if (chatRoom.members.includes(memberId)) groupChatList.push(chatRoom);
     });
     return groupChatList;
   }
@@ -260,10 +251,23 @@ export class ChatRoomContainerState {
     const chatRoom = this.chatRoom[chatRoomId];
     if (!chatRoom || chatRoom.type === "private") return false;
 
-    return chatRoom.admins.includes(this.user?._id || "");
+    return chatRoom.admins.length === 1
+      ? chatRoom.admins.includes(this.user?._id || "")
+      : false;
   }
   getUserInfo() {
     return this.user;
+  }
+  getOtherUserIdInPrivateChat(chatRoomId: string) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (!chatRoom || chatRoom.type === "group" || !this.user) return null;
+
+    const user = this.user;
+    const otherUser = chatRoom.members.filter(
+      (memberId) => memberId !== user._id,
+    );
+    if (otherUser.length) return otherUser[0];
+    return null;
   }
 }
 const useChatRoomState = () => {

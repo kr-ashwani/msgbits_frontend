@@ -42,12 +42,12 @@ const ChatRoom = ({
       >
         <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
         <div className="w-full overflow-hidden">
-          <p className="truncate pb-[1px] text-[16px] font-semibold">
+          <p className="truncate whitespace-pre-wrap pb-[1px] text-[16px] font-semibold">
             {chatRoomState.getChatRoomName()}
           </p>
-          <div className="flex items-center justify-between text-sm font-medium text-msg-message">
+          <div className="flex items-center justify-between text-[14px] font-medium text-msg-message lg:text-[13px]">
             <span className="truncate">{messageState?.getMessageText()}</span>
-            <span className="text-nowrap before:mr-0.5 before:content-['•']">
+            <span className="whitespace-pre-wrap text-nowrap before:mr-0.5 before:content-['•']">
               {messageState?.getLastMessageTimeFromNow()}
             </span>
           </div>

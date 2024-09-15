@@ -1,31 +1,26 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
 import Avatar from "@/components/utility/Avatar";
 import React from "react";
-import GroupChatMembers from "./GroupChatMembers";
-import GroupChatPrivacy from "./GroupChatPrivacy";
 import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
-import SharedPhotos from "./SharedPhotos";
-import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import { IUser } from "@/schema/userSchema";
+import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 
-const ChatRoomDetailsInfo = ({
-  chatRoomState,
-}: {
-  chatRoomState: ChatRoomState;
-}) => {
-  const rawChatRoom = chatRoomState.getRawChatRoom();
-  const memberId = chatRoomState.getOtherUserIdInPrivateChat();
-  if (!rawChatRoom) return null;
-
+const UserDetails = ({ user }: { user: IUser }) => {
+  function getJoinedDate(date: string) {
+    return new Date(date).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  }
   return (
     <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
-          <Avatar src={chatRoomState.getChatRoomPicture() || ""} size={120} />
+          <Avatar src={user.profilePicture || ""} size={120} />
         </div>
-        <div className="text-lg font-semibold">
-          {chatRoomState.getChatRoomName()}
-        </div>
-        <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Created by ${chatRoomState?.getChatRoomCreatorName()}, ${chatRoomState?.getChatRoomCreatorDate()}`}</div>
+        <div className="text-lg font-semibold">{capitalizeStr(user.name)}</div>
+        <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Joined on ${getJoinedDate(user.createdAt)}`}</div>
         <div className="mt-[10px] flex w-full gap-2 text-theme-color">
           <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
             <div className="absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
@@ -50,20 +45,11 @@ const ChatRoomDetailsInfo = ({
         </div>
       </div>
 
-      <SharedPhotos />
-
-      {rawChatRoom.type === "group" ? (
-        <>
-          <GroupChatMembers chatRoomState={chatRoomState} />
-          <GroupChatPrivacy chatRoomState={chatRoomState} />
-        </>
-      ) : memberId ? (
-        <PrivateChatCommonGroups memberId={memberId} />
-      ) : null}
+      <PrivateChatCommonGroups memberId={user._id} />
 
       <div className="h-16 w-full shrink-0"></div>
     </div>
   );
 };
 
-export default ChatRoomDetailsInfo;
+export default UserDetails;

@@ -34,6 +34,9 @@ export const useSetUpSocketListners = () => {
       socket.on("chatroom-create", chatRoomDispatch.createChatRoom),
       socket.on("chatroom-addNewMembers", chatRoomDispatch.addNewMembers),
       socket.on("chatroom-leave", chatRoomDispatch.exitChatRoom),
+      socket.on("chatroom-makeAdmin", chatRoomDispatch.makeAdmin),
+      socket.on("chatroom-removeAdmin", chatRoomDispatch.removeAdmin),
+      socket.on("chatroom-removeUser", chatRoomDispatch.exitChatRoom),
       // Listening to all chatUser events
       socket.on("chatuser-create", chatUserDispatch.createChatUser),
       //Listening to Sync Service

@@ -1,14 +1,30 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
 import Avatar from "@/components/utility/Avatar";
-import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
+import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
+import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import React from "react";
 
-const PrivateChatCommonGroups = ({
-  chatRoomState,
-}: {
-  chatRoomState: ChatRoomState;
-}) => {
-  const commonGroups = chatRoomState.getCommonGroupChat();
+const PrivateChatCommonGroups = ({ memberId }: { memberId: string }) => {
+  const chatContainer = useChatRoomState();
+  const commonGroups = chatContainer.getCommonGroupChatById(memberId);
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
+  const selectedChatDispatch = useSelectedChatDispatch();
+  const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
+
+  function handleGroupCreation() {
+    chatRoomDataDispatch.addNewGroupMembers([memberId]);
+
+    // close any selected chat and toggle chatroom details
+    selectedChatDispatch.setSelectedChat(null);
+    showChatRoomDetailsDispatch.toggleChatRoomDetails(false);
+  }
+
+  function showGroupChat(chatRoomId: string) {
+    selectedChatDispatch.setSelectedChat(chatRoomId);
+    showChatRoomDetailsDispatch.toggleChatRoomDetails(false);
+  }
 
   return (
     <div className="">
@@ -19,19 +35,23 @@ const PrivateChatCommonGroups = ({
         </p>
       </div>
       <div>
-        <div className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg">
+        <div
+          onClick={handleGroupCreation}
+          className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
+        >
           <div className="relative flex h-10 w-10 items-center justify-center text-theme-color">
             <div className="absolute inset-0 rounded-full bg-theme-color opacity-10"></div>
             {ChatSvg("groupChatIcon")}
           </div>
           <div className="flex flex-col overflow-hidden">
             <p className="truncate text-base font-semibold">
-              Create group with {chatRoomState.getChatRoomName().split(" ")[0]}
+              Create group with {chatContainer.getChatRoomName(memberId)}
             </p>
           </div>
         </div>
         {commonGroups.map((chatRoom) => (
           <div
+            onClick={() => showGroupChat(chatRoom.chatRoomId)}
             key={chatRoom.chatRoomId}
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
@@ -43,8 +63,7 @@ const PrivateChatCommonGroups = ({
                 {chatRoom.chatName}
               </p>
               <p className="truncate text-xs font-medium text-msg-message">
-                {chatRoomState
-                  .getChatContainer()
+                {chatContainer
                   .getChatMembersNameExceptYou(chatRoom.chatRoomId)
                   .reduce<string>(
                     (acc, memberName, i, arr) =>

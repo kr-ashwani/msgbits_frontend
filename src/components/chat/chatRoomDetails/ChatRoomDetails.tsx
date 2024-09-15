@@ -9,6 +9,8 @@ import { useToggleChatRoomDetails } from "@/hooks/useToggleChatRoomDetails";
 import { useRef } from "react";
 import AddUserToChatRoom from "./AddUserToChatRoom";
 import ChatRoomDetailsInfo from "./ChatRoomDetailsInfo";
+import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
+import UserDetails from "./UserDetails";
 
 const ChatRoomDetails = () => {
   const component = useRef<HTMLDivElement>(null);
@@ -18,6 +20,7 @@ const ChatRoomDetails = () => {
   const showChatRoomDetail = useShowChatRoomDetailsState();
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
   const chatRoomState = useSelectedChatState().getChatState();
+  const user = useChatUserState().getUserById(chatRoomState?.chatRoomId || "");
 
   useToggleChatRoomDetails(showChatRoomDetail);
 
@@ -39,9 +42,11 @@ const ChatRoomDetails = () => {
             {ChatSvg("backArrow")}
           </div>
 
-          <p className="grow pl-2 text-xl font-semibold">Chat Room Details</p>
+          <p className="grow pl-2 text-xl font-semibold">{`${user ? "User Details" : "Chat Room Details"}`}</p>
         </div>
-        {chatRoomState ? (
+        {user ? (
+          <UserDetails user={user} />
+        ) : chatRoomState ? (
           <ChatRoomDetailsInfo chatRoomState={chatRoomState} />
         ) : null}
       </section>

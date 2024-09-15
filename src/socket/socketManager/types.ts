@@ -4,12 +4,13 @@ import {
   ChatAddNewMember,
   ChatAddNewMemberSchema,
 } from "@/schema/ChatAddNewMemberSchema";
+import {
+  ChatRoomAndMember,
+  ChatRoomAndMemberSchema,
+} from "@/schema/ChatRoomAndMemberSchema";
 import { ChatRoomSchema, IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
-import {
-  LeaveChatRoom,
-  LeaveChatRoomSchema,
-} from "@/schema/LeaveChatRoomSchema";
+
 import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { MessageStatusSchema } from "@/schema/MessageStatusSchema";
 import { z } from "zod";
@@ -17,7 +18,10 @@ import { z } from "zod";
 export interface ChatRoomEmitterMapping {
   "chatroom-create": IChatRoom;
   "chatroom-addNewMembers": ChatAddNewMember;
-  "chatroom-leave": LeaveChatRoom;
+  "chatroom-leave": ChatRoomAndMember;
+  "chatroom-removeUser": ChatRoomAndMember;
+  "chatroom-makeAdmin": ChatRoomAndMember;
+  "chatroom-removeAdmin": ChatRoomAndMember;
 }
 
 export interface MessageEmitterMapping {
@@ -38,7 +42,10 @@ const ChatRoomListenerSchema = {
   "chatroom-update": ChatRoomSchema,
   "chatroom-getall": z.array(ChatRoomSchema),
   "chatroom-addNewMembers": ChatAddNewMemberSchema,
-  "chatroom-leave": LeaveChatRoomSchema,
+  "chatroom-leave": ChatRoomAndMemberSchema,
+  "chatroom-removeUser": ChatRoomAndMemberSchema,
+  "chatroom-makeAdmin": ChatRoomAndMemberSchema,
+  "chatroom-removeAdmin": ChatRoomAndMemberSchema,
 };
 
 const MessageListenerSchema = {
