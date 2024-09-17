@@ -4,7 +4,9 @@ import { useChatService } from "@/hooks/chat/useChatService";
 import { useGetEmojiPickerHeight } from "@/hooks/useGetEmojiPickerHeight";
 import useIsMobile from "@/hooks/useIsMobile";
 import EmojiPicker from "./EmojiPicker";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useChatInputMessageState } from "@/hooks/AppSelector/useChatInputMessageState";
+import { useCacheInputMessage } from "@/hooks/chat/useCacheInputMessage";
 
 const ChatAreaFooter = () => {
   const messageDiv = useRef<HTMLDivElement>(null);
@@ -13,6 +15,8 @@ const ChatAreaFooter = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const pickerHeight = useGetEmojiPickerHeight();
   const isMobile = useIsMobile();
+  const chatInputMessageState = useChatInputMessageState();
+  useCacheInputMessage(message);
 
   const toggleEmojiPicker = useCallback(() => {
     setShowEmojiPicker((prev) => !prev);
@@ -43,19 +47,26 @@ const ChatAreaFooter = () => {
     }
   };
 
-  function resetMessage() {
-    setMessage("");
-    if (messageDiv.current) messageDiv.current.innerText = "";
-  }
+  const updateMessage = useCallback(
+    function updateMessage(msg: string = "") {
+      setMessage(msg);
+      if (messageDiv.current) messageDiv.current.innerText = msg;
+    },
+    [setMessage],
+  );
 
   function sendMessage() {
     if (!messageDiv.current) return;
     messageDiv.current.focus();
 
-    if (!message.trim()) return resetMessage();
+    if (!message.trim()) return updateMessage();
     chatService.sendNewTextMessage(message.trim());
-    resetMessage();
+    updateMessage();
   }
+
+  useEffect(() => {
+    updateMessage(chatInputMessageState.getSelectedChatMessage());
+  }, [chatInputMessageState, updateMessage]);
 
   return (
     <div className="flex shrink-0 items-center gap-3 border-t-[1px] border-border-color p-3 px-4 lg:gap-4 lg:px-8">

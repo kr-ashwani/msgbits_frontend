@@ -215,7 +215,10 @@ class ChatService {
     if (!chatRoom || chatRoom.type === "private" || !this.user) return;
     // user itself must be admin to perform this action
     if (!chatRoom.admins.includes(this.user._id || ""))
-      return toast.error("User doesnot have privilege to remove user");
+      return toast.error("User doesnot have privilege to remove another user");
+
+    if (chatRoom.createdBy === this.user._id)
+      return toast.error("You cannot remove owner of the group");
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} removed ${capitalizeStr(memberName)}`,
@@ -240,7 +243,14 @@ class ChatService {
     if (!chatRoom || chatRoom.type === "private" || !this.user) return;
     // user itself must be admin to perform this action
     if (!chatRoom.admins.includes(this.user?._id || ""))
-      return toast.error("User doesnot have privilege to demote user to admin");
+      return toast.error(
+        "User doesnot have privilege to demote another user to admin",
+      );
+
+    if (chatRoom.createdBy === this.user._id)
+      return toast.error(
+        "You cannot remove admin role from owner of the group",
+      );
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} demoted ${capitalizeStr(memberName)} from admin`,
@@ -261,10 +271,12 @@ class ChatService {
     const chatRoom = this.chatRoom[chatRoomId];
     if (!chatRoom || chatRoom.type === "private" || !this.user) return;
     // user itself must be admin to perform this action
-    if (!chatRoom.admins.includes(this.user?._id || ""))
+    if (!chatRoom.admins.includes(this.user._id || ""))
       return toast.error(
-        "User doesnot have privilege to promote user to admin",
+        "User doesnot have privilege to promote another user to admin",
       );
+    if (chatRoom.createdBy === this.user._id)
+      return toast.error("You cannot promote owner of the group to admin");
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} made ${capitalizeStr(memberName)} admin`,

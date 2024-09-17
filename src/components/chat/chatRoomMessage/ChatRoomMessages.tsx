@@ -2,10 +2,11 @@
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useRightSwipeToggle } from "@/hooks/useRightSwipeToggle";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import ChatAreaHeader from "./ChatAreaHeader";
 import ChatAreaView from "./ChatAreaView";
 import ChatAreaFooter from "./ChatAreaFooter";
+import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 
 const ChatRoomMessages = () => {
   const component = useRef<HTMLElement>(null);
@@ -14,6 +15,15 @@ const ChatRoomMessages = () => {
   });
   const selectedChat = useSelectedChatState();
   const selectedChatDispatch = useSelectedChatDispatch();
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
+
+  useEffect(() => {
+    const chatRoomId = selectedChat.getSelectedChatId();
+    if (chatRoomId)
+      chatRoomDataDispatch.resetUnreadMessages({
+        chatRoomId,
+      });
+  }, [selectedChat, chatRoomDataDispatch]);
 
   return (
     <section

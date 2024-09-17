@@ -1,22 +1,23 @@
 import { chatInputMessageState } from "@/lib/store/features/chat/chatRoomDataSlice";
-import { chatUserState } from "@/lib/store/features/chat/chatUserSlice";
+import { selectedChatState } from "@/lib/store/features/chat/selectedChatSlice";
 import { useAppSelector } from "@/lib/store/hooks";
-import { IUser } from "@/schema/userSchema";
 import { useMemo } from "react";
 
 export class ChatInputMessageState {
   private chatInputMessage;
-  private chatUser;
-  private user;
+  private selectedChatState;
 
   constructor(
     chatInputMessage: chatInputMessageState,
-    chatUser: chatUserState,
-    user: IUser | null,
+    selectedChatState: selectedChatState,
   ) {
     this.chatInputMessage = chatInputMessage;
-    this.chatUser = chatUser;
-    this.user = user;
+    this.selectedChatState = selectedChatState;
+  }
+  getSelectedChatMessage() {
+    return (
+      this.chatInputMessage[this.selectedChatState.id || ""]?.message || ""
+    );
   }
 }
 
@@ -24,12 +25,11 @@ const useChatInputMessageState = () => {
   const chatInputMessage = useAppSelector(
     (state) => state.chat.chatRoomData.chatInputMessage,
   );
-  const chatUser = useAppSelector((state) => state.chat.chatUser);
-  const user = useAppSelector((state) => state.auth.user);
+  const selectedChatState = useAppSelector((state) => state.chat.selectedChat);
 
   return useMemo(
-    () => new ChatInputMessageState(chatInputMessage, chatUser, user),
-    [chatInputMessage, chatUser, user],
+    () => new ChatInputMessageState(chatInputMessage, selectedChatState),
+    [chatInputMessage, selectedChatState],
   );
 };
 

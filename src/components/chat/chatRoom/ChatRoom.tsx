@@ -1,9 +1,10 @@
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
-import React from "react";
+import React, { useMemo } from "react";
 import Avatar from "../../utility/Avatar";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
+import { useChatUnreadMessages } from "@/hooks/chat/useChatUnreadMessages";
 
 const ChatRoom = ({
   chatRoomState,
@@ -20,6 +21,13 @@ const ChatRoom = ({
   );
   const isChatSelected =
     selectChatState.getSelectedChatId() === chatRoomState.chatRoomId;
+
+  const chatUnreadMsg = useChatUnreadMessages();
+
+  const unreadMsgCount = useMemo(
+    () => chatUnreadMsg.getUnreadMessages(chatRoomState.chatRoomId),
+    [chatUnreadMsg, chatRoomState],
+  );
 
   return (
     <div
@@ -42,8 +50,15 @@ const ChatRoom = ({
       >
         <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
         <div className="w-full overflow-hidden">
-          <p className="truncate whitespace-pre-wrap pb-[1px] text-[16px] font-semibold">
-            {chatRoomState.getChatRoomName()}
+          <p className="flex items-center gap-2 truncate pb-[2px] text-[16px] font-semibold">
+            <span className="flex-grow truncate">
+              {chatRoomState.getChatRoomName()}
+            </span>
+            {unreadMsgCount ? (
+              <div className="mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-theme-color text-[11px] text-white">
+                {unreadMsgCount}
+              </div>
+            ) : null}
           </p>
           <div className="flex items-center justify-between text-[14px] font-medium text-msg-message lg:text-[13px]">
             <span className="truncate">{messageState?.getMessageText()}</span>
