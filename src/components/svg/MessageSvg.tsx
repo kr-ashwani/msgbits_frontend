@@ -73,8 +73,8 @@ export const MessageSvg = (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
-        width={opts.width ? opts.width : "15"}
-        height={opts.height ? opts.height : "15"}
+        width={opts.width ? opts.width : "16"}
+        height={opts.height ? opts.height : "16"}
         viewBox="0 0 24 24"
         stroke="currentColor"
       >
