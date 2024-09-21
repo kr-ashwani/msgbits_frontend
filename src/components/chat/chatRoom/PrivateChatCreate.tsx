@@ -1,6 +1,5 @@
 import useSlide from "@/components/StackSlider/hooks/useSlide";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
@@ -9,6 +8,7 @@ import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import Slider from "../../utility/Slider";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
@@ -91,7 +91,11 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
               key={user._id}
               className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
             >
-              <Avatar src={user.profilePicture} size={45} />
+              <StatusAvatar
+                userId={user._id}
+                src={user.profilePicture}
+                size={45}
+              />
               <div className="flex flex-col overflow-hidden">
                 <p className="truncate text-[16px] font-semibold">
                   {user.name}

@@ -21,6 +21,12 @@ export const UserSchema = z.object({
   profilePicture: z.string({
     required_error: "Profile picture is required",
   }),
+  profileColor: z.string({
+    required_error: "profile color is required",
+  }),
+  lastOnline: z.string({
+    required_error: "last online is required",
+  }),
 });
 
 export const OAuthUserSchema = z.object({

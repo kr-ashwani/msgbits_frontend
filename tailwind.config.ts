@@ -43,6 +43,7 @@ const config: Config = {
       "grey-400": "#707079",
       "grey-100": "#F2F2F2",
       "chat-text-bg": "var(--chat-text-bg)",
+      "user-online": "#23be7e",
 
       background: "hsl(var(--background))",
       foreground: "hsl(var(--foreground))",
@@ -95,6 +96,7 @@ const config: Config = {
       borderRadius: {
         "sender-chat-radus": "20px 0 20px 20px",
         "user-chat-radius": "0 20px 20px 20px",
+        "typing-status-radius": "15px 15px 0 0",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
@@ -122,12 +124,36 @@ const config: Config = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
+        typing: {
+          "0%": { transform: "scale(1)", opacity: "0.2" },
+          "20%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.15)", opacity: "0.5" },
+          "100%": { transform: "scale(1)", opacity: "0.2" },
+        },
       },
       animation: {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        typing: "typing 1.4s infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({
+      addUtilities,
+    }: {
+      addUtilities: (utilities: Record<string, Record<string, string>>) => void;
+    }) {
+      const newUtilities = {
+        ".delay-150": {
+          "animation-delay": "150ms",
+        },
+        ".delay-300": {
+          "animation-delay": "300ms",
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };
 export default config;

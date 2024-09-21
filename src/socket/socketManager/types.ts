@@ -22,6 +22,7 @@ export interface ChatRoomEmitterMapping {
   "chatroom-removeUser": ChatRoomAndMember;
   "chatroom-makeAdmin": ChatRoomAndMember;
   "chatroom-removeAdmin": ChatRoomAndMember;
+  "chatroom-memberTyping": ChatRoomAndMember;
 }
 
 export interface MessageEmitterMapping {
@@ -31,6 +32,8 @@ export interface MessageEmitterMapping {
 }
 export interface SyncEmitterMapping {
   "sync-updateChatRoom:Messages:ChatUsers": SyncUpdateInput;
+  "sync-allUserStatus": null;
+  heartbeat: string;
 }
 
 export type EmitterMapping = ChatRoomEmitterMapping &
@@ -46,6 +49,7 @@ const ChatRoomListenerSchema = {
   "chatroom-removeUser": ChatRoomAndMemberSchema,
   "chatroom-makeAdmin": ChatRoomAndMemberSchema,
   "chatroom-removeAdmin": ChatRoomAndMemberSchema,
+  "chatroom-memberTyping": ChatRoomAndMemberSchema,
 };
 
 const MessageListenerSchema = {
@@ -60,6 +64,10 @@ const ChatUserListenerSchema = {
   "chatuser-create": ChatUserSchema,
   "chatuser-update": ChatUserSchema,
   "chatuser-getall": z.array(ChatUserSchema),
+  "chatuser-statusChange": z.object({
+    userId: z.union([z.string(), z.array(z.string())]),
+    status: z.string(),
+  }),
 };
 
 const SyncListenerSchema = {
@@ -69,6 +77,7 @@ const SyncListenerSchema = {
     message: z.record(z.string(), z.array(MessageSchema)),
     chatUser: z.array(ChatUserSchema),
   }),
+  "sync-allUserStatus": z.array(z.string()),
 };
 
 const ListenerSchema = {

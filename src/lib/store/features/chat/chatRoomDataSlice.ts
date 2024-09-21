@@ -1,3 +1,4 @@
+import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { IMessage } from "@/schema/MessageSchema";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -13,6 +14,9 @@ export type chatInputMessageState = {
 export type unreadMessagesState = {
   [p in string]: number;
 };
+export type userOnlineStatusState = {
+  [p in string]: boolean;
+};
 export type newGroupMembersState = string[];
 
 export interface chatRoomDataState {
@@ -20,12 +24,14 @@ export interface chatRoomDataState {
   typingStatus: typingStatusState;
   newGroupMembers: newGroupMembersState;
   unreadMessages: unreadMessagesState;
+  userOnlineStatus: userOnlineStatusState;
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
   typingStatus: {},
   newGroupMembers: [],
   unreadMessages: {},
+  userOnlineStatus: {},
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -41,10 +47,7 @@ export const chatRoomDataSlice = createSlice({
     resetNewGroupMembers(state, action: PayloadAction<void>) {
       state.newGroupMembers = [];
     },
-    changeTypingStatus(
-      state,
-      action: PayloadAction<{ chatRoomId: string; memberId: string }>,
-    ) {
+    changeTypingStatus(state, action: PayloadAction<ChatRoomAndMember>) {
       state.typingStatus[action.payload.chatRoomId] = action.payload.memberId;
     },
     resetTypingStatus(state, action: PayloadAction<{ chatRoomId: string }>) {
@@ -87,6 +90,8 @@ export const chatRoomDataSlice = createSlice({
             if (msg.senderId === userId) break;
             // if message is already seen by user then also exit
             else if (msg.seenBy.includes(userId)) break;
+            // if message is of info type then don't do anything
+            else if (msg.type === "info") continue;
             // user hasn't seen the message so mark it
             else
               state.unreadMessages[msg.chatRoomId] =
@@ -103,6 +108,22 @@ export const chatRoomDataSlice = createSlice({
     ) {
       state.unreadMessages[action.payload.chatRoomId] = 0;
     },
+
+    setOnlineStatus(
+      state,
+      action: PayloadAction<{
+        userId: string | string[];
+        status: "online" | "offline";
+      }>,
+    ) {
+      const userId = action.payload.userId;
+      const status = action.payload.status;
+      const userIds = Array.isArray(userId) ? userId : [userId];
+
+      userIds.forEach((id) => {
+        state.userOnlineStatus[id] = status === "online" ? true : false;
+      });
+    },
   },
 });
 
@@ -114,6 +135,7 @@ export const {
   setChatInputMessage,
   setUnreadMessages,
   resetUnreadMessages,
+  setOnlineStatus,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;

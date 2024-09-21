@@ -9,6 +9,7 @@ import {
   updateMsgStatusToDom,
 } from "./utils/updateMsgStatusToDom";
 import { useEmitMessageSeen } from "@/hooks/useEmitMessageSeen";
+import TypingStatus from "./TypingStatus";
 
 const ChatAreaView = () => {
   const messageContainer = useMessageState();
@@ -23,16 +24,18 @@ const ChatAreaView = () => {
   useChatViewScrollAnimation(chatView, messageStateArr);
   const msgStatus = useRef<MsgStatus>(resetMsgStatus());
   useEmitMessageSeen(messageStateArr, selectedChat);
+  const typingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     updateMsgStatusToDom(msgStatus.current, "show");
     const cloneStatus = { ...msgStatus.current };
     return () => updateMsgStatusToDom(cloneStatus, "hide");
   }, [selectedChat, messageStateArr]);
+
   return (
     <div
       ref={chatView}
-      className="flex grow flex-col overflow-y-auto px-2 pb-5 pt-2 font-manrope md:px-2"
+      className="relative z-[1] flex grow flex-col overflow-y-auto px-2 pb-5 pt-2 font-manrope md:px-2"
     >
       <div className="w-full grow"></div>
       {renderMessages(messageStateArr, msgStatus, selectedChat)}

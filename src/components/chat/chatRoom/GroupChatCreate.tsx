@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import { IUser } from "@/schema/userSchema";
 import GroupChatNewMembers from "./GroupChatNewMembers";
@@ -9,6 +8,7 @@ import useSlide from "@/components/StackSlider/hooks/useSlide";
 import Slider from "../../utility/Slider";
 import { useNewGroupMembersState } from "@/hooks/AppSelector/useNewGroupMembersState";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -110,7 +110,11 @@ const GroupChatCreate = ({
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
             <div className="relative">
-              <Avatar src={user.profilePicture} size={45} />
+              <StatusAvatar
+                userId={user._id}
+                src={user.profilePicture}
+                size={45}
+              />
               {newGroup.members.some((member) => member._id === user._id) ? (
                 <>
                   <div className="absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>

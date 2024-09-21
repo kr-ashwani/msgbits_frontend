@@ -1,8 +1,8 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import React from "react";
 import { NewGroupType } from "./ChatRoomWrapper";
 import { setNewGroupList } from "./GroupChatCreate";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 const GroupChatNewMembers = ({
   newGroup,
@@ -25,7 +25,11 @@ const GroupChatNewMembers = ({
           className="flex cursor-pointer flex-col gap-2"
         >
           <div className="relative self-center">
-            <Avatar src={member.profilePicture} size={50} />
+            <StatusAvatar
+              userId={member._id}
+              src={member.profilePicture}
+              size={50}
+            />
 
             <div className="absolute bottom-[-4px] right-[-4px] rounded-full bg-theme-bg-color p-[2px]">
               <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-theme-color text-white">

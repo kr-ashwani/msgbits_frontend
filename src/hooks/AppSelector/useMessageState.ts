@@ -54,6 +54,9 @@ export class MessageState {
   isMessageAlreadySeen() {
     return this.messageContainerState.isMessageAlreadySeen(this.messageId);
   }
+  getChatRoomId() {
+    return this.messageContainerState.getChatRoomId(this.messageId);
+  }
 }
 class MessageContainerState {
   private message: messageState;
@@ -170,6 +173,10 @@ class MessageContainerState {
     if (msg.senderId === this.user._id) return false;
     if (msg.seenBy.includes(this.user._id)) return true;
     return false;
+  }
+  getChatRoomId(messageId: string) {
+    const msg = this.message[messageId];
+    return msg ? msg.chatRoomId : null;
   }
 }
 

@@ -217,8 +217,8 @@ class ChatService {
     if (!chatRoom.admins.includes(this.user._id || ""))
       return toast.error("User doesnot have privilege to remove another user");
 
-    if (chatRoom.createdBy === this.user._id)
-      return toast.error("You cannot remove owner of the group");
+    if (chatRoom.createdBy === memberId)
+      return toast.error("You cannot remove group owner");
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} removed ${capitalizeStr(memberName)}`,
@@ -247,10 +247,8 @@ class ChatService {
         "User doesnot have privilege to demote another user to admin",
       );
 
-    if (chatRoom.createdBy === this.user._id)
-      return toast.error(
-        "You cannot remove admin role from owner of the group",
-      );
+    if (chatRoom.createdBy === memberId)
+      return toast.error("You cannot remove admin role from group owner");
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} demoted ${capitalizeStr(memberName)} from admin`,
@@ -275,8 +273,8 @@ class ChatService {
       return toast.error(
         "User doesnot have privilege to promote another user to admin",
       );
-    if (chatRoom.createdBy === this.user._id)
-      return toast.error("You cannot promote owner of the group to admin");
+    if (chatRoom.createdBy === memberId)
+      return toast.error("You cannot promote group owner to admin");
 
     const infoMsg = new InfoMessage(
       `${capitalizeStr(this.user.name)} made ${capitalizeStr(memberName)} admin`,
@@ -288,6 +286,17 @@ class ChatService {
     this.chatRoomDispatch.makeAdmin(payload);
     this.socketQueue.emitChatRoom("chatroom-makeAdmin", payload);
     this.addToStoreAndEmitMsg(infoMsg.toObject());
+  }
+
+  sendTypingIndicator() {
+    const chatRoomId = this.selectedChat.id;
+    const memberId = this.user?._id;
+    if (!chatRoomId || !memberId) return;
+
+    this.socketQueue.emitDirectly("chatroom-memberTyping", {
+      chatRoomId,
+      memberId,
+    });
   }
 }
 

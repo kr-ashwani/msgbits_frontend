@@ -5,6 +5,8 @@ import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatUnreadMessages } from "@/hooks/chat/useChatUnreadMessages";
+import ChatRoomLastMessage from "./ChatRoomLastMessage";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 const ChatRoom = ({
   chatRoomState,
@@ -48,9 +50,17 @@ const ChatRoom = ({
       <div
         className={`flex w-full gap-4 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
       >
-        <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
+        {chatRoomState.getChatType() === "group" ? (
+          <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
+        ) : (
+          <StatusAvatar
+            userId={chatRoomState.getOtherUserIdInPrivateChat()}
+            src={chatRoomState.getChatRoomPicture()}
+            size={45}
+          />
+        )}
         <div className="w-full overflow-hidden">
-          <p className="flex items-center gap-2 truncate pb-[2px] text-[16px] font-semibold">
+          <div className="flex items-center gap-2 truncate pb-[2px] text-[16px] font-semibold">
             <span className="flex-grow truncate">
               {chatRoomState.getChatRoomName()}
             </span>
@@ -59,9 +69,11 @@ const ChatRoom = ({
                 {unreadMsgCount}
               </div>
             ) : null}
-          </p>
+          </div>
           <div className="flex items-center justify-between text-[14px] font-medium text-msg-message lg:text-[13px]">
-            <span className="truncate">{messageState?.getMessageText()}</span>
+            {messageState ? (
+              <ChatRoomLastMessage messageState={messageState} />
+            ) : null}
             <span className="whitespace-pre-wrap text-nowrap before:mr-0.5 before:content-['•']">
               {messageState?.getLastMessageTimeFromNow()}
             </span>

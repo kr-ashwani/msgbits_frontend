@@ -13,6 +13,8 @@ import {
 } from "./AppSelector/useChatUserState";
 import { socketState } from "@/lib/store/features/socket/socketSlice";
 
+const HEARTBEAT_INTERVAL = 50 * 1000; // 1 minute in seconds
+
 export type SyncUpdateInput = {
   chatRoom: {
     [p in string]: {
@@ -30,6 +32,7 @@ class SocketSyncService {
   private messageState: messageState;
   private chatUserState: ChatUserState;
   private socketState: socketState;
+  private heartbeatTimer: NodeJS.Timeout | null = null;
 
   constructor(
     socketQueue: SocketEmitterQueue,
@@ -66,6 +69,13 @@ class SocketSyncService {
     });
 
     this.socketQueue.emit("sync-updateChatRoom:Messages:ChatUsers", syncUpdate);
+    this.socketQueue.emit("sync-allUserStatus", null);
+
+    if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
+
+    this.heartbeatTimer = setInterval(() => {
+      this.socketQueue.emitDirectly("heartbeat", "I am still alive 💀💀💀");
+    }, HEARTBEAT_INTERVAL);
   };
 }
 

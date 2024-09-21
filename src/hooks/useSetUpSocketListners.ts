@@ -7,6 +7,7 @@ import { useSocketSyncService } from "./useSocketSyncService";
 import { useSocketEmiterService } from "./useSocketEmiterService";
 import { IMessage } from "@/schema/MessageSchema";
 import { useUpdateSocketLastDisconnect } from "./useUpdateSocketLastDisconnect";
+import { useChatRoomDataDispatch } from "./AppDispatcher/useChatRoomDataDispatch";
 
 /**
  * All socket listeners for the App must be registered here
@@ -16,6 +17,7 @@ export const useSetUpSocketListners = () => {
   const { socket } = useSocket();
   const messageDispatch = useMessageDispatch();
   const chatRoomDispatch = useChatRoomDispatch();
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
   const chatUserDispatch = useChatUserDispatch();
   const socketSyncService = useSocketSyncService();
   const socketService = useSocketEmiterService();
@@ -37,8 +39,14 @@ export const useSetUpSocketListners = () => {
       socket.on("chatroom-makeAdmin", chatRoomDispatch.makeAdmin),
       socket.on("chatroom-removeAdmin", chatRoomDispatch.removeAdmin),
       socket.on("chatroom-removeUser", chatRoomDispatch.exitChatRoom),
+      socket.on(
+        "chatroom-memberTyping",
+        chatRoomDataDispatch.changeTypingStatus,
+      ),
       // Listening to all chatUser events
       socket.on("chatuser-create", chatUserDispatch.createChatUser),
+      socket.on("chatuser-statusChange", chatUserDispatch.getStatusUpdate),
+
       //Listening to Sync Service
       socket.on("sync-update", socketSyncService.listenForSyncInitiator),
       socket.on("sync-updateChatRoom:Messages:ChatUsers", (payload) => {
@@ -53,6 +61,7 @@ export const useSetUpSocketListners = () => {
         socketService.updateMsgStatus("delivered", totalMsg);
         chatUserDispatch.getAllChatUser(payload.chatUser);
       }),
+      socket.on("sync-allUserStatus", chatUserDispatch.getUserOnlineStatus),
     ];
 
     return () => {
@@ -68,5 +77,6 @@ export const useSetUpSocketListners = () => {
     socket,
     socketSyncService,
     socketService,
+    chatRoomDataDispatch,
   ]);
 };

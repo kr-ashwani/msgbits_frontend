@@ -1,11 +1,12 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 
 import React, { ReactNode } from "react";
+import StatusAvatar from "../chatUser/StatusAvatar";
+import Avatar from "@/components/utility/Avatar";
 
 function getChatMembersPictures(chatRoom: ChatRoomState) {
   const members = chatRoom.getChatRoomMembers();
@@ -25,12 +26,22 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
       break;
     }
     userList.push(
-      <Avatar
-        className="ml-[-12px] border-2 border-theme-bg-color"
-        key={user._id}
-        src={user.profilePicture}
-        size={35}
-      />,
+      chatRoom.getChatType() === "group" ? (
+        <Avatar
+          className="ml-[-12px] border-2 border-theme-bg-color"
+          key={user._id}
+          src={user.profilePicture}
+          size={35}
+        />
+      ) : (
+        <StatusAvatar
+          userId={user._id}
+          className="ml-[-12px] border-2 border-theme-bg-color"
+          key={user._id}
+          src={user.profilePicture}
+          size={35}
+        />
+      ),
     );
   }
   return userList;

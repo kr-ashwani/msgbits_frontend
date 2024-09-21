@@ -7,26 +7,34 @@ import {
 } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
+import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { useMemo } from "react";
 
 export class ChatRoomDataDispatch {
   private dispatch: AppDispatch;
+  private chatTypingTimeOut: { [p in string]: NodeJS.Timeout } = {};
 
-  addNewGroupMembers(members: string[]) {
+  addNewGroupMembers = (members: string[]) => {
     this.dispatch(addNewGroupMembers(members));
-  }
-  resetNewGroupMembers() {
+  };
+  resetNewGroupMembers = () => {
     this.dispatch(resetNewGroupMembers());
-  }
-  changeTypingStatus(payload: { chatRoomId: string; memberId: string }) {
+  };
+  changeTypingStatus = (payload: ChatRoomAndMember) => {
     this.dispatch(changeTypingStatus(payload));
-  }
-  resetTypingStatus(payload: { chatRoomId: string }) {
+
+    const timeout = this.chatTypingTimeOut[payload.chatRoomId];
+    if (timeout) clearTimeout(timeout);
+    this.chatTypingTimeOut[payload.chatRoomId] = setTimeout(() => {
+      this.resetTypingStatus({ chatRoomId: payload.chatRoomId });
+    }, 5000);
+  };
+  resetTypingStatus = (payload: { chatRoomId: string }) => {
     this.dispatch(resetTypingStatus(payload));
-  }
-  resetUnreadMessages(payload: { chatRoomId: string }) {
+  };
+  resetUnreadMessages = (payload: { chatRoomId: string }) => {
     this.dispatch(resetUnreadMessages(payload));
-  }
+  };
 
   constructor(dispatch: AppDispatch) {
     this.dispatch = dispatch;

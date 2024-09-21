@@ -1,11 +1,11 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import React from "react";
 import GroupChatMembers from "./GroupChatMembers";
 import GroupChatPrivacy from "./GroupChatPrivacy";
 import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
 import SharedPhotos from "./SharedPhotos";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 const ChatRoomDetailsInfo = ({
   chatRoomState,
@@ -20,7 +20,12 @@ const ChatRoomDetailsInfo = ({
     <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
-          <Avatar src={chatRoomState.getChatRoomPicture() || ""} size={120} />
+          <StatusAvatar
+            indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
+            userId={memberId}
+            src={chatRoomState.getChatRoomPicture() || ""}
+            size={120}
+          />
         </div>
         <div className="text-lg font-semibold">
           {chatRoomState.getChatRoomName()}

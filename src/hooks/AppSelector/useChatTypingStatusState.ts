@@ -2,6 +2,7 @@ import { typingStatusState } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { chatUserState } from "@/lib/store/features/chat/chatUserSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { IUser } from "@/schema/userSchema";
+import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 import { useMemo } from "react";
 
 export class ChatTypingStatusState {
@@ -17,6 +18,23 @@ export class ChatTypingStatusState {
     this.typingStatus = typingStatus;
     this.chatUser = chatUser;
     this.user = user;
+  }
+
+  getUser(chatRoomId: string) {
+    const memberId = this.typingStatus[chatRoomId];
+    if (!this.user || !memberId) return null;
+    const member = this.chatUser[memberId];
+    if (!member) return null;
+
+    const userName =
+      this.user._id === member._id
+        ? "You"
+        : capitalizeStr(member.name.split(" ")[0]);
+
+    return {
+      userName,
+      user: member,
+    };
   }
 }
 

@@ -1,9 +1,9 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Avatar from "@/components/utility/Avatar";
 import React from "react";
 import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
 import { IUser } from "@/schema/userSchema";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
+import StatusAvatar from "../chatUser/StatusAvatar";
 
 const UserDetails = ({ user }: { user: IUser }) => {
   function getJoinedDate(date: string) {
@@ -17,7 +17,12 @@ const UserDetails = ({ user }: { user: IUser }) => {
     <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
-          <Avatar src={user.profilePicture || ""} size={120} />
+          <StatusAvatar
+            indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
+            userId={user._id}
+            src={user.profilePicture || ""}
+            size={120}
+          />
         </div>
         <div className="text-lg font-semibold">{capitalizeStr(user.name)}</div>
         <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Joined on ${getJoinedDate(user.createdAt)}`}</div>
