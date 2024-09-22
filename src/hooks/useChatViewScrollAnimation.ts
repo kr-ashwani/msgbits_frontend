@@ -17,9 +17,8 @@ export const useChatViewScrollAnimation = (
     if (!messageStateArr.length) return;
     const chatViewComp = chatView.current;
     if (chatViewComp) {
-      if (isMounted.current)
-        chatViewComp.style.cssText = "scroll-behavior:smooth";
-      else chatViewComp.style.cssText = "";
+      if (isMounted.current) chatViewComp.style.scrollBehavior = "smooth";
+      else chatViewComp.style.scrollBehavior = "";
 
       chatViewComp.scrollTop = chatViewComp.scrollHeight;
     }

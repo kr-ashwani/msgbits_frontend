@@ -2,6 +2,8 @@
 import { getCurrentTranslateX } from "@/utils/custom/getTranslateX";
 import { RefObject, useEffect } from "react";
 
+const LEFT_THRESHOLD = 70;
+
 const useRightSwipeToggle = (
   comp: RefObject<HTMLElement>,
   setter: (a: boolean) => void,
@@ -34,7 +36,7 @@ const useRightSwipeToggle = (
       prevDis = startBuff;
       vel = 0;
 
-      shouldMove = startBuff < 100 ? true : false;
+      shouldMove = startBuff < LEFT_THRESHOLD ? true : false;
       translatePercent = 0;
       prevTranslatePercent = translatePercent;
     }

@@ -99,12 +99,8 @@ export class InfoMessage extends Message implements IInfoMessage {
 export class TimestampMessage extends Message implements IInfoMessage {
   type: "info";
 
-  constructor(
-    senderId: string,
-    chatRoomId: string,
-    repliedTo: string | null = null,
-  ) {
-    super("TIMESTAMP", senderId, chatRoomId, repliedTo);
+  constructor(senderId: string, chatRoomId: string) {
+    super("TIMESTAMP", senderId, chatRoomId, null);
     this.type = "info";
   }
 

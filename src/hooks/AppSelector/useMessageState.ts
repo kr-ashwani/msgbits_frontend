@@ -16,14 +16,17 @@ export class MessageState {
     this.messageId = messageId;
     this.messageContainerState = messageContainerState;
   }
+  getContainer() {
+    return this.messageContainerState;
+  }
   getMessageText() {
     return this.messageContainerState.getMessageTextById(this.messageId);
   }
   isMessageFromSelf() {
     return this.messageContainerState.isMessageFromSelf(this.messageId);
   }
-  getUser() {
-    return this.messageContainerState.getUser(this.messageId);
+  getSenderUser() {
+    return this.messageContainerState.getSenderUser(this.messageId);
   }
   getRawMessage() {
     return this.messageContainerState.getRawMessage(this.messageId);
@@ -58,7 +61,7 @@ export class MessageState {
     return this.messageContainerState.getChatRoomId(this.messageId);
   }
 }
-class MessageContainerState {
+export class MessageContainerState {
   private message: messageState;
   private chatRoomToMessageMap: chatRoomToMessageMapState;
   private chatUser: ChatUserState;
@@ -130,7 +133,7 @@ class MessageContainerState {
 
     return this.message[messageId].senderId === this.user._id;
   }
-  getUser(messageId: string) {
+  getSenderUser(messageId: string) {
     if (!this.message[messageId]) return null;
     return this.chatUser.getUserById(this.message[messageId].senderId);
   }

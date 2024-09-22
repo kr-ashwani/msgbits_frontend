@@ -10,6 +10,9 @@ import { useCacheInputMessage } from "@/hooks/chat/useCacheInputMessage";
 import debounce from "lodash/debounce";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import TypingStatus from "./TypingStatus";
+import { useRepliedToMessageState } from "@/hooks/AppSelector/useRepliedToMessageState";
+import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import { useAppSelector } from "@/lib/store/hooks";
 
 const TYPING_DEBOUNCE_DELAY = 500; //  500 msecond
 
@@ -26,6 +29,10 @@ const ChatAreaFooter = () => {
   const selectedChat = useSelectedChatState();
   const footerRef = useRef<HTMLDivElement>(null);
   const typingRef = useRef<HTMLDivElement>(null);
+  const repliedMsgState = useAppSelector(
+    (state) => state.chat.chatRoomData.repliedToMessage,
+  );
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
 
   // Create a memoized version of the typing indicator function
   const sendTypingIndicator = useCallback(() => {
@@ -107,11 +114,18 @@ const ChatAreaFooter = () => {
   );
 
   function sendMessage() {
-    if (!messageDiv.current) return;
+    const chatRoomId = selectedChat.getSelectedChatId();
+    if (!messageDiv.current || !chatRoomId) return;
     messageDiv.current.focus();
 
     if (!message.trim()) return updateMessage();
-    chatService.sendNewTextMessage(message.trim());
+    chatService.sendNewTextMessage(
+      message.trim(),
+      repliedMsgState[chatRoomId] || null,
+    );
+    chatRoomDataDispatch.resetRepliedToMessage({
+      chatRoomId,
+    });
     updateMessage();
   }
 

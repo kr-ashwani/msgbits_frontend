@@ -7,14 +7,19 @@ import TextMessage from "../TextMessage";
 import TimestampMessage from "../TimestampMessage";
 import { MsgStatus, resetMsgStatus } from "./updateMsgStatusToDom";
 import InfoMessage from "../InfoMessage";
+import SwipeableRightElement from "../SwipeableRightElement";
+import MessageFrame from "./MessageFrame";
+import { ChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 
 function renderMessageWithType(messageState: MessageState): ReactNode {
   const rawMessage = messageState.getRawMessage();
+
   if (!rawMessage) return null;
 
   switch (rawMessage.type) {
     case "text":
       return <TextMessage messageState={messageState} />;
+
     case "info":
       return rawMessage.message === "TIMESTAMP" ? (
         <TimestampMessage messageState={messageState} />
@@ -32,6 +37,7 @@ export function renderMessages(
   messageStateArr: MessageState[],
   msgStatus: React.MutableRefObject<MsgStatus>,
   selectedChat: SelectedChatState,
+  chatRoomDataDispatch: ChatRoomDataDispatch,
 ): ReactNode {
   msgStatus.current = resetMsgStatus();
 
@@ -39,7 +45,7 @@ export function renderMessages(
   let userId: string = "xxxNULLxxx";
 
   messageStateArr.forEach((messageState) => {
-    const user = messageState.getUser();
+    const user = messageState.getSenderUser();
     const rawMessage = messageState.getRawMessage();
     if (!user || !rawMessage) return;
 
@@ -58,10 +64,7 @@ export function renderMessages(
         );
       } else {
         return (
-          <div
-            id={msgId}
-            className="relative flex h-[15px] w-[15px] items-center justify-center self-end pb-[5px] text-theme-color"
-          ></div>
+          <div className="status relative flex h-[15px] w-[15px] items-center justify-center self-end pb-[5px] text-theme-color"></div>
         );
       }
     };
@@ -81,21 +84,41 @@ export function renderMessages(
         !selfMessage &&
         selectedChat.getChatState()?.getChatType() === "group" ? (
         <div className="w-52 translate-y-[2px] truncate text-xs font-semibold text-msg-message">
-          {messageState.getUser()?.name}
+          {messageState.getSenderUser()?.name}
         </div>
       ) : null;
     };
 
     message.push(
-      <div
-        key={msgId}
-        className={`flex w-full gap-1 ${selfMessage ? "flex-row-reverse gap-[6px]" : "md:gap-3"} ${
-          showAvatar ? "mt-[8px]" : ""
-        }`}
-      >
-        {renderAvatar()}
-        {renderMessageFrame()}
-      </div>,
+      rawMessage.type === "info" ? (
+        <MessageFrame
+          key={msgId}
+          msgId={msgId}
+          renderAvatar={renderAvatar}
+          renderMessageFrame={renderMessageFrame}
+          showAvatar={showAvatar}
+          selfMessage={selfMessage}
+        />
+      ) : (
+        <SwipeableRightElement
+          key={msgId}
+          leftBufferPx={60}
+          onReply={() => {
+            chatRoomDataDispatch.setRepliedToMessage({
+              chatRoomId: rawMessage.chatRoomId,
+              messageId: msgId,
+            });
+          }}
+        >
+          <MessageFrame
+            msgId={msgId}
+            renderAvatar={renderAvatar}
+            renderMessageFrame={renderMessageFrame}
+            showAvatar={showAvatar}
+            selfMessage={selfMessage}
+          />
+        </SwipeableRightElement>
+      ),
     );
 
     // for which user avatar has been shown

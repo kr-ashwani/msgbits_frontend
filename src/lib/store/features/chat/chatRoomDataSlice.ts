@@ -17,6 +17,9 @@ export type unreadMessagesState = {
 export type userOnlineStatusState = {
   [p in string]: boolean;
 };
+export type repliedToMessageState = {
+  [p in string]: string;
+};
 export type newGroupMembersState = string[];
 
 export interface chatRoomDataState {
@@ -25,6 +28,7 @@ export interface chatRoomDataState {
   newGroupMembers: newGroupMembersState;
   unreadMessages: unreadMessagesState;
   userOnlineStatus: userOnlineStatusState;
+  repliedToMessage: repliedToMessageState;
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -32,6 +36,7 @@ const initialState: chatRoomDataState = {
   newGroupMembers: [],
   unreadMessages: {},
   userOnlineStatus: {},
+  repliedToMessage: {},
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -124,6 +129,24 @@ export const chatRoomDataSlice = createSlice({
         state.userOnlineStatus[id] = status === "online" ? true : false;
       });
     },
+    setRepliedToMessage(
+      state,
+      action: PayloadAction<{
+        chatRoomId: string;
+        messageId: string;
+      }>,
+    ) {
+      state.repliedToMessage[action.payload.chatRoomId] =
+        action.payload.messageId;
+    },
+    resetRepliedToMessage(
+      state,
+      action: PayloadAction<{
+        chatRoomId: string;
+      }>,
+    ) {
+      delete state.repliedToMessage[action.payload.chatRoomId];
+    },
   },
 });
 
@@ -136,6 +159,8 @@ export const {
   setUnreadMessages,
   resetUnreadMessages,
   setOnlineStatus,
+  setRepliedToMessage,
+  resetRepliedToMessage,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;

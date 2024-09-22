@@ -33,11 +33,21 @@ export function updateMsgStatusToDom(
   updateDom(msgStatus.lastSeenMsg, "msgSeen", action);
 }
 
-function updateDom(id: string | null, status: Status, action: "show" | "hide") {
-  if (id) {
-    const elem = document.getElementById(id);
-    if (elem)
-      elem.innerHTML =
+function updateDom(
+  messageId: string | null,
+  status: Status,
+  action: "show" | "hide",
+) {
+  if (messageId) {
+    const msgElem = document.getElementById(messageId);
+    if (!msgElem) return;
+
+    const [statusElem] = Array.from(
+      msgElem.getElementsByClassName("status"),
+    ) as HTMLElement[];
+
+    if (statusElem)
+      statusElem.innerHTML =
         action === "show"
           ? ReactDOMServer.renderToString(
               <div className="absolute">{MessageSvg(status)}</div>,

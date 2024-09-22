@@ -1,7 +1,7 @@
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatViewScrollAnimation } from "@/hooks/useChatViewScrollAnimation";
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import { renderMessages } from "./utils/renderMessage";
 import {
   MsgStatus,
@@ -9,7 +9,12 @@ import {
   updateMsgStatusToDom,
 } from "./utils/updateMsgStatusToDom";
 import { useEmitMessageSeen } from "@/hooks/useEmitMessageSeen";
-import TypingStatus from "./TypingStatus";
+import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import { useRepliedToMessageState } from "@/hooks/AppSelector/useRepliedToMessageState";
+import RepliedToMessageDrawer from "./RepliedToMessageDrawer";
+
+export const REPLIED_TO_HEIGHT = 100;
+export const REPLIED_TO_DURATION = 250;
 
 const ChatAreaView = () => {
   const messageContainer = useMessageState();
@@ -20,11 +25,18 @@ const ChatAreaView = () => {
       ? messageContainer.getAllMessages()[selectedChatId] || []
       : [];
   }, [messageContainer, selectedChat]);
-  const chatView = useRef<HTMLDivElement>(null);
-  useChatViewScrollAnimation(chatView, messageStateArr);
+
+  const chatList = useRef<HTMLDivElement>(null);
+  useChatViewScrollAnimation(chatList, messageStateArr);
   const msgStatus = useRef<MsgStatus>(resetMsgStatus());
   useEmitMessageSeen(messageStateArr, selectedChat);
-  const typingRef = useRef<HTMLDivElement>(null);
+  const chatRoomDataDispatch = useChatRoomDataDispatch();
+  const repliedToMessageState = useRepliedToMessageState();
+  const repliedMessage = useMemo(
+    () => repliedToMessageState.getRepliedToMessage(),
+    [repliedToMessageState],
+  );
+  const isAlreadyInReplyMode = useRef(false);
 
   useEffect(() => {
     updateMsgStatusToDom(msgStatus.current, "show");
@@ -32,13 +44,51 @@ const ChatAreaView = () => {
     return () => updateMsgStatusToDom(cloneStatus, "hide");
   }, [selectedChat, messageStateArr]);
 
+  useEffect(() => {
+    const chatView = chatList.current;
+    if (!chatView) return;
+
+    if (!repliedMessage) {
+      chatView.scrollTop -= REPLIED_TO_HEIGHT;
+      chatView.style.setProperty("height", `100%`);
+      chatView.style.transform = `translateY(0px)`;
+
+      isAlreadyInReplyMode.current = false;
+      return;
+    }
+
+    setTimeout(() => {
+      if (isAlreadyInReplyMode.current) return;
+      chatView.style.setProperty(
+        "height",
+        `calc(100% - ${REPLIED_TO_HEIGHT}px)`,
+      );
+      chatView.scrollTop += REPLIED_TO_HEIGHT;
+      isAlreadyInReplyMode.current = true;
+    }, REPLIED_TO_DURATION);
+    chatView.style.transform = `translateY(${-1 * REPLIED_TO_HEIGHT}px)`;
+  }, [repliedMessage]);
+
   return (
     <div
-      ref={chatView}
-      className="relative z-[1] flex grow flex-col overflow-y-auto px-2 pb-5 pt-2 font-manrope md:px-2"
+      className={`relative z-[1] flex grow flex-col justify-end overflow-x-hidden overflow-y-hidden`}
     >
-      <div className="w-full grow"></div>
-      {renderMessages(messageStateArr, msgStatus, selectedChat)}
+      <div
+        ref={chatList}
+        className={`chat-scroll-container relative z-[1] flex h-full flex-col overflow-y-auto overflow-x-hidden px-2 pb-5 pt-2 font-manrope md:px-2`}
+        style={{
+          transition: `transform ${REPLIED_TO_DURATION}ms cubic-bezier(0.1, 0.82, 0.25, 1)`,
+        }}
+      >
+        <div key="XXX" className="w-full grow"></div>
+        {renderMessages(
+          messageStateArr,
+          msgStatus,
+          selectedChat,
+          chatRoomDataDispatch,
+        )}
+      </div>
+      <RepliedToMessageDrawer repliedMessage={repliedMessage} />
     </div>
   );
 };

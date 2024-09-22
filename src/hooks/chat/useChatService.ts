@@ -76,7 +76,7 @@ class ChatService {
     this.socketQueue.emitChatRoom("chatroom-create", chatRoom);
   }
 
-  sendNewTextMessage(message: string) {
+  sendNewTextMessage(message: string, repliedTo: string | null) {
     if (!this.user || !this.selectedChat.id) return;
     let chatRoomId = this.selectedChat.id;
 
@@ -88,7 +88,7 @@ class ChatService {
       timeStampMsg = new TimestampMessage(this.user._id, chatRoomId);
 
     //chatRoomId can be user id so dont forget to update it
-    const msg = new TextMessage(message, this.user._id, chatRoomId);
+    const msg = new TextMessage(message, this.user._id, chatRoomId, repliedTo);
     if (!this.chatRoom[chatRoomId]) {
       // which means chatRoomId is userId.
       const chatRoom = new PrivateChatRoom(

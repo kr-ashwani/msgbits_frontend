@@ -2,8 +2,10 @@ import {
   addNewGroupMembers,
   changeTypingStatus,
   resetNewGroupMembers,
+  resetRepliedToMessage,
   resetTypingStatus,
   resetUnreadMessages,
+  setRepliedToMessage,
 } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
@@ -34,6 +36,16 @@ export class ChatRoomDataDispatch {
   };
   resetUnreadMessages = (payload: { chatRoomId: string }) => {
     this.dispatch(resetUnreadMessages(payload));
+  };
+
+  setRepliedToMessage = (payload: {
+    chatRoomId: string;
+    messageId: string;
+  }) => {
+    this.dispatch(setRepliedToMessage(payload));
+  };
+  resetRepliedToMessage = (payload: { chatRoomId: string }) => {
+    this.dispatch(resetRepliedToMessage(payload));
   };
 
   constructor(dispatch: AppDispatch) {
