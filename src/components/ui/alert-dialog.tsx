@@ -99,7 +99,7 @@ const AlertDialogAction = React.forwardRef<
   <AlertDialogPrimitive.Action
     ref={ref}
     className={cn(
-      "rounded-md bg-theme-color px-4 py-2 text-sm text-white outline-none",
+      "theme-color-Animation rounded-md bg-theme-color px-4 py-2 text-sm text-white outline-none",
       className,
     )}
     {...props}

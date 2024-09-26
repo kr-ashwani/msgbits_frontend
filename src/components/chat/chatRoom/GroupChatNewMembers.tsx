@@ -2,7 +2,7 @@ import { ChatSvg } from "@/components/svg/chatSvg";
 import React from "react";
 import { NewGroupType } from "./ChatRoomWrapper";
 import { setNewGroupList } from "./GroupChatCreate";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 
 const GroupChatNewMembers = ({
   newGroup,
@@ -32,7 +32,7 @@ const GroupChatNewMembers = ({
             />
 
             <div className="absolute bottom-[-4px] right-[-4px] rounded-full bg-theme-bg-color p-[2px]">
-              <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-theme-color text-white">
+              <div className="theme-color-Animation flex h-[18px] w-[18px] items-center justify-center rounded-full bg-theme-color text-white">
                 {ChatSvg("xmarkIcon")}
               </div>
             </div>

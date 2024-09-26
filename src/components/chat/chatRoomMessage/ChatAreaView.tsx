@@ -1,7 +1,7 @@
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatViewScrollAnimation } from "@/hooks/useChatViewScrollAnimation";
-import { useMemo, useRef, useEffect, useLayoutEffect } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { renderMessages } from "./utils/renderMessage";
 import {
   MsgStatus,
@@ -49,9 +49,11 @@ const ChatAreaView = () => {
     if (!chatView) return;
 
     if (!repliedMessage) {
+      chatView.style.scrollBehavior = "";
       chatView.scrollTop -= REPLIED_TO_HEIGHT;
       chatView.style.setProperty("height", `100%`);
       chatView.style.transform = `translateY(0px)`;
+      chatView.style.scrollBehavior = "smooth";
 
       isAlreadyInReplyMode.current = false;
       return;
@@ -59,12 +61,14 @@ const ChatAreaView = () => {
 
     setTimeout(() => {
       if (isAlreadyInReplyMode.current) return;
+      chatView.style.scrollBehavior = "";
       chatView.style.setProperty(
         "height",
         `calc(100% - ${REPLIED_TO_HEIGHT}px)`,
       );
       chatView.scrollTop += REPLIED_TO_HEIGHT;
       isAlreadyInReplyMode.current = true;
+      chatView.style.scrollBehavior = "smooth";
     }, REPLIED_TO_DURATION);
     chatView.style.transform = `translateY(${-1 * REPLIED_TO_HEIGHT}px)`;
   }, [repliedMessage]);

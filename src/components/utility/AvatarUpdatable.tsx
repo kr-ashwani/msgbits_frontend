@@ -38,7 +38,7 @@ const AvatarUpdatable = ({
         onClick={onClick}
       />
 
-      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-theme-color opacity-40 group-hover/update:flex"></div>
+      <div className="theme-color-Animation absolute inset-0 flex items-center justify-center rounded-full bg-theme-color opacity-40 group-hover/update:flex"></div>
 
       {loading ? (
         <div className="absolute inset-0 flex items-center justify-center text-xl font-bold text-white">

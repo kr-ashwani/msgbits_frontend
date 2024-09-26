@@ -60,11 +60,11 @@ export function renderMessages(
         return showAvatar ? (
           Avatar({ src: user.profilePicture, size: 30, className: "mt-1" })
         ) : (
-          <div className="h-[30px] w-[30px]"></div>
+          <div className="h-[30px] w-[30px] shrink-0"></div>
         );
       } else {
         return (
-          <div className="status relative flex h-[15px] w-[15px] items-center justify-center self-end pb-[5px] text-theme-color"></div>
+          <div className="status relative flex h-[15px] w-[15px] shrink-0 items-center justify-center self-end pb-[5px] text-theme-color"></div>
         );
       }
     };
@@ -83,7 +83,12 @@ export function renderMessages(
       return showAvatar &&
         !selfMessage &&
         selectedChat.getChatState()?.getChatType() === "group" ? (
-        <div className="w-52 translate-y-[2px] truncate text-xs font-semibold text-msg-message">
+        <div
+          className="w-52 translate-y-[2px] truncate text-xs font-semibold text-msg-message"
+          style={{
+            color: messageState.getSenderUser()?.profileColor,
+          }}
+        >
           {messageState.getSenderUser()?.name}
         </div>
       ) : null;

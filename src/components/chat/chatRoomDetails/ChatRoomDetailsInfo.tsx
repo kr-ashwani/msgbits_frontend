@@ -5,7 +5,7 @@ import GroupChatPrivacy from "./GroupChatPrivacy";
 import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
 import SharedPhotos from "./SharedPhotos";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 
 const ChatRoomDetailsInfo = ({
   chatRoomState,
@@ -33,12 +33,12 @@ const ChatRoomDetailsInfo = ({
         <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Created by ${chatRoomState?.getChatRoomCreatorName()}, ${chatRoomState?.getChatRoomCreatorDate()}`}</div>
         <div className="mt-[10px] flex w-full gap-2 text-theme-color">
           <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
-            <div className="absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
+            <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("callIcon")}
             <span>Call Group</span>
           </div>
           <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
-            <div className="absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
+            <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("videoIcon")}
             <span>Video Chat</span>
           </div>

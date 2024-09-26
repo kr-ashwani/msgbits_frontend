@@ -33,7 +33,6 @@ const RepliedToMessageDrawer = ({
         <div
           className="z-10 flex cursor-pointer items-center justify-center self-stretch p-3 px-4"
           onClick={() => {
-            console.log(repliedMessage?.getChatRoomId(), "opp");
             chatRoomDataDispacth.resetRepliedToMessage({
               chatRoomId: repliedMessage?.getChatRoomId() || "",
             });

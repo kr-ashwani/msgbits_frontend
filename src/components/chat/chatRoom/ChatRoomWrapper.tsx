@@ -5,8 +5,8 @@ import ChatRoomAddButton from "./ChatRoomAddButton";
 import ChatRoomContainer from "./ChatRoomContainer";
 import GroupChatCreate from "./GroupChatCreate";
 import PrivateChatCreate from "./PrivateChatCreate";
-import Setting from "../chatUtilities/Setting";
-import Profile from "../chatUtilities/Profile";
+import Setting from "../user/Setting";
+import Profile from "../user/Profile";
 import { IUser } from "@/schema/userSchema";
 import GroupChatFinalCreate from "./GroupChatFinalCreate";
 

@@ -28,8 +28,8 @@ const ChatRoomDetails = () => {
     <StackSlider
       ref={component}
       stackElemId="chatRoomDetails"
-      mainStackClass="h-full"
-      stackContainerClass={`absolute inset-0 h-full bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
+      mainStackClass="h-full "
+      stackContainerClass={`absolute z-[2] inset-0 h-full bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <section className="h-full">
         <div className="flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">

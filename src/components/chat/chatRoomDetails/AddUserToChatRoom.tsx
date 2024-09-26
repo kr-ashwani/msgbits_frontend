@@ -76,7 +76,7 @@ const AddUserToChatRoom = ({
           cancelButtonText="Go Back"
           confirmButtonText="Add"
         >
-          <div className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
+          <div className="theme-color-Animation absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white">
             {ChatSvg("checkIcon")}
           </div>
         </Dialog>
@@ -113,7 +113,7 @@ const AddUserToChatRoom = ({
               <Avatar src={user.profilePicture} size={45} />
               {newGroup.members.some((member) => member._id === user._id) ? (
                 <>
-                  <div className="absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>
+                  <div className="theme-color-Animation absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>
                   <div className="absolute inset-0 flex items-center justify-center rounded-full text-white">
                     {ChatSvg("checkIcon")}
                   </div>

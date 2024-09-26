@@ -10,7 +10,7 @@ const TextMessage = ({ messageState }: { messageState: MessageState }) => {
 
   return (
     <div
-      className={`relative mt-[6px] flex w-auto max-w-[80%] shrink-0 flex-col whitespace-pre-wrap text-[15px] md:max-w-[60%] ${selfMsg ? "rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
+      className={`theme-color-Animation relative mt-[6px] flex w-auto max-w-[80%] shrink-0 flex-col whitespace-pre-wrap text-[15px] md:max-w-[60%] ${selfMsg ? "theme-color-Animation rounded-sender-chat-radus bg-theme-color text-white" : "rounded-user-chat-radius bg-chat-text-bg"}`}
     >
       {rawMessage.repliedTo ? (
         <RepliedToMessage

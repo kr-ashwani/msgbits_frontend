@@ -53,7 +53,7 @@ const ChatMember: React.FC<{
           </div>
           {chatRoomState.isChatRoomAdmin(member._id) && (
             <div className="relative flex items-center justify-center p-1 px-2">
-              <div className="absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
+              <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
               <p className="text-xs font-medium text-theme-color">Admin</p>
             </div>
           )}

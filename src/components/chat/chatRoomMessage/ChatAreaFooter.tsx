@@ -2,7 +2,6 @@ import { ChatSvg } from "@/components/svg/chatSvg";
 import { MessageSvg } from "@/components/svg/MessageSvg";
 import { useChatService } from "@/hooks/chat/useChatService";
 import { useGetEmojiPickerHeight } from "@/hooks/useGetEmojiPickerHeight";
-import useIsMobile from "@/hooks/useIsMobile";
 import EmojiPicker from "./EmojiPicker";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useChatInputMessageState } from "@/hooks/AppSelector/useChatInputMessageState";
@@ -10,7 +9,6 @@ import { useCacheInputMessage } from "@/hooks/chat/useCacheInputMessage";
 import debounce from "lodash/debounce";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import TypingStatus from "./TypingStatus";
-import { useRepliedToMessageState } from "@/hooks/AppSelector/useRepliedToMessageState";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 import { useAppSelector } from "@/lib/store/hooks";
 
@@ -23,7 +21,9 @@ const ChatAreaFooter = () => {
   const chatService = useChatService();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const pickerHeight = useGetEmojiPickerHeight();
-  const isMobile = useIsMobile();
+  const enterToSendMsg = useAppSelector(
+    (state) => state.chat.setting.enterToSendMessage,
+  );
   const chatInputMessageState = useChatInputMessageState();
   useCacheInputMessage(message);
   const selectedChat = useSelectedChatState();
@@ -99,7 +99,7 @@ const ChatAreaFooter = () => {
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && !e.shiftKey && !isMobile) {
+    if (e.key === "Enter" && !e.shiftKey && enterToSendMsg) {
       e.preventDefault();
       sendMessage();
     }

@@ -40,7 +40,7 @@ const PrivateChatCommonGroups = ({ memberId }: { memberId: string }) => {
           className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
         >
           <div className="relative flex h-10 w-10 items-center justify-center text-theme-color">
-            <div className="absolute inset-0 rounded-full bg-theme-color opacity-10"></div>
+            <div className="theme-color-Animation absolute inset-0 rounded-full bg-theme-color opacity-10"></div>
             {ChatSvg("groupChatIcon")}
           </div>
           <div className="flex flex-col overflow-hidden">

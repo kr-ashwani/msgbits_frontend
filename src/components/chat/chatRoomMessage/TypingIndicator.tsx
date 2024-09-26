@@ -16,7 +16,7 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({
   size = "medium",
   className = "",
 }) => {
-  const dotClasses = `${sizeClasses[size]} rounded-full bg-theme-color animate-pulse`;
+  const dotClasses = `${sizeClasses[size]} rounded-full theme-color-Animation bg-theme-color animate-pulse`;
 
   return (
     <div

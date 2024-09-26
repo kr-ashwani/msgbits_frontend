@@ -6,7 +6,7 @@ import { useMessageState } from "@/hooks/AppSelector/useMessageState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatUnreadMessages } from "@/hooks/chat/useChatUnreadMessages";
 import ChatRoomLastMessage from "./ChatRoomLastMessage";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 
 const ChatRoom = ({
   chatRoomState,
@@ -41,11 +41,11 @@ const ChatRoom = ({
     >
       <div className="absolute inset-0 overflow-hidden">
         <div
-          className={`absolute bottom-0 left-[-8px] top-0 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"} w-2 bg-theme-color`}
+          className={`theme-color-Animation absolute bottom-0 left-[-8px] top-0 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"} w-2 bg-theme-color`}
         ></div>
       </div>
       <div
-        className={`absolute inset-0 overflow-hidden bg-theme-color ${isChatSelected ? "opacity-[0.08]" : "opacity-0"} transition-opacity duration-300`}
+        className={`theme-color-Animation absolute inset-0 overflow-hidden bg-theme-color ${isChatSelected ? "opacity-[0.08]" : "opacity-0"} transition-opacity duration-300`}
       ></div>
       <div
         className={`flex w-full gap-4 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
@@ -65,7 +65,7 @@ const ChatRoom = ({
               {chatRoomState.getChatRoomName()}
             </span>
             {unreadMsgCount ? (
-              <div className="mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-theme-color text-[11px] text-white">
+              <div className="theme-color-Animation mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-theme-color text-[11px] text-white">
                 {unreadMsgCount}
               </div>
             ) : null}

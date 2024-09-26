@@ -1,3 +1,8 @@
+import { resetChatData } from "@/lib/store/features/chat/chatSlice";
+import {
+  setEnterToSendMsg,
+  updateTheme,
+} from "./../../lib/store/features/chat/settingSlice";
 import {
   addNewGroupMembers,
   changeTypingStatus,
@@ -46,6 +51,21 @@ export class ChatRoomDataDispatch {
   };
   resetRepliedToMessage = (payload: { chatRoomId: string }) => {
     this.dispatch(resetRepliedToMessage(payload));
+  };
+
+  setEnterToSendMsg = (payload: boolean) => {
+    this.dispatch(setEnterToSendMsg(payload));
+  };
+  updateTheme = (payload: string) => {
+    localStorage.setItem("theme", payload);
+    this.dispatch(updateTheme(payload));
+  };
+
+  resetChatData = () => {
+    this.dispatch(resetChatData());
+  };
+  getDispatch = () => {
+    return this.dispatch;
   };
 
   constructor(dispatch: AppDispatch) {

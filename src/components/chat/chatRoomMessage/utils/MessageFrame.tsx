@@ -21,7 +21,7 @@ const MessageFrame = ({
         showAvatar ? "mt-[8px]" : ""
       }`}
     >
-      <div className="highlighter absolute inset-0 select-none bg-theme-color opacity-0 transition-opacity duration-300"></div>
+      <div className="highlighter theme-color-Animation absolute inset-0 select-none bg-theme-color opacity-0 transition-opacity duration-300"></div>
       {renderAvatar()}
       {renderMessageFrame()}
     </div>

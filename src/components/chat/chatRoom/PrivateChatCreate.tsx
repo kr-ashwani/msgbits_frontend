@@ -8,7 +8,7 @@ import { sleep } from "@/components/StackSlider/utils/sleep";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import Slider from "../../utility/Slider";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 
 const PrivateChatCreate = ({ name }: { name: string }) => {
   const slider = useSlide();
@@ -52,7 +52,7 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
           slider.trigerSlider("close", name);
         }}
       >
-        <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-theme-color text-white">
+        <div className="theme-color-Animation flex h-[45px] w-[45px] items-center justify-center rounded-full bg-theme-color text-white">
           {ChatSvg("groupChatIcon", { height: "30", width: "30" })}
         </div>
         <p className="text-[16px] font-semibold"> New Group Chat</p>

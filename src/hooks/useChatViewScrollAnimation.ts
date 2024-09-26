@@ -20,7 +20,12 @@ export const useChatViewScrollAnimation = (
       if (isMounted.current) chatViewComp.style.scrollBehavior = "smooth";
       else chatViewComp.style.scrollBehavior = "";
 
-      chatViewComp.scrollTop = chatViewComp.scrollHeight;
+      if (isMounted.current)
+        setTimeout(
+          () => (chatViewComp.scrollTop = chatViewComp.scrollHeight),
+          0,
+        );
+      else chatViewComp.scrollTop = chatViewComp.scrollHeight;
     }
     if (!isMounted.current) isMounted.current = true;
   }, [messageStateArr.length, chatView]);

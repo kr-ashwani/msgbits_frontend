@@ -45,7 +45,7 @@ export default function RootLayout({
       lang="en"
       className={`${robotoSlab.variable} ${cousine.variable} ${montserrat.variable} ${manrope.variable}`}
     >
-      <body className="mx-auto max-w-screen-xl">
+      <body className="mx-auto max-w-screen-xl" data-theme="blue">
         <StoreProvider>
           <AuthTokenVerify />
           {children}

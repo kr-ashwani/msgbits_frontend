@@ -42,10 +42,10 @@ const RepliedToMessage = ({
         ) as HTMLElement[];
         setTimeout(() => {
           if (highlighter) highlighter.style.opacity = "0.08";
-        }, 100);
+        }, 200);
         setTimeout(() => {
           if (highlighter) highlighter.style.opacity = "0";
-        }, 700);
+        }, 1000);
         observerRef.current?.unobserve(element);
       });
     },
@@ -54,7 +54,7 @@ const RepliedToMessage = ({
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(handleIntersection, {
-      threshold: 0.5,
+      threshold: 0.01,
     });
 
     return () => {

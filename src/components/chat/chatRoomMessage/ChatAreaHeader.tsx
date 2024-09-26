@@ -5,7 +5,7 @@ import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 
 import React, { ReactNode } from "react";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 import Avatar from "@/components/utility/Avatar";
 
 function getChatMembersPictures(chatRoom: ChatRoomState) {

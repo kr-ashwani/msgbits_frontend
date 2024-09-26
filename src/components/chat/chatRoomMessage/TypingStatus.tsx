@@ -34,8 +34,8 @@ const TypingStatus = () => {
       className={`absolute inset-0 flex select-none items-start transition-all duration-500 ${status?.message ? "opacity-1 translate-y-[-35px]" : "translate-y-0 opacity-25"}`}
     >
       {statusRef.current.user ? (
-        <div className="rounded-typing-status-radius relative flex w-auto items-center bg-chat-bg px-4 py-[5px] pr-8">
-          <div className="rounded-typing-status-radius absolute inset-0 bg-theme-color opacity-[0.08]"></div>
+        <div className="relative flex w-auto items-center rounded-typing-status-radius bg-chat-bg px-4 py-[5px] pr-8">
+          <div className="theme-color-Animation absolute inset-0 rounded-typing-status-radius bg-theme-color opacity-[0.08]"></div>
           <Avatar src={statusRef.current.user.profilePicture} size={25} />
           <div className="p-1 pl-3 pr-2 text-sm font-semibold text-msg-message">
             {statusRef.current.message}

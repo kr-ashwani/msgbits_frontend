@@ -6,6 +6,10 @@
   .btn-primary {
     @apply rounded-full bg-gradient-button px-6 py-2 font-cousine text-lg font-bold text-white;
   }
+
+  .theme-color-Animation {
+    @apply transition-colors duration-500;
+  }
   .hyphenate {
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -79,6 +83,11 @@ body ::-webkit-scrollbar-thumb {
     rgba(255, 255, 255, 1) 78%,
     rgba(255, 255, 255, 0) 100%
   );
+}
+[data-theme="blue"] {
+  --theme-color: #0086ff;
+  --button-color: #0086ff;
+  --button-bg-color: #f0f7ff;
 }
 [data-theme="purple"] {
   --theme-color: #9f7aea;

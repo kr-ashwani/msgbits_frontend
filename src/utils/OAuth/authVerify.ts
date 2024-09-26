@@ -8,6 +8,7 @@ import { fetchData } from "../custom/customFetch";
 import { toast } from "../toast/Toast";
 import { AppDispatch } from "@/lib/store/store";
 import { debug } from "../custom/Debug";
+import { resetChatData } from "@/lib/store/features/chat/chatSlice";
 
 export const authVerify = async (dispatch: AppDispatch) => {
   try {
@@ -22,11 +23,10 @@ export const authVerify = async (dispatch: AppDispatch) => {
         toast.success(
           `${response.payload.data.name}, You are Authenticated successfully.`,
         );
-    } else {
-      dispatch(setAuthPreflightCompleted(true));
-      debug("error", response.error);
-    }
+    } else throw new Error(response.error);
   } catch (err) {
+    // resetting chat data for user
+    dispatch(resetChatData());
     dispatch(setAuthPreflightCompleted(true));
     debug(
       "error",

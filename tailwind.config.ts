@@ -44,6 +44,7 @@ const config: Config = {
       "grey-100": "#F2F2F2",
       "chat-text-bg": "var(--chat-text-bg)",
       "user-online": "#23be7e",
+      "detail-font-color": "var(--detail-font-color)",
 
       background: "hsl(var(--background))",
       foreground: "hsl(var(--foreground))",

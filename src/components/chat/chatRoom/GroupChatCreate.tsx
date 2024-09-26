@@ -8,7 +8,7 @@ import useSlide from "@/components/StackSlider/hooks/useSlide";
 import Slider from "../../utility/Slider";
 import { useNewGroupMembersState } from "@/hooks/AppSelector/useNewGroupMembersState";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
-import StatusAvatar from "../chatUser/StatusAvatar";
+import StatusAvatar from "../user/StatusAvatar";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -76,7 +76,7 @@ const GroupChatCreate = ({
       {newGroup.members.length ? (
         <div
           onClick={() => slider.trigerSlider("open", "GroupChatFinalCreate")}
-          className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
+          className="theme-color-Animation absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
         >
           {ChatSvg("rightArrow")}
         </div>
@@ -117,7 +117,7 @@ const GroupChatCreate = ({
               />
               {newGroup.members.some((member) => member._id === user._id) ? (
                 <>
-                  <div className="absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>
+                  <div className="theme-color-Animation absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>
                   <div className="absolute inset-0 flex items-center justify-center rounded-full text-white">
                     {ChatSvg("checkIcon")}
                   </div>

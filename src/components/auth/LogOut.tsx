@@ -6,6 +6,7 @@ import { z } from "zod";
 import { toast } from "@/utils/toast/Toast";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { resetUser } from "@/lib/store/features/auth/authSlice";
+import { resetChatData } from "@/lib/store/features/chat/chatSlice";
 
 const LogOut = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ const LogOut = () => {
       serverResWapperSchema(z.string()),
     );
 
+    dispatch(resetChatData());
     if (response.success) {
       toast.success(response.payload.data);
       dispatch(resetUser());

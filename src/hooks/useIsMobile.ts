@@ -1,38 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash";
 
-const isMobileDevice = (): boolean => {
-  const userAgent = navigator.userAgent;
-  const mobileKeywords = [
-    "Android",
-    "webOS",
-    "iPhone",
-    "iPad",
-    "iPod",
-    "BlackBerry",
-    "Windows Phone",
-  ];
-  const isMobileDevice = mobileKeywords.some((keyword) =>
-    userAgent.includes(keyword),
-  );
+const MOBILE_BREAKPOINT = 768;
+
+const isMobilePlatform = (): boolean => {
+  if (typeof window === "undefined") return false; // Server-side rendering check
+
+  const userAgent = window.navigator.userAgent;
+  const mobileRegex =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  const isMobileUA = mobileRegex.test(userAgent);
   const isTouchDevice =
     "ontouchstart" in window || navigator.maxTouchPoints > 0;
-  return isMobileDevice || isTouchDevice;
+  const isNarrowScreen = window.innerWidth < MOBILE_BREAKPOINT;
+
+  return isMobileUA || isTouchDevice;
 };
 
 const useIsMobile = (): boolean => {
-  const [isMobile, setIsMobile] = useState<boolean>(() => isMobileDevice());
+  const [isMobile, setIsMobile] = useState<boolean>(isMobilePlatform());
+
+  const checkMobile = useCallback(() => {
+    setIsMobile(isMobilePlatform());
+  }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(isMobileDevice());
-    };
-
-    window.addEventListener("resize", handleResize);
+    const debouncedHandleResize = debounce(checkMobile, 300);
+    window.addEventListener("resize", debouncedHandleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", debouncedHandleResize);
+      debouncedHandleResize.cancel(); // Cancel any pending debounced calls
     };
-  }, []);
+  }, [checkMobile]);
 
   return isMobile;
 };

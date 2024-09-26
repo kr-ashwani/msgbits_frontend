@@ -59,7 +59,7 @@ const GroupChatFinalCreate = ({
       {newGroup.name.trim() && newGroup.members.length ? (
         <div
           onClick={handleGroupChatCreation}
-          className="absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
+          className="theme-color-Animation absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
         >
           {ChatSvg("checkIcon")}
         </div>
