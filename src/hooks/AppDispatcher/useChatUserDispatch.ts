@@ -1,8 +1,13 @@
+import { updateAuthUserProfile } from "@/lib/store/features/auth/authSlice";
 import { setOnlineStatus } from "@/lib/store/features/chat/chatRoomDataSlice";
-import { addChatUser } from "@/lib/store/features/chat/chatUserSlice";
+import {
+  addChatUser,
+  updateUserProfile,
+} from "@/lib/store/features/chat/chatUserSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { IChatUser } from "@/schema/ChatUserSchema";
+import { UserUpdateProfile } from "@/schema/UserUpdateProfileSchema";
 import { useMemo } from "react";
 
 class ChatUserDispatcher {
@@ -11,8 +16,7 @@ class ChatUserDispatcher {
   constructor(dispatch: AppDispatch) {
     this.dispatch = dispatch;
   }
-  createChatUser = () => {};
-  updateChatUser = () => {};
+
   getAllChatUser = (payload: IChatUser[]) => {
     if (payload.length) this.dispatch(addChatUser(payload));
   };
@@ -47,6 +51,13 @@ class ChatUserDispatcher {
         status: "online",
       }),
     );
+  };
+
+  updateUserProfile = (payload: UserUpdateProfile) => {
+    //update chatuser list
+    this.dispatch(updateUserProfile(payload));
+    //update currently logged in user if userId matches
+    this.dispatch(updateAuthUserProfile(payload));
   };
 }
 

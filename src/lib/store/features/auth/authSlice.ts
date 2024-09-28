@@ -1,4 +1,5 @@
 import { IUser } from "@/schema/userSchema";
+import { UserUpdateProfile } from "@/schema/UserUpdateProfileSchema";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -26,11 +27,24 @@ export const authSlice = createSlice({
     setAuthPreflightCompleted(state, action: PayloadAction<true>) {
       state.isAuthPreflightCompleted = action.payload;
     },
+    updateAuthUserProfile(state, action: PayloadAction<UserUpdateProfile>) {
+      if (!state.user) return;
+      if (state.user._id !== action.payload.userId) return;
+
+      if (action.payload.updatedProfilePicture)
+        state.user.profilePicture = action.payload.updatedProfilePicture;
+      if (action.payload.updatedName)
+        state.user.name = action.payload.updatedName;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, resetUser, setAuthPreflightCompleted } =
-  authSlice.actions;
+export const {
+  setUser,
+  resetUser,
+  setAuthPreflightCompleted,
+  updateAuthUserProfile,
+} = authSlice.actions;
 
 export default authSlice.reducer;

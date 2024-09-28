@@ -1,4 +1,5 @@
 import { IChatUser } from "@/schema/ChatUserSchema";
+import { UserUpdateProfile } from "@/schema/UserUpdateProfileSchema";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -18,9 +19,17 @@ export const chatUserSlice = createSlice({
         state[action.payload._id] = action.payload;
       }
     },
+    updateUserProfile(state, action: PayloadAction<UserUpdateProfile>) {
+      const user = state[action.payload.userId];
+      if (!user) return;
+
+      if (action.payload.updatedProfilePicture)
+        user.profilePicture = action.payload.updatedProfilePicture;
+      if (action.payload.updatedName) user.name = action.payload.updatedName;
+    },
   },
 });
 
-export const { addChatUser } = chatUserSlice.actions;
+export const { addChatUser, updateUserProfile } = chatUserSlice.actions;
 
 export default chatUserSlice.reducer;

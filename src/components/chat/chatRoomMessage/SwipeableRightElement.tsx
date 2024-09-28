@@ -100,10 +100,11 @@ const SwipeRightToReply: React.FC<SwipeRightToReplyProps> = ({
     const handleTouchEnd = resetPosition;
     const handleTouchCancel = resetPosition;
 
-    element.addEventListener("touchstart", handleTouchStart);
-    element.addEventListener("touchmove", handleTouchMove);
-    element.addEventListener("touchend", handleTouchEnd);
-    element.addEventListener("touchcancel", handleTouchCancel);
+    const eventOptions = { passive: false };
+    element.addEventListener("touchstart", handleTouchStart, eventOptions);
+    element.addEventListener("touchmove", handleTouchMove, eventOptions);
+    element.addEventListener("touchend", handleTouchEnd, eventOptions);
+    element.addEventListener("touchcancel", handleTouchCancel, eventOptions);
 
     return () => {
       element.removeEventListener("touchstart", handleTouchStart);

@@ -5,9 +5,14 @@ import { useAppSelector } from "@/lib/store/hooks";
 import AnimatedInput from "@/components/utility/AnimatedInput";
 import { format } from "date-fns";
 import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
+import { UserUpdateProfile } from "@/schema/UserUpdateProfileSchema";
+import { useChatUserDispatch } from "@/hooks/AppDispatcher/useChatUserDispatch";
+import { useSocket } from "@/hooks/useSocket";
 
 const Profile = ({ name }: { name: string }) => {
   const user = useAppSelector((state) => state.auth.user);
+  const { socketQueue } = useSocket();
+  const chatUserDispatch = useChatUserDispatch();
   const [toggleAnimation, setToggleAnimation] = useState(false);
   useEffect(() => {
     setTimeout(() => {
@@ -17,13 +22,25 @@ const Profile = ({ name }: { name: string }) => {
 
   if (!user) return null;
 
-  const handleSubmit = (type: "name", updateValue: string) => {};
+  const handleSubmit = (
+    type: "name" | "profilePicture",
+    updateValue: string,
+  ) => {
+    const updatedProfile: UserUpdateProfile = {
+      userId: user._id,
+      updatedName: type === "name" ? updateValue : null,
+      updatedProfilePicture: type === "profilePicture" ? updateValue : null,
+    };
+
+    socketQueue.emit("chatuser-updateProfile", updatedProfile);
+    chatUserDispatch.updateUserProfile(updatedProfile);
+  };
 
   return (
     <Slider
       heading="Profile"
       name={name}
-      className="text-detail-font-color overflow-y-auto overflow-x-hidden font-manrope text-sm font-semibold"
+      className="overflow-y-auto overflow-x-hidden font-manrope text-sm font-semibold text-detail-font-color"
     >
       <Avatar
         className={`mx-auto mb-14 transition-all duration-500 lg:mb-12 ${toggleAnimation ? "scale-100 opacity-100" : "scale-[0] opacity-0"}`}

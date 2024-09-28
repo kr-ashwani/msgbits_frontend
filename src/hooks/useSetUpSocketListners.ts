@@ -44,8 +44,8 @@ export const useSetUpSocketListners = () => {
         chatRoomDataDispatch.changeTypingStatus,
       ),
       // Listening to all chatUser events
-      socket.on("chatuser-create", chatUserDispatch.createChatUser),
       socket.on("chatuser-statusChange", chatUserDispatch.getStatusUpdate),
+      socket.on("chatuser-updateProfile", chatUserDispatch.updateUserProfile),
 
       //Listening to Sync Service
       socket.on("sync-update", socketSyncService.listenForSyncInitiator),

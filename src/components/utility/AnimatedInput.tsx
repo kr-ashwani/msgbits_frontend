@@ -15,14 +15,18 @@ const AnimatedInput = ({
   inputClassName = "",
   onSave,
 }: AnimatedInputProps) => {
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useState(initialValue.trim());
   const inputRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"edit" | "save">("save");
-  const prevValue = useRef(initialValue);
+  const prevValue = useRef(initialValue.trim());
 
   useEffect(() => {
     if (mode === "edit") inputRef.current?.focus();
   }, [mode]);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   return (
     <div className="relative flex w-full">
@@ -41,17 +45,15 @@ const AnimatedInput = ({
       </div>
       <div
         className="relative flex w-8 cursor-pointer items-center justify-center"
-        onClick={(e) =>
-          setMode((state) => {
-            if (state === "save") {
-              if (onSave && prevValue.current !== value) {
-                onSave(value);
-                prevValue.current = value;
-              }
-              return "edit";
-            } else return "save";
-          })
-        }
+        onClick={(e) => {
+          const trimmedValue = value.trim();
+          if (onSave && prevValue.current !== trimmedValue) {
+            onSave(value);
+            prevValue.current = trimmedValue;
+          }
+          setMode((state) => (state === "edit" ? "save" : "edit"));
+          setValue(trimmedValue);
+        }}
       >
         <div
           className={`absolute transition-opacity duration-500 ${mode === "save" ? "opacity-1" : "opacity-0"}`}

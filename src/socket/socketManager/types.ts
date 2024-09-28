@@ -13,6 +13,11 @@ import { ChatUserSchema } from "@/schema/ChatUserSchema";
 
 import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { MessageStatusSchema } from "@/schema/MessageStatusSchema";
+import {
+  UserUpdateProfile,
+  UserUpdateProfileSchema,
+} from "@/schema/UserUpdateProfileSchema";
+
 import { z } from "zod";
 
 export interface ChatRoomEmitterMapping {
@@ -30,6 +35,10 @@ export interface MessageEmitterMapping {
   "message-delivered": MessageStatusEmit[];
   "message-seen": MessageStatusEmit[];
 }
+
+export interface ChatUserEmitterMapping {
+  "chatuser-updateProfile": UserUpdateProfile;
+}
 export interface SyncEmitterMapping {
   "sync-updateChatRoom:Messages:ChatUsers": SyncUpdateInput;
   "sync-allUserStatus": null;
@@ -38,12 +47,11 @@ export interface SyncEmitterMapping {
 
 export type EmitterMapping = ChatRoomEmitterMapping &
   MessageEmitterMapping &
+  ChatUserEmitterMapping &
   SyncEmitterMapping;
 
 const ChatRoomListenerSchema = {
   "chatroom-create": ChatRoomSchema,
-  "chatroom-update": ChatRoomSchema,
-  "chatroom-getall": z.array(ChatRoomSchema),
   "chatroom-addNewMembers": ChatAddNewMemberSchema,
   "chatroom-leave": ChatRoomAndMemberSchema,
   "chatroom-removeUser": ChatRoomAndMemberSchema,
@@ -61,13 +69,11 @@ const MessageListenerSchema = {
   "message-sent": z.string(),
 };
 const ChatUserListenerSchema = {
-  "chatuser-create": ChatUserSchema,
-  "chatuser-update": ChatUserSchema,
-  "chatuser-getall": z.array(ChatUserSchema),
   "chatuser-statusChange": z.object({
     userId: z.union([z.string(), z.array(z.string())]),
     status: z.string(),
   }),
+  "chatuser-updateProfile": UserUpdateProfileSchema,
 };
 
 const SyncListenerSchema = {
