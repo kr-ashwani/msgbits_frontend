@@ -1,124 +1,91 @@
-import { FileMetaData, UploadTask } from "./FileQueue";
-
-interface UploadResult {
-  success: boolean;
-  error?: Error;
-}
+import { formatBytes } from "@/utils/custom/formatBytes";
+import { FileUploadStatus, UploadFile } from "./types";
 
 export class FileProcess {
   private readonly baseURL: URL;
+  private statusCallback: (status: FileUploadStatus) => void;
 
-  constructor(serverURL: string = "http://192.168.29.250:8080") {
+  constructor(
+    statusCallback: (status: FileUploadStatus) => void,
+    serverURL: string,
+  ) {
     this.baseURL = new URL(serverURL);
+    this.statusCallback = statusCallback;
   }
 
-  public getFileURL(fileMetaData: FileMetaData): {
-    fileUrl: string;
-    downloadUrl: string;
-  } {
-    try {
-      const queryString = new URLSearchParams(
-        Object.entries(fileMetaData),
-      ).toString();
-      const fileUrl = new URL("/file/", this.baseURL);
-      const downloadUrl = new URL("/download/", this.baseURL);
-      fileUrl.search = downloadUrl.search = queryString;
-      return {
-        fileUrl: fileUrl.toString(),
-        downloadUrl: downloadUrl.toString(),
-      };
-    } catch (err) {
-      console.error("Error in getFileURL:", err);
-      throw new Error("Failed to construct file URLs");
-    }
+  public processFile(task: UploadFile): void {
+    this.uploadFileToServer(task);
   }
 
-  public processFile(
-    task: UploadTask,
-    onProgress: (fileId: string, progress: number) => void,
-  ): Promise<void> {
-    return this.uploadFileToServer(task, onProgress);
-  }
-
-  private async uploadFileToServer(
-    task: UploadTask,
-    onProgress: (fileId: string, progress: number) => void,
-  ): Promise<void> {
-    const { id: fileId, file, fileMetaData } = task;
+  private async uploadFileToServer(task: UploadFile) {
+    const { fileId, file } = task;
     const formData = new FormData();
-    const totalSize = file.size;
 
     formData.append("file-upload", file, file.name);
-    formData.append(
-      "metadata",
-      JSON.stringify({
-        fileId,
-        fileType: file.type,
-        size: file.size,
-        originalName: file.name,
-      }),
-    );
 
-    const queryString = new URLSearchParams(
-      Object.entries(fileMetaData),
-    ).toString();
-    const uploadUrl = new URL(`/upload/?${queryString}`, this.baseURL);
+    const uploadUrl = new URL(`/upload/${fileId}`, this.baseURL);
 
-    try {
-      const result = await this.performUpload(
-        uploadUrl,
-        formData,
-        (progress) => {
-          const roundedProgress = Math.round(progress * 10) / 10; // Round to 1 decimal place
-          onProgress(fileId, roundedProgress);
-        },
-      );
-
-      if (!result.success) {
-        throw result.error || new Error("Upload failed");
-      }
-    } catch (error) {
-      console.error("Error in uploadFileToServer:", error);
-      throw error;
-    }
+    this.performUpload(uploadUrl, formData, task);
   }
 
-  private performUpload(
-    url: URL,
-    formData: FormData,
-    onProgress: (progress: number) => void,
-  ): Promise<UploadResult> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", url.toString(), true);
-      xhr.withCredentials = true;
+  private performUpload(url: URL, formData: FormData, task: UploadFile) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url.toString(), true);
+    xhr.withCredentials = true;
+    const { file, fileId } = task;
+    const totalSize = file.size;
+    let lastRecTime = Date.now();
+    let lastLoadedBytes = 0;
 
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = (event.loaded / event.total) * 100;
-          onProgress(progress);
-        }
-      };
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = (event.loaded / event.total) * 100;
+        const percentage = Math.round(progress * 10) / 10;
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve({ success: true });
-        } else {
-          resolve({
-            success: false,
-            error: new Error(`Upload failed with status: ${xhr.status}`),
-          });
-        }
-      };
+        const totalSeconds = (Date.now() - lastRecTime) / 1000;
+        const totalBytesPerSec = Math.round(
+          (event.loaded - lastLoadedBytes) / totalSeconds,
+        );
 
-      xhr.onerror = () => {
-        resolve({
-          success: false,
-          error: new Error("Network error during file upload"),
+        lastLoadedBytes = event.loaded;
+        lastRecTime = Date.now();
+
+        this.statusCallback({
+          fileId,
+          status: "UPLOADING",
+          size: formatBytes(totalSize),
+          uploadedSize: formatBytes(event.loaded),
+          speed: `${formatBytes(totalBytesPerSec, 0)}/s `,
+          percentage,
         });
-      };
+      }
+    };
 
-      xhr.send(formData);
-    });
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        this.statusCallback({
+          fileId,
+          status: "UPLOADED",
+        });
+      } else {
+        this.statusCallback({
+          fileId,
+          status: "FAILED",
+          error: new Error("Failed to upload file"),
+          fileExtension: file.name.split(".")[1] || "",
+        });
+      }
+    };
+
+    xhr.onerror = () => {
+      this.statusCallback({
+        fileId,
+        status: "FAILED",
+        error: new Error("Failed to upload file"),
+        fileExtension: file.name.split(".")[1] || "",
+      });
+    };
+
+    xhr.send(formData);
   }
 }

@@ -15,9 +15,7 @@ const ImageOrVideoMessage = ({
   if (fileMessage.type !== "file") return null;
 
   const file = fileMessage.file;
-  const selfMsg = messageState.isMessageFromSelf();
 
-  console.log();
   if (
     (!file.fileType.includes("image/") && !file.fileType.includes("video/")) ||
     !file.dimension
@@ -50,14 +48,18 @@ const ImageOrVideoMessage = ({
         )
       ) : (
         <div
-          className="flex items-center justify-center"
+          className="flex items-center justify-center overflow-hidden"
           style={{
             width: file.dimension.width,
             height: file.dimension.height,
           }}
         >
-          <div className="text-theme-color">
-            {Svg("loading", { width: "40", height: "40", strokeWidth: 2 })}
+          <div id={file.fileId} className="relative flex text-theme-color">
+            <div className="progressLabelAttach absolute inset-0 flex items-center justify-center text-sm font-medium">
+              0%
+            </div>
+
+            {Svg("loading", { width: "80", height: "80", strokeWidth: 1.3 })}
           </div>
         </div>
       )}

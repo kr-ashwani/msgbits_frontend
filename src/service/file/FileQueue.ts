@@ -1,98 +1,46 @@
 import { DoublyLinkedList } from "./../../utils/custom/DoublyLinkedList";
-import { v4 as uuidv4 } from "uuid";
 import { FileProcess } from "./FileProcess";
-
-export interface FileMetaData {
-  size: number;
-  mimeType: string;
-  originalName: string;
-  fileId: string;
-}
-
-export interface UploadTask {
-  file: File;
-  retries: number;
-  id: string;
-  fileMetaData: FileMetaData;
-}
-
-type CallbackType = "progress" | "success" | "error";
-
-interface ProgressData {
-  fileId: string;
-  progress: number;
-}
-
-interface SuccessData {
-  fileId: string;
-  fileMetaData: FileMetaData;
-}
-
-interface ErrorData {
-  fileId: string;
-  error: Error;
-  retries: number;
-}
-
-type CallbackData = ProgressData | SuccessData | ErrorData;
-
-type Callback<T extends CallbackData> = (data: T) => void;
-
-type LogLevel = "info" | "error" | "warn";
-
-interface FileQueueConfig {
-  maxConcurrentUploads: number;
-  maxRetries: number;
-  retryDelay: number;
-  logger: (message: string, level: LogLevel) => void;
-}
+import {
+  FileQueueConfig,
+  FileUploadStatus,
+  LogLevel,
+  UploadFile,
+  UploadFileTask,
+} from "./types";
 
 const defaultLogger = (message: string, level: LogLevel) => {
   console[level](message);
 };
 
 export class FileQueue {
-  private queue: DoublyLinkedList<UploadTask>;
-  private activeUploads: Map<string, UploadTask> = new Map();
-  private callbacks: {
-    progress: Set<Callback<ProgressData>>;
-    success: Set<Callback<SuccessData>>;
-    error: Set<Callback<ErrorData>>;
+  private queue: DoublyLinkedList<UploadFileTask>;
+  private activeUploads: Map<string, UploadFileTask> = new Map();
+  private fileStatusCallbacks: {
+    [p in string]: ((status: FileUploadStatus) => void)[];
   };
+  private callbacks: ((status: FileUploadStatus) => void)[];
   private config: FileQueueConfig;
+  private fileProcess: FileProcess;
 
-  constructor(
-    private fileProcess: FileProcess,
-    config: Partial<FileQueueConfig> = {},
-  ) {
+  constructor(config: Partial<FileQueueConfig> = {}) {
+    const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "";
+    this.fileProcess = new FileProcess(this.fileProcessCallback, serverURL);
     this.config = {
       maxConcurrentUploads: 3,
-      maxRetries: 3,
+      maxRetries: 0,
       retryDelay: 1000,
       logger: defaultLogger,
       ...config,
     };
-    this.queue = new DoublyLinkedList<UploadTask>();
-    this.callbacks = {
-      progress: new Set(),
-      success: new Set(),
-      error: new Set(),
-    };
+    this.queue = new DoublyLinkedList<UploadFileTask>();
+    this.fileStatusCallbacks = {};
+    this.callbacks = [];
   }
 
-  public enqueue(file: File): FileMetaData {
-    const id = uuidv4();
-    const fileMetaData: FileMetaData = {
-      originalName: file.name,
-      mimeType: file.type,
-      size: file.size,
-      fileId: id,
-    };
-    const task: UploadTask = { file, retries: 0, id, fileMetaData };
-
+  public enqueue(fileUpload: UploadFile) {
+    const task: UploadFileTask = { ...fileUpload, retries: 0 };
     this.queue.enqueue(task);
     this.processQueue();
-    return fileMetaData;
   }
 
   private async processQueue(): Promise<void> {
@@ -102,94 +50,104 @@ export class FileQueue {
 
     this.queue.forEach((task) => {
       if (this.activeUploads.size >= this.config.maxConcurrentUploads) return;
-      if (!this.activeUploads.has(task.id)) {
-        this.processTask(task);
-      }
+      if (!this.activeUploads.has(task.fileId)) this.processTask(task);
     });
   }
 
-  public registerCallback<T extends CallbackType>(
-    type: T,
-    callback: Callback<
-      T extends "progress"
-        ? ProgressData
-        : T extends "success"
-          ? SuccessData
-          : ErrorData
-    >,
+  public registerCallbackForFile(
+    fileId: string,
+    callback: (status: FileUploadStatus) => void,
   ): void {
-    this.callbacks[type].add(callback as any);
+    if (this.fileStatusCallbacks[fileId])
+      this.fileStatusCallbacks[fileId].push(callback);
+    else this.fileStatusCallbacks[fileId] = [callback];
   }
 
-  public unregisterCallback<T extends CallbackType>(
-    type: T,
-    callback: Callback<
-      T extends "progress"
-        ? ProgressData
-        : T extends "success"
-          ? SuccessData
-          : ErrorData
-    >,
+  public registerCallback(callback: (status: FileUploadStatus) => void): void {
+    this.callbacks.push(callback);
+  }
+  public unregisterCallback(
+    callback: (status: FileUploadStatus) => void,
   ): void {
-    this.callbacks[type].delete(callback as any);
+    this.callbacks = this.callbacks.filter((cb) => cb !== callback);
   }
 
-  private async processTask(task: UploadTask): Promise<void> {
-    this.activeUploads.set(task.id, task);
-    try {
-      await this.fileProcess.processFile(task, (fileId, progress) => {
-        this.notifyCallbacks("progress", { fileId, progress });
-      });
-      this.config.logger(
-        `File ${task.file.name} (ID: ${task.id}) uploaded successfully.`,
-        "info",
-      );
-      this.queue.removeElements((t) => t.id === task.id);
-      this.notifyCallbacks("success", {
-        fileId: task.id,
-        fileMetaData: task.fileMetaData,
-      });
-    } catch (error) {
-      if (task.retries < this.config.maxRetries) {
-        task.retries++;
-        this.config.logger(
-          `Retrying file ${task.file.name} (ID: ${task.id}), attempt ${task.retries}.`,
-          "warn",
-        );
-        await this.retryTask(task);
-      } else {
-        this.config.logger(
-          `File ${task.file.name} (ID: ${task.id}) failed after ${this.config.maxRetries} attempts. Removing from Queue`,
-          "error",
-        );
-        this.queue.removeElements((t) => t.id === task.id);
-        this.notifyCallbacks("error", {
-          fileId: task.id,
-          error: error as Error,
-          retries: task.retries,
-        });
-      }
-    } finally {
-      this.activeUploads.delete(task.id);
-      this.processQueue();
-    }
+  public unregisterCallbackForFile(
+    fileId: string,
+    callback: (status: FileUploadStatus) => void,
+  ): void {
+    this.fileStatusCallbacks[fileId] = this.fileStatusCallbacks[fileId].filter(
+      (cb) => cb !== callback,
+    );
+  }
+  public unregisterAllCallbackForFile(fileId: string): void {
+    delete this.fileStatusCallbacks[fileId];
   }
 
-  private async retryTask(task: UploadTask): Promise<void> {
+  private async processTask(task: UploadFileTask): Promise<void> {
+    this.activeUploads.set(task.fileId, task);
+    this.fileProcess.processFile(task);
+  }
+
+  private getUploadTaskFromQueue(fileId: string): UploadFileTask | null {
+    let task: UploadFileTask | null = null;
+    this.queue.forEach((elem) => {
+      if (elem.fileId === fileId) task = elem;
+    });
+    return task;
+  }
+  private async retryTask(fileId: string): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, this.config.retryDelay));
-    this.queue.enqueue(task);
+    this.activeUploads.delete(fileId);
     this.processQueue();
   }
 
-  private notifyCallbacks<T extends CallbackType>(
-    type: T,
-    data: T extends "progress"
-      ? ProgressData
-      : T extends "success"
-        ? SuccessData
-        : ErrorData,
-  ): void {
-    this.callbacks[type].forEach((callback) => callback(data as any));
+  private async removeTask(fileId: string): Promise<void> {
+    this.queue.removeElements((t) => t.fileId === fileId);
+    this.activeUploads.delete(fileId);
+    this.processQueue();
+  }
+  // this is purposely set to arrow function
+  // so that (this) is always to binded to class instance
+  private fileProcessCallback = (status: FileUploadStatus): void => {
+    if (status.status !== "FAILED") this.callRegisteredCallbacks(status);
+
+    switch (status.status) {
+      case "UPLOADED":
+        this.config.logger(
+          `File with ID: ${status.fileId}) uploaded successfully.`,
+          "info",
+        );
+        this.removeTask(status.fileId);
+        this.unregisterAllCallbackForFile(status.fileId);
+        break;
+      case "FAILED":
+        const task = this.getUploadTaskFromQueue(status.fileId);
+        if (!task) return;
+
+        if (task.retries < this.config.maxRetries) {
+          task.retries++;
+          this.config.logger(
+            `Retrying file with (ID: ${status.fileId}), attempt ${task.retries}.`,
+            "warn",
+          );
+          this.retryTask(status.fileId);
+        } else {
+          this.config.logger(
+            `File with ID: ${status.fileId}) failed after ${this.config.maxRetries} attempts. Removing from Queue`,
+            "error",
+          );
+          this.callRegisteredCallbacks(status);
+          this.removeTask(status.fileId);
+          this.unregisterAllCallbackForFile(status.fileId);
+        }
+    }
+  };
+  private callRegisteredCallbacks(status: FileUploadStatus) {
+    this.callbacks.forEach((callback) => callback({ ...status }));
+    this.fileStatusCallbacks[status.fileId]?.forEach((callback) =>
+      callback({ ...status }),
+    );
   }
 
   public getQueueSize(): number {
@@ -201,7 +159,7 @@ export class FileQueue {
   }
 
   public clearQueue(): void {
-    this.queue = new DoublyLinkedList<UploadTask>();
+    this.queue = new DoublyLinkedList<UploadFileTask>();
     this.activeUploads.clear();
   }
 }

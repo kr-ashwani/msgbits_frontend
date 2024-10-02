@@ -16,6 +16,8 @@ import { v4 as uuidv4 } from "uuid";
 import { processFile } from "@/utils/custom/processFile";
 import { toast } from "@/utils/toast/Toast";
 import { DeferredPromise } from "@/utils/custom/DeferredPromise";
+import { fileQueue } from "@/service/file/FileQueueSingleton";
+import { updateUploadProgress } from "./utils/updateUploadProgress";
 
 const TYPING_DEBOUNCE_DELAY = 500; //  500 msecond
 
@@ -187,6 +189,11 @@ const ChatInputArea = () => {
       }
       resizeObserver.disconnect();
     };
+  }, []);
+
+  useEffect(() => {
+    fileQueue.registerCallback(updateUploadProgress);
+    return () => fileQueue.unregisterCallback(updateUploadProgress);
   }, []);
 
   async function handleFiles(

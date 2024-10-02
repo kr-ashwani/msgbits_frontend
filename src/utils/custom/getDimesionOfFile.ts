@@ -3,12 +3,12 @@ import { IFile } from "@/schema/FileSchema";
 
 const getImageMetadata = async (
   file: File,
-): Promise<{ width: number; height: number; url: string }> => {
+): Promise<{ width: number; height: number }> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      resolve({ width: img.width, height: img.height, url: img.src });
-      //window.URL.revokeObjectURL(img.src);
+      resolve({ width: img.width, height: img.height });
+      window.URL.revokeObjectURL(img.src);
     };
     img.onerror = () => {
       reject(new Error("Failed to load image"));
@@ -19,16 +19,15 @@ const getImageMetadata = async (
 
 const getVideoMetadata = async (
   file: File,
-): Promise<{ width: number; height: number; url: string }> => {
+): Promise<{ width: number; height: number }> => {
   return new Promise((resolve, reject) => {
     const video = document.createElement("video");
     video.preload = "metadata";
     video.onloadedmetadata = () => {
-      //window.URL.revokeObjectURL(video.src);
+      window.URL.revokeObjectURL(video.src);
       resolve({
         width: video.videoWidth,
         height: video.videoHeight,
-        url: video.src,
       });
     };
     video.onerror = () => {
@@ -40,7 +39,7 @@ const getVideoMetadata = async (
 
 export const getDimesionOfFile = async (
   fileUpload: FileUpload,
-): Promise<{ width: number; height: number; url: string } | null> => {
+): Promise<IFile["dimension"]> => {
   const imageMimeTypeRegex =
     /^image\/(jpeg|png|gif|bmp|webp|svg\+xml|tiff|x-icon)$/i;
   const videoMimeTypeRegex =

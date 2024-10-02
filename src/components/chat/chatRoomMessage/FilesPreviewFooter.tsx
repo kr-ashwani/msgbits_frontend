@@ -8,6 +8,9 @@ import { convertFiletoFileMessage } from "@/utils/custom/convertFiletoFileMessag
 import Svg from "@/components/svg";
 import { useMessageDispatch } from "@/hooks/AppDispatcher/useMessageDispatch";
 import { IMessage } from "@/schema/MessageSchema";
+import { fileQueue } from "@/service/file/FileQueueSingleton";
+import { toast } from "@/utils/toast/Toast";
+import { updateUploadProgress } from "./utils/updateUploadProgress";
 
 const FilesPreviewFooter = () => {
   const selectedChat = useSelectedChatState();
@@ -21,7 +24,7 @@ const FilesPreviewFooter = () => {
 
   useEffect(() => {
     setLoading(true);
-    const initiateFileMessageCoversion = async () => {
+    const initiateFileMessageConversion = async () => {
       // check whether it is already in cache
       const pendingFiles = files.filter(
         (file) => !Boolean(fileMessages.current[file.fileId]),
@@ -41,7 +44,7 @@ const FilesPreviewFooter = () => {
 
       setLoading(false);
     };
-    initiateFileMessageCoversion();
+    initiateFileMessageConversion();
   }, [files]);
 
   if (!chatState) return null;
@@ -56,8 +59,22 @@ const FilesPreviewFooter = () => {
       [chatRoomId]: fileMessagesArr.current,
     });
 
+    fileMessagesArr.current.forEach((fileMsg) => {
+      if (fileMsg.type !== "file") return;
+      const [file] = files.filter(
+        (elem) => elem.fileId === fileMsg.file.fileId,
+      );
+      if (!file) toast.error("file to upload is missing");
+
+      fileQueue.enqueue({
+        file: file.file,
+        fileId: file.fileId,
+      });
+    });
+
     setFiles([]);
   };
+
   return (
     <div className="flex px-10 py-2 pb-6">
       <div className="grow">
