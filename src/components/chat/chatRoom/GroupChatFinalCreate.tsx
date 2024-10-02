@@ -8,6 +8,7 @@ import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import GroupChatNewMembers from "./GroupChatNewMembers";
 import { useChatService } from "@/hooks/chat/useChatService";
 import Slider from "../../utility/Slider";
+import { toast } from "@/utils/toast/Toast";
 
 const DefaultUrl = "/assets/groupChat.png";
 const GroupChatFinalCreate = ({
@@ -34,8 +35,18 @@ const GroupChatFinalCreate = ({
     focus();
   }, []);
 
-  function handleGroupChatCreation() {
+  function handleGroupChatCreation(e?: React.FormEvent<HTMLFormElement>) {
+    if (e) e.preventDefault();
+
     const members = newGroup.members.map((memb) => memb._id);
+
+    if (!members.length)
+      return toast.error("Group must have atleast one member");
+    if (!newGroup.name.trim())
+      return toast.error("Group must have a valid name");
+    if (!chatRoomPicture)
+      return toast.error("Group must have a valid chat room picture");
+
     chatService.createNewGroupChat({
       chatName: newGroup.name.trim(),
       chatRoomPicture,
@@ -58,7 +69,7 @@ const GroupChatFinalCreate = ({
     >
       {newGroup.name.trim() && newGroup.members.length ? (
         <div
-          onClick={handleGroupChatCreation}
+          onClick={() => handleGroupChatCreation()}
           className="theme-color-Animation absolute bottom-5 right-5 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-theme-color text-white"
         >
           {ChatSvg("checkIcon")}
@@ -93,13 +104,15 @@ const GroupChatFinalCreate = ({
         />
         <div className="mx-4 flex gap-4">
           <p className="text-nowrap font-semibold">Group Name </p>
-          <input
-            ref={inputRef}
-            value={newGroup.name}
-            onChange={handleGroupName}
-            className="h-7 w-0 grow border-theme-color pb-[2px] text-base font-semibold text-body-color outline-none focus:border-b-[3px]"
-            placeholder="Group Name..."
-          />
+          <form onSubmit={handleGroupChatCreation} className="h-7 w-0 grow">
+            <input
+              ref={inputRef}
+              value={newGroup.name}
+              onChange={handleGroupName}
+              className="h-full w-full border-theme-color pb-[2px] text-base font-semibold text-body-color outline-none focus:border-b-[3px]"
+              placeholder="Group Name..."
+            />
+          </form>
         </div>
         <div className="pt-4">
           <p className="text-nowrap px-5 pb-2 font-semibold">Group Members</p>

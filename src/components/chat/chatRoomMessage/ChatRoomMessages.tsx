@@ -29,7 +29,7 @@ const ChatRoomMessages = () => {
     <section
       id="chatRoomMessage"
       ref={component}
-      className={`absolute inset-0 flex h-full w-full flex-col overflow-y-auto bg-[--theme-bg-color] transition-transform ${selectedChat.getSelectedChatId() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
+      className={`absolute inset-0 flex h-full w-full flex-col overflow-hidden bg-[--theme-bg-color] transition-transform ${selectedChat.getSelectedChatId() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
     >
       <ChatAreaHeader />
       <ChatAreaView />

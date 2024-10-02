@@ -1,8 +1,19 @@
 import { MessageState } from "@/hooks/AppSelector/useMessageState";
 import React from "react";
 import RepliedToMessage from "./RepliedToMessage";
+import { cn } from "@/lib/utils";
 
-const TextMessage = ({ messageState }: { messageState: MessageState }) => {
+const TextMessage = ({
+  messageState,
+  children,
+  messageClassName = "",
+  messageFrameClassName = "",
+}: {
+  messageState: MessageState;
+  messageClassName?: string;
+  messageFrameClassName?: string;
+  children?: React.ReactNode;
+}) => {
   const rawMessage = messageState.getRawMessage();
 
   if (!rawMessage) return null;
@@ -17,14 +28,27 @@ const TextMessage = ({ messageState }: { messageState: MessageState }) => {
           repliedMessage={messageState
             .getContainer()
             .getMessageById(rawMessage.repliedTo)}
-          className={`mx-2 mt-2 p-2 pl-4 pr-5 ${messageState.isMessageFromSelf() ? "" : ""}`}
+          className={`mx-2 mt-2 h-[60px] p-2 pl-4 ${messageState.isMessageFromSelf() ? "" : ""}`}
         />
       ) : null}
-      <div className="p-2 px-3">
-        <span className="hyphenate font-medium leading-[21px] md:text-sm">
-          {rawMessage.message}
-        </span>
-        <span className="inline-block h-auto w-[54px]"></span>
+      {/* components like images, videos and docs can be rendered here */}
+      {children}
+
+      <div
+        className={cn(
+          `${rawMessage.message ? "p-2" : "p-0"} flex px-3`,
+          messageFrameClassName,
+        )}
+      >
+        <div
+          className={cn(
+            `hyphenate min-h-4 font-medium leading-[21px] md:text-sm`,
+            messageClassName,
+          )}
+        >
+          <span>{rawMessage.message}</span>
+          <span className="inline-block h-auto w-[54px]"></span>
+        </div>
       </div>
       <div
         className={`absolute bottom-[2px] right-[12px] font-manrope text-[10px] font-medium ${selfMsg ? "text-white-200" : "text-msg-message"}`}

@@ -1,8 +1,9 @@
 import { MessageState } from "@/hooks/AppSelector/useMessageState";
 import { cn } from "@/lib/utils";
-import { IMessage } from "@/schema/MessageSchema";
+import { IFileMessage, IMessage } from "@/schema/MessageSchema";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
-import React, { useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
+import React, { ReactNode, useCallback, useEffect, useRef } from "react";
 
 function repliedMessageComp(
   messageState: MessageState | null,
@@ -16,6 +17,35 @@ function repliedMessageComp(
         {rawMessage?.message}
       </div>
     );
+
+  if (rawMessage.type === "file")
+    return (
+      <div className="max-w-52 text-sm font-semibold text-msg-message">
+        <div className="truncate">
+          {rawMessage?.message || rawMessage?.file.fileName}
+        </div>
+      </div>
+    );
+}
+
+function renderFileMessageLogo(fileMessage: IFileMessage): ReactNode {
+  const file = fileMessage.file;
+
+  if (file.dimension && file.fileType.includes("image/")) {
+    return (
+      <div className="relative w-11 rounded-lg">
+        <Image
+          src={file.url}
+          alt={file.fileName}
+          fill
+          style={{ objectFit: "cover" }}
+          className="rounded-lg"
+        />
+      </div>
+    );
+  }
+
+  return null;
 }
 
 const RepliedToMessage = ({
@@ -91,26 +121,33 @@ const RepliedToMessage = ({
   return (
     <div
       className={cn(
-        "relative h-full grow cursor-pointer overflow-hidden rounded-xl bg-theme-bg-color p-3 pl-6",
+        "relative flex h-full grow cursor-pointer overflow-hidden rounded-xl bg-theme-bg-color p-3 pl-6",
         className,
       )}
       onClick={() => scrollToMessage(rawMessage?.messageId || "")}
     >
       <div
-        className="absolute bottom-0 left-0 top-0 w-[5px]"
-        style={{
-          backgroundColor: senderUser?.profileColor,
-        }}
-      ></div>
-      <div
-        className="font-semibold"
-        style={{
-          color: senderUser?.profileColor,
-        }}
+        className={`flex ${rawMessage?.type === "file" ? "shrink gap-3" : "w-0"} grow`}
       >
-        {capitalizeStr(senderUser?.name || "")}
+        <div className={`grow truncate`}>
+          <div
+            className="absolute bottom-0 left-0 top-0 w-[5px]"
+            style={{
+              backgroundColor: senderUser?.profileColor,
+            }}
+          ></div>
+          <div
+            className="truncate font-semibold"
+            style={{
+              color: senderUser?.profileColor,
+            }}
+          >
+            {capitalizeStr(senderUser?.name || "")}
+          </div>
+          {repliedMessageComp(repliedMessage, rawMessage)}
+        </div>
+        {rawMessage?.type === "file" ? renderFileMessageLogo(rawMessage) : null}
       </div>
-      {repliedMessageComp(repliedMessage, rawMessage)}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { IFile } from "@/schema/FileSchema";
 
 export class File implements IFile {
@@ -11,10 +10,10 @@ export class File implements IFile {
   dimension: {
     width: number;
     height: number;
-  };
+  } | null;
 
-  constructor(file: Omit<IFile, "fileId">) {
-    this.fileId = uuidv4();
+  constructor(file: IFile) {
+    this.fileId = file.fileId;
     this.fileName = file.fileName;
     this.size = file.size;
     this.fileType = file.fileType;

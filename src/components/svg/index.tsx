@@ -26,6 +26,7 @@ interface SvgOpts {
   width: string;
   height: string;
   fill: string;
+  strokeWidth?: number;
 }
 
 const Svg = (
@@ -261,7 +262,7 @@ const Svg = (
       <svg
         width={opts.width ? opts.width : "28"}
         height={opts.height ? opts.height : "28"}
-        stroke="#fff"
+        stroke="currentColor"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -271,7 +272,13 @@ const Svg = (
           }
         </style>
         <g className="spinner_V8m1">
-          <circle cx="12" cy="12" r="9.5" fill="none" strokeWidth="3"></circle>
+          <circle
+            cx="12"
+            cy="12"
+            r="9.5"
+            fill="none"
+            strokeWidth={opts.strokeWidth ? opts.strokeWidth : "3"}
+          ></circle>
         </g>
       </svg>
     );

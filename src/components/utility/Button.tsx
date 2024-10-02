@@ -30,7 +30,7 @@ const Button = (props: {
     >
       {props.children}
       {
-        <span className="absolute inset-0 hidden items-center justify-center group-disabled:flex">
+        <span className="absolute inset-0 hidden items-center justify-center text-white group-disabled:flex">
           {Svg("loading")}
         </span>
       }

@@ -19,17 +19,19 @@ export const FileSchema = z.object({
   url: z.string({
     required_error: "File URL is required",
   }),
-  dimension: z.object(
-    {
-      width: z.number({
-        required_error: "Width is required",
-      }),
-      height: z.number({
-        required_error: "Height is required",
-      }),
-    },
-    { required_error: "File Dimension is required" },
-  ),
+  dimension: z
+    .object(
+      {
+        width: z.number({
+          required_error: "Width is required",
+        }),
+        height: z.number({
+          required_error: "Height is required",
+        }),
+      },
+      { required_error: "File Dimension is required" },
+    )
+    .nullable(),
 });
 
 export type IFile = z.infer<typeof FileSchema>;

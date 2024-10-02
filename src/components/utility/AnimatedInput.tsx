@@ -28,32 +28,38 @@ const AnimatedInput = ({
     setValue(initialValue);
   }, [initialValue]);
 
+  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+
+    const trimmedValue = value.trim();
+    if (onSave && prevValue.current !== trimmedValue) {
+      onSave(value);
+      prevValue.current = trimmedValue;
+    }
+    setMode((state) => (state === "edit" ? "save" : "edit"));
+    setValue(trimmedValue);
+  };
+
   return (
     <div className="relative flex w-full">
       <div className="grow">
-        <input
-          ref={inputRef}
-          type={inputType}
-          value={value}
-          disabled={mode === "save"}
-          onChange={(e) => setValue(e.target.value)}
-          className={cn(
-            `w-full appearance-none bg-theme-bg-color text-base outline-none disabled:cursor-auto disabled:opacity-100`,
-            inputClassName,
-          )}
-        ></input>
+        <form onSubmit={handleSubmit}>
+          <input
+            ref={inputRef}
+            type={inputType}
+            value={value}
+            disabled={mode === "save"}
+            onChange={(e) => setValue(e.target.value)}
+            className={cn(
+              `w-full appearance-none bg-theme-bg-color text-base outline-none disabled:cursor-auto disabled:opacity-100`,
+              inputClassName,
+            )}
+          ></input>
+        </form>
       </div>
       <div
         className="relative flex w-8 cursor-pointer items-center justify-center"
-        onClick={(e) => {
-          const trimmedValue = value.trim();
-          if (onSave && prevValue.current !== trimmedValue) {
-            onSave(value);
-            prevValue.current = trimmedValue;
-          }
-          setMode((state) => (state === "edit" ? "save" : "edit"));
-          setValue(trimmedValue);
-        }}
+        onClick={() => handleSubmit()}
       >
         <div
           className={`absolute transition-opacity duration-500 ${mode === "save" ? "opacity-1" : "opacity-0"}`}
