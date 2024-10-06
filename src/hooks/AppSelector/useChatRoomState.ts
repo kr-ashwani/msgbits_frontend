@@ -64,6 +64,9 @@ export class ChatRoomState {
   getOtherUserIdInPrivateChat() {
     return this.chatRoomContainer.getOtherUserIdInPrivateChat(this.chatRoomId);
   }
+  getTempUser() {
+    return this.chatRoomContainer.getTempUser(this.chatRoomId);
+  }
 }
 
 export class ChatRoomContainerState {
@@ -268,6 +271,12 @@ export class ChatRoomContainerState {
     );
     if (otherUser.length) return otherUser[0];
     return null;
+  }
+  getTempUser(chatRoomId: string) {
+    const chatRoom = this.chatRoom[chatRoomId];
+    if (chatRoom) return null;
+    const user = this.chatUser.getUserById(chatRoomId);
+    return user;
   }
 }
 const useChatRoomState = () => {

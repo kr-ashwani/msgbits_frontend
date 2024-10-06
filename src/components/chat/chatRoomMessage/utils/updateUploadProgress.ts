@@ -3,8 +3,6 @@ import { FileUploadStatus } from "@/service/file/types";
 export const updateUploadProgress = (fileUploadStatus: FileUploadStatus) => {
   const { fileId } = fileUploadStatus;
 
-  console.log(fileUploadStatus);
-
   const fileElem = document.getElementById(fileId);
   if (!fileElem) return;
 
@@ -16,8 +14,6 @@ export const updateUploadProgress = (fileUploadStatus: FileUploadStatus) => {
     // file is attachment
     if (fileUploadStatus.status === "UPLOADING")
       attachProgressLabelElem.textContent = `${fileUploadStatus.percentage}%`;
-    else if (fileUploadStatus.status === "FAILED")
-      attachProgressLabelElem.textContent = `Failed`;
   } else {
     // file is doc
     const docLabelElem = fileElem.getElementsByClassName("progressLabel")[0];
@@ -44,12 +40,6 @@ export const updateUploadProgress = (fileUploadStatus: FileUploadStatus) => {
       docDescA.textContent = `${fileUploadStatus.uploadedSize} / ${fileUploadStatus.size}`;
       percentLabel.textContent = `${fileUploadStatus.percentage}%`;
       docDescB.textContent = fileUploadStatus.speed;
-    } else if (fileUploadStatus.status === "FAILED") {
-      // Animate to percentage
-      const offset = pathLength - 0 * pathLength;
-      progressPath.style.strokeDashoffset = `${offset}px`;
-      docDescA.textContent = `Failed`;
-      docDescB.textContent = fileUploadStatus.fileExtension;
     }
   }
 };

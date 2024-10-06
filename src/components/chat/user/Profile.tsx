@@ -8,12 +8,14 @@ import { SLIDING_TIME } from "@/components/StackSlider/StatckSlider";
 import { UserUpdateProfile } from "@/schema/UserUpdateProfileSchema";
 import { useChatUserDispatch } from "@/hooks/AppDispatcher/useChatUserDispatch";
 import { useSocket } from "@/hooks/useSocket";
+import AvatarUpdatable from "@/components/utility/AvatarUpdatable";
 
 const Profile = ({ name }: { name: string }) => {
   const user = useAppSelector((state) => state.auth.user);
   const { socketQueue } = useSocket();
   const chatUserDispatch = useChatUserDispatch();
   const [toggleAnimation, setToggleAnimation] = useState(false);
+  const [userSrc, setUserSrc] = useState(user?.profilePicture || "");
   useEffect(() => {
     setTimeout(() => {
       setToggleAnimation(true);
@@ -25,6 +27,7 @@ const Profile = ({ name }: { name: string }) => {
   const handleSubmit = (
     type: "name" | "profilePicture",
     updateValue: string,
+    fileId?: string,
   ) => {
     const updatedProfile: UserUpdateProfile = {
       userId: user._id,
@@ -32,8 +35,10 @@ const Profile = ({ name }: { name: string }) => {
       updatedProfilePicture: type === "profilePicture" ? updateValue : null,
     };
 
-    socketQueue.emit("chatuser-updateProfile", updatedProfile);
     chatUserDispatch.updateUserProfile(updatedProfile);
+    // to server send fileId instead of url
+    if (fileId) updatedProfile.updatedProfilePicture = fileId;
+    socketQueue.emit("chatuser-updateProfile", updatedProfile);
   };
 
   return (
@@ -42,10 +47,16 @@ const Profile = ({ name }: { name: string }) => {
       name={name}
       className="overflow-y-auto overflow-x-hidden font-manrope text-sm font-semibold text-detail-font-color"
     >
-      <Avatar
+      <AvatarUpdatable
         className={`mx-auto mb-14 transition-all duration-500 lg:mb-12 ${toggleAnimation ? "scale-100 opacity-100" : "scale-[0] opacity-0"}`}
-        src={user.profilePicture}
+        avatarClassName="text-white"
+        src={userSrc}
+        setSrc={setUserSrc}
+        showBg={false}
         size={230}
+        onSrcUrlChange={(newUrl: string, fileId: string) => {
+          handleSubmit("profilePicture", newUrl, fileId);
+        }}
       />
       <div
         className={`mx-auto transition-all duration-500 ${toggleAnimation ? "translate-y-0 opacity-100" : "-translate-y-40 opacity-0"} w-full max-w-md bg-theme-bg-color px-3`}

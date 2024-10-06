@@ -10,6 +10,10 @@ import {
 } from "@/schema/ChatRoomAndMemberSchema";
 import { ChatRoomSchema, IChatRoom } from "@/schema/ChatRoomSchema";
 import { ChatUserSchema } from "@/schema/ChatUserSchema";
+import {
+  GroupChatProfileUpdate,
+  GroupChatProfileUpdateSchema,
+} from "@/schema/GroupChatProfileUpdate";
 
 import { IMessage, MessageSchema } from "@/schema/MessageSchema";
 import { MessageStatusSchema } from "@/schema/MessageStatusSchema";
@@ -28,6 +32,7 @@ export interface ChatRoomEmitterMapping {
   "chatroom-makeAdmin": ChatRoomAndMember;
   "chatroom-removeAdmin": ChatRoomAndMember;
   "chatroom-memberTyping": ChatRoomAndMember;
+  "chatroom-updateChatNameOrPic": GroupChatProfileUpdate;
 }
 
 export interface MessageEmitterMapping {
@@ -58,6 +63,7 @@ const ChatRoomListenerSchema = {
   "chatroom-makeAdmin": ChatRoomAndMemberSchema,
   "chatroom-removeAdmin": ChatRoomAndMemberSchema,
   "chatroom-memberTyping": ChatRoomAndMemberSchema,
+  "chatroom-updateChatNameOrPic": GroupChatProfileUpdateSchema,
 };
 
 const MessageListenerSchema = {

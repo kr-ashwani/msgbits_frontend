@@ -4,7 +4,7 @@ import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
 import { authVerify } from "./authVerify";
 import { UserSchema } from "@/schema/userSchema";
 import { AppDispatch } from "@/lib/store/store";
-import { debug } from "../custom/Debug";
+import { debug } from "../custom/debug";
 
 const facebookOAuth = (
   facebookRef: RefObject<HTMLDivElement>,

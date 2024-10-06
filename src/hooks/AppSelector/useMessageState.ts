@@ -115,7 +115,7 @@ export class MessageContainerState {
     return message;
   }
   getMessageTextById(messageId: string) {
-    const fallbackMsg = "No Message";
+    const fallbackMsg = "";
     if (this.message[messageId]) return this.message[messageId].message;
     return fallbackMsg;
   }

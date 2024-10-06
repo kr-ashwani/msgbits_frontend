@@ -1,5 +1,9 @@
 import { formatBytes } from "@/utils/custom/formatBytes";
 import { FileUploadStatus, UploadFile } from "./types";
+import { FileSchema, IFile } from "@/schema/FileSchema";
+import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
+import { fetchData } from "@/utils/custom/customFetch";
+import { z } from "zod";
 
 export class FileProcess {
   private readonly baseURL: URL;
@@ -52,6 +56,7 @@ export class FileProcess {
 
         this.statusCallback({
           fileId,
+          fileMessage: task.fileMessage,
           status: "UPLOADING",
           size: formatBytes(totalSize),
           uploadedSize: formatBytes(event.loaded),
@@ -61,31 +66,52 @@ export class FileProcess {
       }
     };
 
-    xhr.onload = () => {
+    xhr.onload = async () => {
       if (xhr.status >= 200 && xhr.status < 300) {
-        this.statusCallback({
-          fileId,
-          status: "UPLOADED",
-        });
-      } else {
-        this.statusCallback({
-          fileId,
-          status: "FAILED",
-          error: new Error("Failed to upload file"),
-          fileExtension: file.name.split(".")[1] || "",
-        });
-      }
+        const response = JSON.parse(xhr.responseText);
+        if (!response?.url)
+          this.callErrorCallback("Failed to upload file meta data", task);
+
+        const dto = { ...task.fileMessage.file, url: response.url };
+        const fileDTORes = await this.uploadFileMetaData(dto);
+        if (fileDTORes)
+          this.statusCallback({
+            fileId,
+            fileMessage: task.fileMessage,
+            status: "UPLOADED",
+            url: fileDTORes.url,
+          });
+        else this.callErrorCallback("Failed to upload file meta data", task);
+      } else this.callErrorCallback("Failed to upload file", task);
     };
 
     xhr.onerror = () => {
-      this.statusCallback({
-        fileId,
-        status: "FAILED",
-        error: new Error("Failed to upload file"),
-        fileExtension: file.name.split(".")[1] || "",
-      });
+      this.callErrorCallback("Failed to upload file", task);
     };
 
     xhr.send(formData);
+  }
+
+  private async uploadFileMetaData(fileDTO: IFile): Promise<IFile | null> {
+    try {
+      const response = await fetchData(
+        "/filemetadata",
+        serverResWapperSchema(FileSchema),
+        fileDTO,
+      );
+
+      return response.success ? response.payload.data : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  private callErrorCallback(errMsg: string, task: UploadFile) {
+    this.statusCallback({
+      fileId: task.fileId,
+      fileMessage: task.fileMessage,
+      status: "FAILED",
+      error: new Error(errMsg),
+    });
   }
 }

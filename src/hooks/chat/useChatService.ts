@@ -22,16 +22,23 @@ import {
 } from "../AppDispatcher/useSelectedChatDispatch";
 import { isToday } from "date-fns";
 import { messageState } from "@/lib/store/features/chat/messageSlice";
-import { IMessage } from "@/schema/MessageSchema";
+import { IFileMessage, IMessage } from "@/schema/MessageSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { joinArrayWithAnd } from "@/utils/custom/joinArrayWithAnd";
 import { toast } from "@/utils/toast/Toast";
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
+import _ from "lodash";
+import { setFilePreviewMode } from "@/lib/store/features/chat/chatRoomDataSlice";
 
 interface NewGroupChatParams {
   chatName: string;
   chatRoomPicture: string;
   members: string[];
+}
+
+interface Message {
+  text: string;
+  file: IFileMessage[];
 }
 
 class ChatService {
@@ -76,7 +83,11 @@ class ChatService {
     this.socketQueue.emitChatRoom("chatroom-create", chatRoom);
   }
 
-  sendNewTextMessage(message: string, repliedTo: string | null) {
+  sendNewMessage<T extends keyof Message>(
+    type: T,
+    message: Message[T],
+    repliedTo?: string | null,
+  ) {
     if (!this.user || !this.selectedChat.id) return;
     let chatRoomId = this.selectedChat.id;
 
@@ -88,27 +99,54 @@ class ChatService {
       timeStampMsg = new TimestampMessage(this.user._id, chatRoomId);
 
     //chatRoomId can be user id so dont forget to update it
-    const msg = new TextMessage(message, this.user._id, chatRoomId, repliedTo);
+    let msg: IMessage[] = [];
+    if (type === "text") {
+      const tempMessage = message as Message["text"];
+      msg.push(
+        new TextMessage(
+          tempMessage,
+          this.user._id,
+          chatRoomId,
+          repliedTo,
+        ).toObject(),
+      );
+    } else if (type === "file") {
+      const tempMessage = message as Message["file"];
+      tempMessage.forEach((message) => {
+        const updatedMessage = { ...message };
+        updatedMessage.createdAt = new Date().toISOString();
+        updatedMessage.updatedAt = new Date().toISOString();
+        msg.push(updatedMessage);
+      });
+    }
+    const lastNewMsg = _.last(msg);
+    if (!lastNewMsg) return;
+
     if (!this.chatRoom[chatRoomId]) {
       // which means chatRoomId is userId.
       const chatRoom = new PrivateChatRoom(
         [this.user._id, chatRoomId],
         this.user._id,
-        msg.messageId,
-        msg.updatedAt,
+        lastNewMsg.messageId,
+        lastNewMsg.updatedAt,
       );
       chatRoomId = chatRoom.chatRoomId;
       //this replaces userId with realChatRoomID for newly created one
-      msg.chatRoomId = chatRoom.chatRoomId;
+      msg.forEach((elem) => {
+        elem.chatRoomId = chatRoom.chatRoomId;
+      });
       if (timeStampMsg) timeStampMsg.chatRoomId = chatRoom.chatRoomId;
       // now select this chatRoom
-      this.selectedChatDispatch.setSelectedChat(chatRoom.chatRoomId);
+      this.selectedChatDispatch.setSelectedChat(chatRoom.chatRoomId, true);
       // and add this chatRoom to ChatRoom Store
       this.addToStoreAndEmitChatRoom(chatRoom.toObject());
     }
 
     if (timeStampMsg) this.addToStoreAndEmitMsg(timeStampMsg.toObject());
-    this.addToStoreAndEmitMsg(msg.toObject());
+    msg.forEach((elem) => {
+      this.addToStoreAndEmitMsg(elem);
+    });
+    return msg;
   }
 
   createNewGroupChat({

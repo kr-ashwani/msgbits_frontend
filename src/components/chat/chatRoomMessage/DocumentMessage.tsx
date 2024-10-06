@@ -55,39 +55,53 @@ const DocumentMessage = ({ messageState }: { messageState: MessageState }) => {
 
   return (
     <div
-      className={`mx-2 cursor-pointer ${fileMessage.message ? "mb-3" : ""} mt-2 flex shrink-0 items-center rounded-xl`}
+      className={`mx-2 cursor-pointer ${fileMessage.message ? "mb-3" : ""} mt-2 flex items-center rounded-xl`}
     >
       <a
+        className="flex w-[270px] items-center px-2 py-1"
         href={file.url}
-        onClick={(e) => !file.url && e.preventDefault()}
+        onClick={(e) =>
+          (!file.url || file.url === "failed") && e.preventDefault()
+        }
         target="_blank"
         rel="noopener noreferrer"
       >
-        <div id={file.fileId} className="flex w-[270px] items-center px-2 py-1">
-          <div className="h-12 w-0 shrink grow">
-            <div className="flex items-center gap-2 overflow-hidden">
+        <div id={file.fileId} className="flex grow gap-1">
+          <div className="h-12 w-0 grow">
+            <div className="flex w-full items-center gap-2">
               <div className="w-7 shrink-0">
                 <FileIcon
                   extension={file.extension}
                   {...(defaultStyles as any)[file.extension]}
                 />
               </div>
+
               <div className="truncate">{file.fileName}</div>
             </div>
             <div
               className={`mt-[6px] flex shrink-0 items-center gap-1 text-[11px] font-semibold ${selfMsg ? "text-white-200" : "text-msg-message"} `}
             >
               <div className="fileUploadDescA truncate">
-                {file.url ? formatBytes(file.size, 0) : "Pending"}
+                {file.url
+                  ? file.url === "failed"
+                    ? "Failed"
+                    : formatBytes(file.size, 0)
+                  : "Pending"}
               </div>
               <div className="mx-[1px] h-[6px] w-[6px] rounded-full bg-msg-message"></div>
-              <div className="fileUploadDescB truncate">{file.extension}</div>
+              <div className="fileUploadDescB truncate">
+                {file.extension + (file.url ? " " : "")}
+              </div>
             </div>
           </div>
 
-          <div className={`progressLabel shrink-0 justify-center self-center`}>
+          <div
+            className={`progressLabel justify-center self-center ${file.url && file.url !== "failed" ? "w-7" : "w-12"} `}
+          >
             {file.url ? (
-              <SquareArrowOutUpRight strokeWidth={2.5} className="h-7 w-7" />
+              file.url === "failed" ? null : (
+                <SquareArrowOutUpRight strokeWidth={2.5} className="h-7 w-7" />
+              )
             ) : (
               <CircularProgress className="h-12 w-12" />
             )}

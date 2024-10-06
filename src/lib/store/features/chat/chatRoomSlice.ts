@@ -4,6 +4,7 @@ import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { IMessage } from "@/schema/MessageSchema";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { GroupChatProfileUpdate } from "@/schema/GroupChatProfileUpdate";
 
 export interface chatRoomState {
   [p: string]: IChatRoom;
@@ -75,6 +76,19 @@ export const chatRoomSlice = createSlice({
         (id) => id !== action.payload.memberId,
       );
     },
+    updateGroupChatProfilePicOrName(
+      state,
+      action: PayloadAction<GroupChatProfileUpdate>,
+    ) {
+      const chatRoom = state[action.payload.chatRoomId];
+      if (!chatRoom || chatRoom.type === "private") return;
+
+      if (action.payload.updatedProfilePicture)
+        chatRoom.chatRoomPicture = action.payload.updatedProfilePicture;
+
+      if (action.payload.updatedName)
+        chatRoom.chatName = action.payload.updatedName;
+    },
   },
 });
 
@@ -85,6 +99,7 @@ export const {
   exitChatRoom,
   chatRoomMakeAdmin,
   chatRoomRemoveAdmin,
+  updateGroupChatProfilePicOrName,
 } = chatRoomSlice.actions;
 
 export default chatRoomSlice.reducer;

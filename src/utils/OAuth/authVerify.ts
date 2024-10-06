@@ -7,7 +7,7 @@ import { UserSchema } from "@/schema/userSchema";
 import { fetchData } from "../custom/customFetch";
 import { toast } from "../toast/Toast";
 import { AppDispatch } from "@/lib/store/store";
-import { debug } from "../custom/Debug";
+import { debug } from "../custom/debug";
 import { resetChatData } from "@/lib/store/features/chat/chatSlice";
 
 export const authVerify = async (dispatch: AppDispatch) => {

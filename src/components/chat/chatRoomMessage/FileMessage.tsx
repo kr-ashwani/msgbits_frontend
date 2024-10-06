@@ -1,6 +1,6 @@
 import { MessageState } from "@/hooks/AppSelector/useMessageState";
 import React from "react";
-import ImageOrVideoMessage from "./ImageOrVideoMessage";
+import ImageOrVideoMessage from "./ImageMessage";
 import DocumentMessage from "./DocumentMessage";
 import TextMessage from "./TextMessage";
 

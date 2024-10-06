@@ -55,6 +55,17 @@ export const messageSlice = createSlice({
       const message = state[action.payload];
       if (message) message.status = "sent";
     },
+
+    updateFileUrl(
+      state,
+      action: PayloadAction<{ messageId: string; url: string; fileId: string }>,
+    ) {
+      const msg = state[action.payload.messageId];
+      if (!msg || msg.type !== "file") return;
+
+      if (msg.file.fileId === action.payload.fileId)
+        msg.file.url = action.payload.url;
+    },
   },
 });
 
@@ -64,6 +75,7 @@ export const {
   updateDeliveredTo,
   updateSeenBy,
   updateMsgSent,
+  updateFileUrl,
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

@@ -43,10 +43,15 @@ class CustomFetch {
           body: JSON.stringify(jsonData),
           method: "post",
         };
-      const response = await fetch(
-        reqToSelfServer ? CustomFetch.serverURL + input : input,
-        { cache: "no-store", credentials: "include", ...init, ...jsonReq },
-      );
+      const reqUrl = reqToSelfServer
+        ? CustomFetch.serverURL + input.trim()
+        : input;
+      const response = await fetch(reqUrl, {
+        cache: "no-store",
+        credentials: "include",
+        ...init,
+        ...jsonReq,
+      });
       const responseJson = await response.json();
 
       if (!response.ok) {

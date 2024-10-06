@@ -1,8 +1,19 @@
 import { useChatTypingStatusState } from "@/hooks/AppSelector/useChatTypingStatusState";
 import { MessageState } from "@/hooks/AppSelector/useMessageState";
 
-import React, { useMemo } from "react";
+import React, { ReactNode, useMemo } from "react";
 import TypingIndicator from "../chatRoomMessage/TypingIndicator";
+
+function displayLastMessage(messageState: MessageState): ReactNode {
+  const rawMessage = messageState.getRawMessage();
+
+  if (!rawMessage) return "";
+
+  if (rawMessage.type === "file" && rawMessage.file.fileName)
+    return rawMessage.file.fileName;
+
+  return messageState.getMessageText();
+}
 
 const ChatRoomLastMessage = ({
   messageState,
@@ -27,7 +38,7 @@ const ChatRoomLastMessage = ({
           <TypingIndicator size="small" className="mt-[6px] pl-2" />
         </div>
       ) : (
-        messageState.getMessageText()
+        displayLastMessage(messageState)
       )}
     </div>
   );

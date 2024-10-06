@@ -13,6 +13,7 @@ const UserDetails = ({ user }: { user: IUser }) => {
       year: "numeric",
     });
   }
+
   return (
     <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">

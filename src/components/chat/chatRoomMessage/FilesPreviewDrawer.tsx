@@ -3,19 +3,21 @@ import { FilesPreviewCarousel } from "./FilesPreviewCarousel";
 import { useFiles } from "./ChatAreaFooter";
 import { ChatSvg } from "@/components/svg/chatSvg";
 import FilesPreviewFooter from "./FilesPreviewFooter";
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setFilePreviewMode } from "@/lib/store/features/chat/chatRoomDataSlice";
 
 const FilesPreviewDrawer = () => {
   const { files, setFiles } = useFiles();
-  const selectedChat = useAppSelector((state) => state.chat.selectedChat);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setFiles([]);
-  }, [selectedChat.id, setFiles]);
+    if (files.length) dispatch(setFilePreviewMode(true));
+    else dispatch(setFilePreviewMode(false));
+  }, [files, dispatch]);
 
   return (
     <div
-      className={`absolute inset-0 z-[2] flex transition-transform duration-300 ${files.length && selectedChat.id ? "translate-y-0" : "translate-y-full"} flex-col bg-chat-bg`}
+      className={`absolute inset-0 z-[2] flex transition-transform duration-300 ${files.length ? "translate-y-0" : "translate-y-full"} flex-col bg-chat-bg`}
     >
       <div className="flex items-center border-b-[1px] border-border-color bg-chat-bg py-3">
         <div
@@ -27,7 +29,7 @@ const FilesPreviewDrawer = () => {
 
         <p className="pl-1 text-xl font-semibold">Files Preview</p>
       </div>
-      {files.length && selectedChat.id ? (
+      {files.length ? (
         <>
           <FilesPreviewCarousel />
           <FilesPreviewFooter />

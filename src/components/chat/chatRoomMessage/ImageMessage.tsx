@@ -16,36 +16,22 @@ const ImageOrVideoMessage = ({
 
   const file = fileMessage.file;
 
-  if (
-    (!file.fileType.includes("image/") && !file.fileType.includes("video/")) ||
-    !file.dimension
-  )
+  // if file is not image or dimension is missing
+  if (!file.fileType.includes("image/") || !file.dimension)
     return <DocumentMessage messageState={messageState} />;
 
   return (
     <div
-      className={`mx-2 mt-2 flex items-center justify-center rounded-xl ${file.url ? "" : "bg-chat-bg"}`}
+      className={`mx-2 mt-2 flex items-center justify-center rounded-xl ${file.url && file.url !== "failed" ? "" : "bg-chat-bg"}`}
     >
-      {file.url ? (
-        file.fileType.includes("image/") ? (
-          <Image
-            className="rounded-xl"
-            alt="message"
-            src={file.url}
-            width={file.dimension.width}
-            height={file.dimension.height}
-          />
-        ) : (
-          <video
-            className="rounded-xl"
-            width={file.dimension.width}
-            height={file.dimension.height}
-            controls
-            muted
-          >
-            <source src={file.url} type={file.fileType} />
-          </video>
-        )
+      {file.url && file.url !== "failed" ? (
+        <Image
+          className="rounded-xl"
+          alt="message"
+          src={file.url}
+          width={file.dimension.width}
+          height={file.dimension.height}
+        />
       ) : (
         <div
           className="flex items-center justify-center overflow-hidden"
@@ -56,10 +42,12 @@ const ImageOrVideoMessage = ({
         >
           <div id={file.fileId} className="relative flex text-theme-color">
             <div className="progressLabelAttach absolute inset-0 flex items-center justify-center text-sm font-medium">
-              0%
+              {file.url === "failed" ? "Failed" : "0%"}
             </div>
 
-            {Svg("loading", { width: "80", height: "80", strokeWidth: 1.3 })}
+            {file.url === "failed"
+              ? null
+              : Svg("loading", { width: "80", height: "80", strokeWidth: 1.3 })}
           </div>
         </div>
       )}

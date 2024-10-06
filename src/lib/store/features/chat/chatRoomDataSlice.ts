@@ -29,6 +29,8 @@ export interface chatRoomDataState {
   unreadMessages: unreadMessagesState;
   userOnlineStatus: userOnlineStatusState;
   repliedToMessage: repliedToMessageState;
+  isInFilePreviewMode: boolean;
+  showFileDiscardDialog: boolean;
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -37,6 +39,8 @@ const initialState: chatRoomDataState = {
   unreadMessages: {},
   userOnlineStatus: {},
   repliedToMessage: {},
+  isInFilePreviewMode: false,
+  showFileDiscardDialog: false,
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -147,6 +151,13 @@ export const chatRoomDataSlice = createSlice({
     ) {
       delete state.repliedToMessage[action.payload.chatRoomId];
     },
+    setFilePreviewMode(state, action: PayloadAction<boolean>) {
+      state.isInFilePreviewMode = action.payload;
+    },
+
+    setShowFileDiscardDialog(state, action: PayloadAction<boolean>) {
+      state.showFileDiscardDialog = action.payload;
+    },
   },
 });
 
@@ -161,6 +172,8 @@ export const {
   setOnlineStatus,
   setRepliedToMessage,
   resetRepliedToMessage,
+  setFilePreviewMode,
+  setShowFileDiscardDialog,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;

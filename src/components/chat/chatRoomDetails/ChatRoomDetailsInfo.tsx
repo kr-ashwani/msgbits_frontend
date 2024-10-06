@@ -1,31 +1,72 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
 import GroupChatMembers from "./GroupChatMembers";
 import GroupChatPrivacy from "./GroupChatPrivacy";
 import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
 import SharedPhotos from "./SharedPhotos";
 import { ChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
+import AvatarUpdatable from "@/components/utility/AvatarUpdatable";
 import StatusAvatar from "../user/StatusAvatar";
+import { useChatRoomDispatch } from "@/hooks/AppDispatcher/useChatRoomDispatch";
+import { useSocket } from "@/hooks/useSocket";
+import ChatRoomDetailsHamburger from "./ChatRoomDetailsHamburger";
 
 const ChatRoomDetailsInfo = ({
   chatRoomState,
 }: {
   chatRoomState: ChatRoomState;
 }) => {
+  const [userSrc, setUserSrc] = useState(
+    chatRoomState.getChatRoomPicture() || "",
+  );
+  const chatRoomDispatch = useChatRoomDispatch();
+  const { socketQueue } = useSocket();
+
+  useLayoutEffect(() => {
+    const pic = chatRoomState.getChatRoomPicture();
+    if (pic) setUserSrc(pic);
+  }, [chatRoomState]);
+
   const rawChatRoom = chatRoomState.getRawChatRoom();
   const memberId = chatRoomState.getOtherUserIdInPrivateChat();
   if (!rawChatRoom) return null;
 
+  function handleChatProfilePicChange(newUrl: string, fileId: string) {
+    if (!rawChatRoom) return null;
+    const updatedProfile = {
+      chatRoomId: rawChatRoom.chatRoomId,
+      updatedProfilePicture: newUrl,
+      updatedName: null,
+    };
+    chatRoomDispatch.updateGroupChatProfilePicOrName(updatedProfile);
+    // to server send fileId instead of url
+    if (fileId) updatedProfile.updatedProfilePicture = fileId;
+    socketQueue.emit("chatroom-updateChatNameOrPic", updatedProfile);
+  }
+
   return (
-    <div className="flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
+    <div className="relative flex h-full shrink-0 flex-col gap-2 overflow-y-auto py-7">
       <div className="flex flex-col items-center gap-[10px] px-7">
+        {rawChatRoom.type === "group" ? <ChatRoomDetailsHamburger /> : null}
         <div>
-          <StatusAvatar
-            indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
-            userId={memberId}
-            src={chatRoomState.getChatRoomPicture() || ""}
-            size={120}
-          />
+          {rawChatRoom.type === "private" ? (
+            <StatusAvatar
+              indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
+              userId={memberId}
+              src={userSrc}
+              size={120}
+            />
+          ) : (
+            <AvatarUpdatable
+              avatarClassName="text-white"
+              imageUploadClass="bottom-0 right-[12%] h-8 w-8 p-1"
+              src={userSrc}
+              setSrc={setUserSrc}
+              showBg={false}
+              size={120}
+              onSrcUrlChange={handleChatProfilePicChange}
+            />
+          )}
         </div>
         <div className="text-lg font-semibold">
           {chatRoomState.getChatRoomName()}

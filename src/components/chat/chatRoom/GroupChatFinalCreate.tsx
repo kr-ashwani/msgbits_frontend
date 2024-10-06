@@ -9,6 +9,7 @@ import GroupChatNewMembers from "./GroupChatNewMembers";
 import { useChatService } from "@/hooks/chat/useChatService";
 import Slider from "../../utility/Slider";
 import { toast } from "@/utils/toast/Toast";
+import { uploadFileToServer } from "@/utils/custom/uploadFileToServer";
 
 const DefaultUrl = "/assets/groupChat.png";
 const GroupChatFinalCreate = ({
@@ -61,6 +62,12 @@ const GroupChatFinalCreate = ({
       name: state.name.trim() ? e.target.value : e.target.value.trim(),
     }));
   }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files) return;
+    const status = await uploadFileToServer(Array.from(e.target.files));
+    console.log(status);
+  }
   return (
     <Slider
       heading="Group Description"
@@ -82,26 +89,9 @@ const GroupChatFinalCreate = ({
           src={chatRoomPicture}
           setSrc={setChatRoomPicture}
           size={250}
-          processImageFn={(e) => {
-            return new Promise<string>((res, rej) => {
-              const file = e.target.files ? e.target.files[0] : null; // Get the selected file
-
-              if (file) {
-                const reader = new FileReader(); // Create a FileReader
-
-                reader.onload = function (e) {
-                  const dataURL = e.target?.result; // Data URL of the file
-                  if (typeof dataURL === "string") res(dataURL || DefaultUrl);
-                  else res(DefaultUrl);
-                };
-
-                reader.readAsDataURL(file); // Read the file as a data URL
-              } else {
-                res(DefaultUrl);
-              }
-            });
-          }}
         />
+
+        <input type="file" name="" id="" multiple onChange={handleFileUpload} />
         <div className="mx-4 flex gap-4">
           <p className="text-nowrap font-semibold">Group Name </p>
           <form onSubmit={handleGroupChatCreation} className="h-7 w-0 grow">

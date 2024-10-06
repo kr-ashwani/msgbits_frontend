@@ -1,9 +1,13 @@
+import { IFileMessage } from "@/schema/MessageSchema";
+
 export interface FileUploadPending {
   fileId: string;
+  fileMessage: IFileMessage;
   status: "PENDING";
 }
 export interface FileUploadProgress {
   fileId: string;
+  fileMessage: IFileMessage;
   status: "UPLOADING";
   // formated string
   size: string;
@@ -13,12 +17,14 @@ export interface FileUploadProgress {
 }
 export interface FileUploadCompleted {
   fileId: string;
+  fileMessage: IFileMessage;
   status: "UPLOADED";
+  url: string;
 }
 export interface FileUploadFailed {
   fileId: string;
+  fileMessage: IFileMessage;
   status: "FAILED";
-  fileExtension: string;
   error: Error;
 }
 
@@ -40,9 +46,8 @@ export interface FileQueueConfig {
 export interface UploadFile {
   file: File;
   fileId: string;
+  fileMessage: IFileMessage;
 }
-export interface UploadFileTask {
-  file: File;
-  fileId: string;
+export interface UploadFileTask extends UploadFile {
   retries: number;
 }

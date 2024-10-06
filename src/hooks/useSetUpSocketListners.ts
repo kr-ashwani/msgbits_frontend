@@ -43,6 +43,10 @@ export const useSetUpSocketListners = () => {
         "chatroom-memberTyping",
         chatRoomDataDispatch.changeTypingStatus,
       ),
+      socket.on(
+        "chatroom-updateChatNameOrPic",
+        chatRoomDispatch.updateGroupChatProfilePicOrName,
+      ),
       // Listening to all chatUser events
       socket.on("chatuser-statusChange", chatUserDispatch.getStatusUpdate),
       socket.on("chatuser-updateProfile", chatUserDispatch.updateUserProfile),

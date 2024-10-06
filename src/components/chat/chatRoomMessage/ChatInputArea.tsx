@@ -18,6 +18,11 @@ import { toast } from "@/utils/toast/Toast";
 import { DeferredPromise } from "@/utils/custom/DeferredPromise";
 import { fileQueue } from "@/service/file/FileQueueSingleton";
 import { updateUploadProgress } from "./utils/updateUploadProgress";
+import { useSocket } from "@/hooks/useSocket";
+import { FileUploadStatus } from "@/service/file/types";
+import { useDispatch } from "react-redux";
+import { updateFileUrl } from "@/lib/store/features/chat/messageSlice";
+import { formatBytes } from "@/utils/custom/formatBytes";
 
 const TYPING_DEBOUNCE_DELAY = 500; //  500 msecond
 
@@ -42,6 +47,8 @@ const ChatInputArea = () => {
   const chatRoomDataDispatch = useChatRoomDataDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const { setFiles } = useFiles();
+  const { socketQueue } = useSocket();
+  const dispatch = useDispatch();
 
   // Create a memoized version of the typing indicator function
   const sendTypingIndicator = useCallback(() => {
@@ -128,7 +135,8 @@ const ChatInputArea = () => {
     messageDiv.current.focus();
 
     if (!message.trim()) return updateMessage();
-    chatService.sendNewTextMessage(
+    chatService.sendNewMessage(
+      "text",
       message.trim(),
       repliedMsgState[chatRoomId] || null,
     );
@@ -192,54 +200,146 @@ const ChatInputArea = () => {
   }, []);
 
   useEffect(() => {
-    fileQueue.registerCallback(updateUploadProgress);
-    return () => fileQueue.unregisterCallback(updateUploadProgress);
-  }, []);
+    function updateFileProgress(fileUploadStatus: FileUploadStatus): void {
+      if (fileUploadStatus.status === "UPLOADED") {
+        const { fileId, url, fileMessage } = fileUploadStatus;
+        // update file state
+        dispatch(
+          updateFileUrl({
+            messageId: fileMessage.messageId,
+            fileId,
+            url,
+          }),
+        );
+        // update socket Queue
+        socketQueue.updateNewFileMsgEventWithUrl({
+          fileId,
+          chatRoomId: fileMessage.chatRoomId,
+          url,
+        });
+      } else if (fileUploadStatus.status === "FAILED") {
+        const { fileId, fileMessage } = fileUploadStatus;
+        // remove it from socket queue also alert user
+        toast.error(
+          `Upload failed: "${fileMessage.file.fileName}" has been removed. Please send again.`,
+        );
+        // update file state
+        dispatch(
+          updateFileUrl({
+            messageId: fileMessage.messageId,
+            fileId,
+            url: "failed",
+          }),
+        );
+        socketQueue.deleteFailedNewFileMessageEvent({
+          fileId,
+          chatRoomId: fileMessage.chatRoomId,
+        });
+      }
+      updateUploadProgress(fileUploadStatus);
+    }
+    fileQueue.registerCallback(updateFileProgress);
+    return () => fileQueue.unregisterCallback(updateFileProgress);
+  }, [socketQueue, dispatch]);
 
-  async function handleFiles(
+  const handleFiles = useCallback(
+    async (files: File[], type: "attachment" | "document") => {
+      //getting max allowed file size
+      const MAX_FILE_SIZE_MB =
+        process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || "100";
+      const maxFileSizeBytes = parseInt(MAX_FILE_SIZE_MB, 10) * 1024 * 1024;
+      const filesToUpload = files.reduce<File[]>((acc, file) => {
+        if (file.size > maxFileSizeBytes || file.size < 0)
+          toast.error(
+            `Upload failed: ${file.name} (${formatBytes(file.size)}) exceeds the maximum file size limit of ${formatBytes(maxFileSizeBytes)}.`,
+          );
+        else acc.push(file);
+        return acc;
+      }, []);
+
+      //filesToUpload to used from here as it contains filtered files
+      if (!filesToUpload?.length) return;
+      const chatRoomId = selectedChat.getSelectedChatId();
+      if (!user || !chatRoomId) return;
+
+      const { promise, resolve, reject } = DeferredPromise<boolean>();
+
+      toast.promise(promise, {
+        loading: "Files are currently being optimized...",
+        success: "File optimization completed successfully.",
+        error: "There was an error while optimizing the files.",
+      });
+
+      const fileUpload: Promise<FileUpload>[] = filesToUpload.map(
+        async (file, i) => ({
+          file: type === "attachment" ? await processFile(file) : file,
+          fileId: uuidv4(),
+          type,
+          // only last file will have message attached
+          message: i === filesToUpload.length - 1 ? message : "",
+          senderId: user._id,
+          chatRoomId,
+          // only last file will have repliedTo attached
+          repliedTo:
+            i === filesToUpload.length - 1 ? repliedMsgState[chatRoomId] : "",
+        }),
+      );
+
+      try {
+        // it is sure all files will have same selected chatroom id
+        setFiles(await Promise.all(fileUpload));
+        resolve(true);
+      } catch (err) {
+        reject(false);
+      }
+
+      chatRoomDataDispatch.resetRepliedToMessage({
+        chatRoomId,
+      });
+      updateMessage();
+    },
+    [
+      chatRoomDataDispatch,
+      message,
+      repliedMsgState,
+      selectedChat,
+      setFiles,
+      updateMessage,
+      user,
+    ],
+  );
+
+  const handlePaste = useCallback(
+    (e: React.ClipboardEvent<HTMLDivElement>) => {
+      const clipboardData = e.clipboardData;
+      const items = clipboardData.items;
+      const fileArray: File[] = [];
+
+      // Loop through clipboard items to find files (images)
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+
+        // Check if the item is a file (image)
+        if (item.kind === "file" && item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            fileArray.push(file); // Add file to array
+          }
+        }
+      }
+
+      handleFiles(fileArray, "attachment");
+    },
+    [handleFiles],
+  );
+
+  function handleDocAndAttachment(
     e: React.ChangeEvent<HTMLInputElement>,
     type: "attachment" | "document",
   ) {
-    const inputFiles = e.target.files;
-    if (!inputFiles?.length) return;
-    const chatRoomId = selectedChat.getSelectedChatId();
-    if (!user || !chatRoomId) return;
-
-    const { promise, resolve, reject } = DeferredPromise<boolean>();
-
-    toast.promise(promise, {
-      loading: "Files are currently being optimized...",
-      success: "File optimization completed successfully.",
-      error: "There was an error while optimizing the files.",
-    });
-
-    const fileUpload: Promise<FileUpload>[] = Array.from(inputFiles).map(
-      async (file, i) => ({
-        file: type === "attachment" ? await processFile(file) : file,
-        fileId: uuidv4(),
-        type,
-        // only last file will have message attached
-        message: i === inputFiles.length - 1 ? message : "",
-        senderId: user._id,
-        chatRoomId,
-        // only last file will have repliedTo attached
-        repliedTo:
-          i === inputFiles.length - 1 ? repliedMsgState[chatRoomId] : "",
-      }),
-    );
-
-    try {
-      setFiles(await Promise.all(fileUpload));
-      resolve(true);
-    } catch (err) {
-      reject(false);
-    }
-
+    if (!e.target.files) return;
+    handleFiles(Array.from(e.target.files), type);
     (e.target as any).value = null; // TypeScript will not complain about this
-    chatRoomDataDispatch.resetRepliedToMessage({
-      chatRoomId,
-    });
-    updateMessage();
   }
 
   return (
@@ -282,7 +382,7 @@ const ChatInputArea = () => {
             accept="image/*,video/*"
             className="absolute inset-0 -z-10 cursor-pointer opacity-0"
             multiple
-            onChange={(e) => handleFiles(e, "attachment")}
+            onChange={(e) => handleDocAndAttachment(e, "attachment")}
           />
         </div>
         <div
@@ -296,12 +396,12 @@ const ChatInputArea = () => {
             type="file"
             className="absolute inset-0 -z-10 cursor-pointer opacity-0"
             multiple
-            onChange={(e) => handleFiles(e, "document")}
+            onChange={(e) => handleDocAndAttachment(e, "document")}
           />
         </div>
         <div className="relative max-h-28 grow overflow-y-auto overflow-x-hidden">
           <div
-            className={`text-gray-400 absolute inset-0 cursor-text select-none items-center p-4 align-middle font-medium ${
+            className={`text-gray-400 pointer-events-none absolute inset-0 cursor-text touch-none select-none items-center p-4 align-middle font-medium ${
               message ? "hidden" : "flex"
             }`}
             onClick={() => messageDiv.current?.focus()}
@@ -313,6 +413,7 @@ const ChatInputArea = () => {
             className="inputMessage rounded-md border-none bg-input-bg p-3 text-[17px] font-medium outline-none"
             contentEditable="true"
             onInput={handleInput}
+            onPaste={handlePaste}
             onKeyDown={handleKeyDown}
           ></div>
         </div>

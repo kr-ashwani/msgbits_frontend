@@ -11,6 +11,7 @@ import AddUserToChatRoom from "./AddUserToChatRoom";
 import ChatRoomDetailsInfo from "./ChatRoomDetailsInfo";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import UserDetails from "./UserDetails";
+import EditChatRoomName from "./EditChatRoomName";
 
 const ChatRoomDetails = () => {
   const component = useRef<HTMLDivElement>(null);
@@ -54,6 +55,12 @@ const ChatRoomDetails = () => {
       {chatRoomState ? (
         <AddUserToChatRoom
           name="AddUserToChatRoom"
+          chatRoomState={chatRoomState}
+        />
+      ) : null}
+      {chatRoomState ? (
+        <EditChatRoomName
+          name="EditChatRoomName"
           chatRoomState={chatRoomState}
         />
       ) : null}

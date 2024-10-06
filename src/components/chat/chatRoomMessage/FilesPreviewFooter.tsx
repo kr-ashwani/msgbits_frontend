@@ -1,26 +1,30 @@
-import { FileMessage } from "@/chat/Message";
 import { ChatSvg } from "@/components/svg/chatSvg";
-import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useFiles } from "./ChatAreaFooter";
 import { convertFiletoFileMessage } from "@/utils/custom/convertFiletoFileMessage";
 import Svg from "@/components/svg";
-import { useMessageDispatch } from "@/hooks/AppDispatcher/useMessageDispatch";
-import { IMessage } from "@/schema/MessageSchema";
+import { IFileMessage, IMessage } from "@/schema/MessageSchema";
 import { fileQueue } from "@/service/file/FileQueueSingleton";
 import { toast } from "@/utils/toast/Toast";
-import { updateUploadProgress } from "./utils/updateUploadProgress";
+import { useChatService } from "@/hooks/chat/useChatService";
+import { Dialog } from "@/components/utility/Dialog";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useDispatch } from "react-redux";
+import { setShowFileDiscardDialog } from "@/lib/store/features/chat/chatRoomDataSlice";
+import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 
 const FilesPreviewFooter = () => {
-  const selectedChat = useSelectedChatState();
-  const chatState = selectedChat.getChatState();
   const { files, setFiles } = useFiles();
   const fileMessages = useRef<{ [p in string]: IMessage }>({});
   const fileMessagesArr = useRef<IMessage[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const messageDispatch = useMessageDispatch();
+  const chatService = useChatService();
+  const chatState = useSelectedChatState().getChatState();
+  const dispatch = useDispatch();
+  const showFileDiscardDialog = useAppSelector(
+    (state) => state.chat.chatRoomData.showFileDiscardDialog,
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -47,40 +51,55 @@ const FilesPreviewFooter = () => {
     initiateFileMessageConversion();
   }, [files]);
 
-  if (!chatState) return null;
-
   const sendFiles = () => {
-    const chatRoomId = selectedChat.getSelectedChatId();
-    if (!chatRoomId || !fileMessagesArr.current.length) return;
+    const fileMessageToUpload: IFileMessage[] = [];
 
-    console.log(fileMessagesArr.current);
-
-    messageDispatch.setMessagesOfChatRoom({
-      [chatRoomId]: fileMessagesArr.current,
+    fileMessagesArr.current.forEach((msg) => {
+      if (msg.type === "file") fileMessageToUpload.push(msg);
     });
 
-    fileMessagesArr.current.forEach((fileMsg) => {
-      if (fileMsg.type !== "file") return;
-      const [file] = files.filter(
-        (elem) => elem.fileId === fileMsg.file.fileId,
-      );
-      if (!file) toast.error("file to upload is missing");
+    // updated messages -- if you are sending files to new user
+    // updated chatroom message is must
+    const updatedMessages = chatService.sendNewMessage(
+      "file",
+      fileMessageToUpload,
+    );
 
-      fileQueue.enqueue({
-        file: file.file,
-        fileId: file.fileId,
-      });
+    updatedMessages?.forEach((msg) => {
+      if (msg.type === "file") {
+        const [file] = files.filter((elem) => elem.fileId === msg.file.fileId);
+        if (!file) toast.error("file to upload is missing");
+
+        fileQueue.enqueue({
+          file: file.file,
+          fileId: file.fileId,
+          fileMessage: msg,
+        });
+      }
     });
 
     setFiles([]);
   };
 
+  function handleFilesDiscard() {
+    setFiles([]);
+  }
+
+  function handleDialogClose(state: boolean) {
+    dispatch(setShowFileDiscardDialog(false));
+  }
+
+  if (!chatState) return null;
   return (
     <div className="flex px-10 py-2 pb-6">
       <div className="grow">
         <div className="flex h-full max-w-40 items-center gap-2 rounded-xl bg-input-bg px-3 py-2">
           <Image
-            src={chatState.getChatRoomPicture() || ""}
+            src={
+              chatState.getChatRoomPicture() ||
+              chatState.getTempUser()?.profilePicture ||
+              ""
+            }
             width={25}
             height={25}
             alt="chatRoom pic"
@@ -93,6 +112,22 @@ const FilesPreviewFooter = () => {
       <div className="cursor-pointer text-theme-color" onClick={sendFiles}>
         {loading ? Svg("loading") : ChatSvg("msgSend")}
       </div>
+
+      <Dialog
+        title={"Discard unsent Message?"}
+        description={
+          "You have an unsent message, including any attached media. Leaving this screen will prevent it from being saved or sent."
+        }
+        cancelButtonText={"Return to File Preview"}
+        confirmButtonText={"Discard"}
+        alertDialogProps={{
+          onOpenChange: handleDialogClose,
+          open: showFileDiscardDialog,
+        }}
+        onConfirm={() => handleFilesDiscard()}
+      >
+        {null}
+      </Dialog>
     </div>
   );
 };

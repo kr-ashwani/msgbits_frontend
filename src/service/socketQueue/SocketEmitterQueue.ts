@@ -5,7 +5,8 @@ import {
   EmitterMapping,
   MessageEmitterMapping,
 } from "../../socket/socketManager/types";
-import { debug } from "@/utils/custom/Debug";
+import { debug } from "@/utils/custom/debug";
+import _ from "lodash";
 
 interface SocketQueueData<T extends keyof EmitterMapping> {
   eventName: T;
@@ -54,13 +55,20 @@ export class SocketEmitterQueue {
       this.queueProcessingMap.set(queueId, false);
     }
 
+    let isDataComplete = true;
+    // for message create event mark isDataComplete to false for file Message
+    if (eventName === "message-create") {
+      const eventData = data as EmitterMapping["message-create"];
+      if (eventData.type === "file") isDataComplete = false;
+    }
+
     const queue = this.queueMap.get(queueId)!;
     queue.enqueue({
       eventName,
       Data: data,
       noOfRetries: 0,
       firstAttemptTimestamp: Date.now(),
-      isDataComplete: true,
+      isDataComplete,
     });
 
     this.processEventQueue(queueId);
@@ -87,6 +95,70 @@ export class SocketEmitterQueue {
     data: ChatRoomEmitterMapping[T],
   ) {
     this.emitWithQueueId("chatroom", eventName as keyof EmitterMapping, data);
+  }
+
+  updateNewFileMsgEventWithUrl({
+    fileId,
+    chatRoomId,
+    url,
+  }: {
+    fileId: string;
+    chatRoomId: string;
+    url: string;
+  }) {
+    const queueId = `${chatRoomId}-msg`;
+    const chatRoomMsgQueue = this.queueMap.get(queueId);
+
+    let isUpdated = false;
+    chatRoomMsgQueue?.forEach((QueueElem) => {
+      if (QueueElem.eventName === "message-create") {
+        const eventData = QueueElem.Data as EmitterMapping["message-create"];
+
+        if (eventData.type === "file") {
+          const cloneEventData = _.cloneDeep(eventData);
+          if (cloneEventData.file.fileId === fileId) {
+            // update file url and mark queue node to complete
+            cloneEventData.file.url = url;
+            QueueElem.isDataComplete = true;
+            isUpdated = true;
+          }
+          QueueElem.Data = cloneEventData;
+        }
+      }
+    });
+
+    if (isUpdated) this.processEventQueue(queueId);
+  }
+
+  deleteFailedNewFileMessageEvent({
+    fileId,
+    chatRoomId,
+  }: {
+    fileId: string;
+    chatRoomId: string;
+  }) {
+    const queueId = `${chatRoomId}-msg`;
+    const chatRoomMsgQueue = this.queueMap.get(queueId);
+
+    let elemRemoved = false;
+    chatRoomMsgQueue?.removeElem((QueueElem) => {
+      if (QueueElem.eventName === "message-create") {
+        const eventData = QueueElem.Data as EmitterMapping["message-create"];
+
+        if (
+          eventData.type === "file" &&
+          eventData.chatRoomId === chatRoomId &&
+          eventData.file.fileId === fileId
+        ) {
+          elemRemoved = true;
+          return true;
+        }
+      }
+      return false;
+    });
+
+    // if any queue node is removed then trigger processing
+    if (elemRemoved) this.processEventQueue(queueId);
   }
 
   private processEventQueue(queueId: string): void {

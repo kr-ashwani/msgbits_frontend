@@ -28,6 +28,11 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: process.env.NEXT_PUBLIC_HOST || "localhost",
+        pathname: '/**',
+      },
     ],
   },
 };

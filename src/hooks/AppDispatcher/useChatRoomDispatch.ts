@@ -4,12 +4,14 @@ import {
   chatRoomMakeAdmin,
   chatRoomRemoveAdmin,
   exitChatRoom,
+  updateGroupChatProfilePicOrName,
 } from "@/lib/store/features/chat/chatRoomSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { AppDispatch } from "@/lib/store/store";
 import { ChatAddNewMember } from "@/schema/ChatAddNewMemberSchema";
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
+import { GroupChatProfileUpdate } from "@/schema/GroupChatProfileUpdate";
 import { useMemo } from "react";
 
 export class ChatRoomDispatcher {
@@ -37,6 +39,10 @@ export class ChatRoomDispatcher {
 
   exitChatRoom = (payload: ChatRoomAndMember) => {
     this.dispatch(exitChatRoom(payload));
+  };
+
+  updateGroupChatProfilePicOrName = (payload: GroupChatProfileUpdate) => {
+    this.dispatch(updateGroupChatProfilePicOrName(payload));
   };
 
   constructor(dispatch: AppDispatch) {

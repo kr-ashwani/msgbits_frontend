@@ -3,6 +3,7 @@ import { FileMessage } from "@/chat/Message";
 import { FileUpload } from "@/components/chat/chatRoomMessage/ChatAreaFooter";
 import { calculateFrameSize, Dimensions } from "./calculateFrameSize";
 import { getDimesionOfFile } from "./getDimesionOfFile";
+import mime from "mime-types";
 
 export const convertFiletoFileMessage = async (
   fileUpload: FileUpload[],
@@ -14,7 +15,6 @@ export const convertFiletoFileMessage = async (
   await Promise.all(
     fileUpload.map(async (elem, i) => {
       let dimension: Dimensions | null = null;
-      let url = "";
       try {
         const originalDimension = await getDimesionOfFile(elem);
         if (originalDimension) {
@@ -22,17 +22,25 @@ export const convertFiletoFileMessage = async (
             originalDimension.width,
             originalDimension.height,
           );
-          url = originalDimension.url;
         }
       } catch (error) {}
 
+      const fileType =
+        elem.file.type ||
+        mime.lookup(elem.file.name) ||
+        "application/octet-stream";
+      const extension =
+        mime.extension(fileType) ||
+        elem.file.name.split(".").pop() ||
+        "noextension";
+
       const file = new File({
         fileId: elem.fileId,
-        fileName: elem.file.name.split(".")[0],
+        fileName: elem.file.name,
         size: elem.file.size,
-        fileType: elem.file.type,
-        extension: elem.file.name.split(".")[1],
-        url,
+        fileType,
+        extension,
+        url: "",
         dimension, // This will be null if getDimesionOfFile failed
       });
 

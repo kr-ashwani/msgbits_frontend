@@ -37,13 +37,15 @@ const getVideoMetadata = async (
   });
 };
 
+// video will be served as document
+// only image will be shown as preview
 export const getDimesionOfFile = async (
   fileUpload: FileUpload,
 ): Promise<IFile["dimension"]> => {
   const imageMimeTypeRegex =
     /^image\/(jpeg|png|gif|bmp|webp|svg\+xml|tiff|x-icon)$/i;
-  const videoMimeTypeRegex =
-    /^video\/(mp4|mpeg|quicktime|x-msvideo|x-ms-wmv|3gpp|webm)$/i;
+  // const videoMimeTypeRegex =
+  //   /^video\/(mp4|mpeg|quicktime|x-msvideo|x-ms-wmv|3gpp|webm)$/i;
   const fileType = fileUpload.file.type;
 
   if (fileUpload.type === "document") return null;
@@ -51,8 +53,8 @@ export const getDimesionOfFile = async (
   if (fileUpload.type === "attachment") {
     // file is nether video nor image
     if (
-      !imageMimeTypeRegex.test(fileType) &&
-      !videoMimeTypeRegex.test(fileType)
+      !imageMimeTypeRegex.test(fileType)
+      // && !videoMimeTypeRegex.test(fileType)
     )
       return null;
   }
@@ -60,8 +62,8 @@ export const getDimesionOfFile = async (
   if (imageMimeTypeRegex.test(fileType))
     return await getImageMetadata(fileUpload.file);
 
-  if (videoMimeTypeRegex.test(fileType))
-    return await getVideoMetadata(fileUpload.file);
+  // if (videoMimeTypeRegex.test(fileType))
+  //   return await getVideoMetadata(fileUpload.file);
 
   return null;
 };
