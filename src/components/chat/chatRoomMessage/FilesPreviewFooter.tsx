@@ -1,5 +1,4 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useFiles } from "./ChatAreaFooter";
 import { convertFiletoFileMessage } from "@/utils/custom/convertFiletoFileMessage";
@@ -13,6 +12,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { useDispatch } from "react-redux";
 import { setShowFileDiscardDialog } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
+import { SafeImage } from "@/components/utility/SafeImage";
 
 const FilesPreviewFooter = () => {
   const { files, setFiles } = useFiles();
@@ -94,7 +94,7 @@ const FilesPreviewFooter = () => {
     <div className="flex px-10 py-2 pb-6">
       <div className="grow">
         <div className="flex h-full max-w-40 items-center gap-2 rounded-xl bg-input-bg px-3 py-2">
-          <Image
+          <SafeImage
             src={
               chatState.getChatRoomPicture() ||
               chatState.getTempUser()?.profilePicture ||
@@ -103,7 +103,7 @@ const FilesPreviewFooter = () => {
             width={25}
             height={25}
             alt="chatRoom pic"
-          ></Image>
+          ></SafeImage>
           <div className="font-sm truncate font-semibold text-detail-font-color">
             {chatState.getChatRoomName()}
           </div>

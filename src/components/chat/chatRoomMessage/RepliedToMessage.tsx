@@ -1,8 +1,8 @@
+import { SafeImage } from "@/components/utility/SafeImage";
 import { MessageState } from "@/hooks/AppSelector/useMessageState";
 import { cn } from "@/lib/utils";
 import { IFileMessage, IMessage } from "@/schema/MessageSchema";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
-import Image from "next/image";
 import React, { ReactNode, useCallback, useEffect, useRef } from "react";
 
 function repliedMessageComp(
@@ -34,7 +34,7 @@ function renderFileMessageLogo(fileMessage: IFileMessage): ReactNode {
   if (file.dimension && file.fileType.includes("image/")) {
     return (
       <div className="relative w-11 rounded-lg">
-        <Image
+        <SafeImage
           src={file.url}
           alt={file.fileName}
           fill

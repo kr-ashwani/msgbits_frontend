@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { SafeImage } from "./SafeImage";
 
 const Avatar = ({
   src,
@@ -19,7 +19,7 @@ const Avatar = ({
       className={cn("shrink-0 rounded-full", className)}
       style={{ width: `${size}px`, height: `${size}px` }}
     >
-      <Image
+      <SafeImage
         className="h-full w-full rounded-full object-cover object-center"
         src={src}
         width={size}

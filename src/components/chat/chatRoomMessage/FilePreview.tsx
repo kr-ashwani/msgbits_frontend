@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import Image from "next/image";
+import { SafeImage } from "@/components/utility/SafeImage";
 
 interface FilePreviewProps {
   file: File;
@@ -43,7 +43,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
   if (file.type.startsWith("image/") && preview) {
     return (
       <div className="relative h-full w-full">
-        <Image
+        <SafeImage
           src={preview}
           alt={file.name}
           fill

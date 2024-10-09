@@ -2,7 +2,7 @@ import { MessageState } from "@/hooks/AppSelector/useMessageState";
 import React from "react";
 import DocumentMessage from "./DocumentMessage";
 import Svg from "@/components/svg";
-import Image from "next/image";
+import { SafeImage } from "@/components/utility/SafeImage";
 
 const ImageOrVideoMessage = ({
   messageState,
@@ -25,7 +25,7 @@ const ImageOrVideoMessage = ({
       className={`mx-2 mt-2 flex items-center justify-center rounded-xl ${file.url && file.url !== "failed" ? "" : "bg-chat-bg"}`}
     >
       {file.url && file.url !== "failed" ? (
-        <Image
+        <SafeImage
           className="rounded-xl"
           alt="message"
           src={file.url}

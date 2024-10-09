@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -30,11 +31,18 @@ const nextConfig = {
       },
       {
         protocol: 'http',
-        hostname: process.env.NEXT_PUBLIC_HOST || "localhost",
+        hostname: getHostFromURL(process.env.NEXT_PUBLIC_SERVER_URL),
         pathname: '/**',
       },
     ],
   },
 };
 
+function getHostFromURL(url) {
+  try {
+    return new URL(url).hostname;
+  } catch (error) {
+    return 'localhost';
+  }
+}
 export default nextConfig;

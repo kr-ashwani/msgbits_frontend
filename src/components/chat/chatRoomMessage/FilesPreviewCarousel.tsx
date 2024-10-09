@@ -51,7 +51,7 @@ export function FilesPreviewCarousel() {
                   <FilePreview file={file.file} />
                   <div
                     onClick={() => removeFile(file.fileId)}
-                    className="absolute right-0 top-0 rounded-full bg-input-bg p-2 font-bold"
+                    className="absolute right-0 top-0 cursor-pointer rounded-full bg-input-bg p-2 font-bold"
                   >
                     {MessageSvg("xIcon", {
                       width: "18",
