@@ -57,7 +57,7 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
-        USER: ec2-user
+        USER: ubuntu
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml ${USER}@${HOST}:~/docker-compose.yml
@@ -67,7 +67,7 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
-        USER: ec2-user
+        USER: ubuntu
         DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}
         GITHUB_SHA: ${{ github.sha }}
       run: |
