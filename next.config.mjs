@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -32,6 +33,16 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: getHostFromURL(process.env.NEXT_PUBLIC_SERVER_URL),
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'msgbits.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.msgbits.com',
         pathname: '/**',
       },
     ],
