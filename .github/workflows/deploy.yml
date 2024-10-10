@@ -74,7 +74,7 @@ jobs:
         ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "
           export DOCKER_REPO=${DOCKER_REPO}
           export GITHUB_SHA=${GITHUB_SHA}
-          docker compose pull
-          docker compose up -d
-          docker system prune -af
+          docker-compose pull
+          docker-compose up -d
+          docker-system prune -af
         "
