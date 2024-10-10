@@ -1,8 +1,17 @@
-import IconShare from "/public/icons/FileShare.png";
-import IconDeviceSync from "/public/icons/DeviceSync.png";
-import IconGroupChat from "/public/icons/GroupChat.png";
 import Svg from "@/components/svg";
 import { SafeImage } from "@/components/utility/SafeImage";
+
+interface Icons {
+  IconShare: string;
+  IconDeviceSync: string;
+  IconGroupChat: string;
+}
+
+const icons: Icons = {
+  IconShare: "/icons/DeviceSync.png",
+  IconDeviceSync: "/icons/FileShare.png",
+  IconGroupChat: "/icons/GroupChat.png",
+};
 
 export const featuresContent = [
   {
@@ -11,13 +20,19 @@ export const featuresContent = [
     desc: "Provides real-time face-to-face interaction, for effective conversations.",
   },
   {
-    logo: <SafeImage width={26} src={IconShare} alt="video icon"></SafeImage>,
+    logo: (
+      <SafeImage width={26} src={icons.IconShare} alt="video icon"></SafeImage>
+    ),
     heading: "File Sharing",
     desc: "Simplifies the process of exchanging documents, images, videos and other files.",
   },
   {
     logo: (
-      <SafeImage width={26} src={IconDeviceSync} alt="video icon"></SafeImage>
+      <SafeImage
+        width={26}
+        src={icons.IconDeviceSync}
+        alt="video icon"
+      ></SafeImage>
     ),
     heading: "Multi-Device Sync",
     desc: "Ensures messages and notifications are synchronized across all devices.",
@@ -29,7 +44,11 @@ export const featuresContent = [
   },
   {
     logo: (
-      <SafeImage width={26} src={IconGroupChat} alt="video icon"></SafeImage>
+      <SafeImage
+        width={26}
+        src={icons.IconGroupChat}
+        alt="video icon"
+      ></SafeImage>
     ),
     heading: "Group Chats and Channels",
     desc: " Facilitates collaboration by allowing users to create and manage groups.",
