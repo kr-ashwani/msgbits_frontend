@@ -3,6 +3,7 @@ import { SocketManager } from "./SocketManager";
 
 const SERVER_URL = String(process.env.NEXT_PUBLIC_SERVER_URL);
 
+console.log(SERVER_URL);
 class SocketSingleton {
   private static instance: SocketManager | null = null;
 
@@ -11,6 +12,7 @@ class SocketSingleton {
       const socket = io(SERVER_URL, {
         autoConnect: false,
         withCredentials: true,
+        path: "/socket.io", // Add this line
       });
       SocketSingleton.instance = new SocketManager(socket);
     }
