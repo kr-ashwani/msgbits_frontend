@@ -12,7 +12,7 @@ class SocketSingleton {
       const socket = io(SERVER_URL, {
         autoConnect: false,
         withCredentials: true,
-        path: "/api/socket.io", // Changed this line
+        //path: "/api/socket.io", // Changed this line
       });
       SocketSingleton.instance = new SocketManager(socket);
     }
