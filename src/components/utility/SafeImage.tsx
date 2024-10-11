@@ -42,7 +42,7 @@ export function SafeImage({
     <Image
       src={displaySrc}
       alt={alt}
-      className={cn(className, "object-contain")}
+      className={cn("object-contain", className)}
       onLoad={() => setImageState({ isLoading: false, imageError: false })}
       onError={() => {
         setImageState({ isLoading: false, imageError: true });
