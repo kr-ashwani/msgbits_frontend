@@ -49,10 +49,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Create .env.production file
-      run: |
-        echo "${{ secrets.ENV_PROD }}" > .env.production
-
     - name: Copy files to EC2
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -60,8 +56,7 @@ jobs:
         USER: ubuntu
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml ${USER}@${HOST}:~/docker-compose.yml
-        scp -i private_key -o StrictHostKeyChecking=no .env.production ${USER}@${HOST}:~/.env.production
+        scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml ${USER}@${HOST}:~/msgbits/frontend/docker-compose.yml
 
     - name: Deploy to EC2 with Docker Compose
       env:
@@ -72,6 +67,7 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
       run: |
         ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "
+          cd ~/msgbits/frontend
           export DOCKER_REPO=${DOCKER_REPO}
           export GITHUB_SHA=${GITHUB_SHA}
           docker-compose pull
