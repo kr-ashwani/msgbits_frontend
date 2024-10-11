@@ -1,9 +1,10 @@
 import { io } from "socket.io-client";
 import { SocketManager } from "./SocketManager";
+import { getSocketUrlFromServerUrl } from "@/utils/custom/getSocketUrlFromServerUrl";
 
-const SOCKET_URL = String(process.env.NEXT_PUBLIC_SOCKET_URL);
+const SERVER_URL = String(process.env.NEXT_PUBLIC_SERVER_URL);
+const SOCKET_URL = getSocketUrlFromServerUrl(SERVER_URL);
 
-console.log(SOCKET_URL);
 class SocketSingleton {
   private static instance: SocketManager | null = null;
 
@@ -12,7 +13,6 @@ class SocketSingleton {
       const socket = io(SOCKET_URL, {
         autoConnect: false,
         withCredentials: true,
-        //path: "/api/socket.io", // Changed this line
       });
       SocketSingleton.instance = new SocketManager(socket);
     }

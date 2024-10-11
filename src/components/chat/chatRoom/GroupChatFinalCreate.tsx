@@ -65,8 +65,7 @@ const GroupChatFinalCreate = ({
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
-    const status = await uploadFileToServer(Array.from(e.target.files));
-    console.log(status);
+    await uploadFileToServer(Array.from(e.target.files));
   }
   return (
     <Slider

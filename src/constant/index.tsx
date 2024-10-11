@@ -21,7 +21,12 @@ export const featuresContent = [
   },
   {
     logo: (
-      <SafeImage width={26} src={icons.IconShare} alt="video icon"></SafeImage>
+      <SafeImage
+        width={26}
+        height={26}
+        src={icons.IconShare}
+        alt="video icon"
+      ></SafeImage>
     ),
     heading: "File Sharing",
     desc: "Simplifies the process of exchanging documents, images, videos and other files.",
@@ -30,6 +35,7 @@ export const featuresContent = [
     logo: (
       <SafeImage
         width={26}
+        height={26}
         src={icons.IconDeviceSync}
         alt="video icon"
       ></SafeImage>
@@ -46,6 +52,7 @@ export const featuresContent = [
     logo: (
       <SafeImage
         width={26}
+        height={26}
         src={icons.IconGroupChat}
         alt="video icon"
       ></SafeImage>
