@@ -5,6 +5,7 @@ import { getSocketUrlFromServerUrl } from "@/utils/custom/getSocketUrlFromServer
 const SERVER_URL = String(process.env.NEXT_PUBLIC_SERVER_URL);
 const SOCKET_URL = getSocketUrlFromServerUrl(SERVER_URL);
 
+console.log(SOCKET_URL);
 class SocketSingleton {
   private static instance: SocketManager | null = null;
 
