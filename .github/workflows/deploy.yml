@@ -56,6 +56,7 @@ jobs:
         USER: ubuntu
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p ~/msgbits/frontend"
         scp -i private_key -o StrictHostKeyChecking=no docker-compose.yml ${USER}@${HOST}:~/msgbits/frontend/docker-compose.yml
 
     - name: Deploy to EC2 with Docker Compose
