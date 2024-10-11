@@ -29,12 +29,12 @@ export class FileProcess {
 
     formData.append("file-upload", file, file.name);
 
-    const uploadUrl = new URL(`/upload/${fileId}`, this.baseURL);
+    const uploadUrl = this.baseURL + `/upload/${fileId}`;
 
     this.performUpload(uploadUrl, formData, task);
   }
 
-  private performUpload(url: URL, formData: FormData, task: UploadFile) {
+  private performUpload(url: string, formData: FormData, task: UploadFile) {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url.toString(), true);
     xhr.withCredentials = true;
