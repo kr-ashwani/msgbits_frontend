@@ -29,7 +29,9 @@ export class FileProcess {
 
     formData.append("file-upload", file, file.name);
 
-    const uploadUrl = this.baseURL + `/upload/${fileId}`;
+    const uploadUrl =
+      this.baseURL.toString() +
+      `${this.baseURL.toString().endsWith("/") ? "" : "/"}upload/${fileId}`;
 
     this.performUpload(uploadUrl, formData, task);
   }
