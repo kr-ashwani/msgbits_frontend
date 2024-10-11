@@ -13,7 +13,9 @@ export class FileProcess {
     statusCallback: (status: FileUploadStatus) => void,
     serverURL: string,
   ) {
-    this.baseURL = new URL(serverURL);
+    this.baseURL = new URL(
+      serverURL.endsWith("/") ? serverURL : serverURL + "/",
+    );
     this.statusCallback = statusCallback;
   }
 
