@@ -14,6 +14,9 @@ COPY . .
 # Build the Next.js app
 RUN npm run build
 
+RUN rm -f .env*
+RUN rm -f /app/.next/standalone/.env*
+
 # Production stage
 FROM node:20-alpine AS runner
 WORKDIR /app
@@ -30,7 +33,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/next.config.mjs ./
-#COPY --from=builder /app/.env.production ./.env.production
 
 USER nextjs
 

@@ -11,7 +11,7 @@ services:
     environment:
       - NODE_ENV=production
     env_file:
-      - ./.env.production  # Add this line  
+      - ./.env.production   
     networks:
       - frontend-network
 

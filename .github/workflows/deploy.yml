@@ -76,7 +76,7 @@ jobs:
 
           echo 'Starting services...'
           echo "$ENV_PROD" > ./.env.production
-          docker-compose --env-file temp_env_file up -d
+          docker-compose up -d
           rm ./.env.production
           
           echo 'Pruning old images and containers...'
