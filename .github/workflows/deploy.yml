@@ -27,9 +27,8 @@ jobs:
         ENV_PROD: ${{ secrets.ENV_PROD }}
       run: |
         # Build all services
-        echo "$ENV_PROD" > ./.env.production
+        echo "$ENV_PROD" > .env.production
         docker compose build
-        rm ./.env.production
 
         # Tag and push each service
         docker compose config --format json | jq -r '.services | to_entries[] | .key as $service | .value.image | select(. != null) | [$service, .] | @tsv' | while read service image; do
@@ -41,6 +40,10 @@ jobs:
           docker tag $image ${DOCKER_REPO}/${service}:latest
           docker push ${DOCKER_REPO}/${service}:latest
         done
+
+    # Remove the .env.production file after docker operations
+    - name: Cleanup
+      run: rm -f .env.production    
 
   deploy:
     needs: build-and-push
@@ -72,14 +75,13 @@ jobs:
           export DOCKER_REPO=${DOCKER_REPO}
           export GITHUB_SHA=${GITHUB_SHA}
 
-          echo "$ENV_PROD" > ./.env.production
+          echo "$ENV_PROD" > .env.production
           
           echo 'Pulling latest images...'
           docker-compose pull
 
           echo 'Starting services...'
           docker-compose up -d
-          rm ./.env.production
           
           echo 'Pruning old images and containers...'
           docker image prune -af
@@ -87,3 +89,7 @@ jobs:
           
           echo 'Deployment complete'
         "
+    
+      # Remove the .env.production file after docker operations
+    - name: Cleanup
+      run: rm -f .env.production    
