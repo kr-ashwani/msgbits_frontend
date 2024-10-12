@@ -49,9 +49,6 @@ export function SafeImage({
       }}
       width={width}
       height={height}
-      style={{
-        height: `${height}px`, // Set height to match prop
-      }}
       {...props}
     />
   );
