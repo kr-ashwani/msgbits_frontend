@@ -23,7 +23,7 @@ export class FileQueue {
   private fileProcess: FileProcess;
 
   constructor(config: Partial<FileQueueConfig> = {}) {
-    const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "";
+    const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost";
     this.fileProcess = new FileProcess(this.fileProcessCallback, serverURL);
     this.config = {
       maxConcurrentUploads: 3,

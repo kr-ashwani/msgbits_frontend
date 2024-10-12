@@ -26,7 +26,9 @@ jobs:
         GITHUB_SHA: ${{ github.sha }}
       run: |
         # Build all services
+        echo "$ENV_PROD" > ./.env.production
         docker compose build
+        rm ./.env.production
 
         # Tag and push each service
         docker compose config --format json | jq -r '.services | to_entries[] | .key as $service | .value.image | select(. != null) | [$service, .] | @tsv' | while read service image; do
@@ -73,9 +75,9 @@ jobs:
           docker-compose pull
 
           echo 'Starting services...'
-          echo "$ENV_PROD" > temp_env_file
+          echo "$ENV_PROD" > ./.env.production
           docker-compose --env-file temp_env_file up -d
-          rm temp_env_file
+          rm ./.env.production
           
           echo 'Pruning old images and containers...'
           docker image prune -af

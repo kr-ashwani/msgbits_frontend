@@ -30,7 +30,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/.env.production ./.env.production
+#COPY --from=builder /app/.env.production ./.env.production
 
 USER nextjs
 
