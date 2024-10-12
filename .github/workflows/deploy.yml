@@ -24,6 +24,7 @@ jobs:
       env:
         DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}
         GITHUB_SHA: ${{ github.sha }}
+        ENV_PROD: ${{ secrets.ENV_PROD }}
       run: |
         # Build all services
         echo "$ENV_PROD" > ./.env.production
@@ -71,11 +72,12 @@ jobs:
           export DOCKER_REPO=${DOCKER_REPO}
           export GITHUB_SHA=${GITHUB_SHA}
 
+          echo "$ENV_PROD" > ./.env.production
+          
           echo 'Pulling latest images...'
           docker-compose pull
 
           echo 'Starting services...'
-          echo "$ENV_PROD" > ./.env.production
           docker-compose up -d
           rm ./.env.production
           
