@@ -98,4 +98,4 @@ jobs:
         USER: ubuntu
       run: |
         rm -f .env.production
-        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "rm -f ~/msgbits/backend/.env.production"      
+        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "rm -f ~/msgbits/frontend/.env.production"      
