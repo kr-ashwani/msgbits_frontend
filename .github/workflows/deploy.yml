@@ -92,4 +92,10 @@ jobs:
     
       # Remove the .env.production file after docker operations
     - name: Cleanup
-      run: rm -f .env.production    
+      env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ubuntu
+      run: |
+        rm -f .env.production
+        ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "rm -f ~/msgbits/backend/.env.production"      
