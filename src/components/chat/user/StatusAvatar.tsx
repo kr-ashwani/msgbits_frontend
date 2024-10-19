@@ -16,7 +16,7 @@ const StatusAvatar = ({
   size: number;
   className?: string;
   indicatorClass?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 }) => {
   return (
     <div className="relative">

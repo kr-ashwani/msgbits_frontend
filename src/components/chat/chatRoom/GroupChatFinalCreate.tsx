@@ -90,7 +90,6 @@ const GroupChatFinalCreate = ({
           size={250}
         />
 
-        <input type="file" name="" id="" multiple onChange={handleFileUpload} />
         <div className="mx-4 flex gap-4">
           <p className="text-nowrap font-semibold">Group Name </p>
           <form onSubmit={handleGroupChatCreation} className="h-7 w-0 grow">

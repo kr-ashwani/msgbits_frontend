@@ -75,6 +75,7 @@ const MessageListenerSchema = {
   "message-sent": z.string(),
 };
 const ChatUserListenerSchema = {
+  "chatuser-new": ChatUserSchema,
   "chatuser-statusChange": z.object({
     userId: z.union([z.string(), z.array(z.string())]),
     status: z.string(),

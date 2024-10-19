@@ -136,6 +136,9 @@ const config: Config = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         typing: "typing 1.4s infinite",
       },
+      gridTemplateColumns: {
+        "4-65": "repeat(4, minmax(0, 65px))",
+      },
     },
   },
   plugins: [

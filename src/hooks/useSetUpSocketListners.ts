@@ -50,6 +50,7 @@ export const useSetUpSocketListners = () => {
       // Listening to all chatUser events
       socket.on("chatuser-statusChange", chatUserDispatch.getStatusUpdate),
       socket.on("chatuser-updateProfile", chatUserDispatch.updateUserProfile),
+      socket.on("chatuser-new", chatUserDispatch.addChatUser),
 
       //Listening to Sync Service
       socket.on("sync-update", socketSyncService.listenForSyncInitiator),
@@ -63,7 +64,7 @@ export const useSetUpSocketListners = () => {
         );
 
         socketService.updateMsgStatus("delivered", totalMsg);
-        chatUserDispatch.getAllChatUser(payload.chatUser);
+        chatUserDispatch.addAllChatUsers(payload.chatUser);
       }),
       socket.on("sync-allUserStatus", chatUserDispatch.getUserOnlineStatus),
     ];

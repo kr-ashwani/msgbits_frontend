@@ -17,9 +17,13 @@ class ChatUserDispatcher {
     this.dispatch = dispatch;
   }
 
-  getAllChatUser = (payload: IChatUser[]) => {
+  addAllChatUsers = (payload: IChatUser[]) => {
     if (payload.length) this.dispatch(addChatUser(payload));
   };
+  addChatUser = (payload: IChatUser) => {
+    this.dispatch(addChatUser(payload));
+  };
+
   getStatusUpdate = ({
     userId,
     status,

@@ -12,7 +12,7 @@ const Avatar = ({
   src: string | StaticImport;
   size: number;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void;
 }) => {
   return (
     <div

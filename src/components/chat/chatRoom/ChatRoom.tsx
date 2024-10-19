@@ -7,6 +7,7 @@ import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatUnreadMessages } from "@/hooks/chat/useChatUnreadMessages";
 import ChatRoomLastMessage from "./ChatRoomLastMessage";
 import StatusAvatar from "../user/StatusAvatar";
+import { useImagePreview } from "@/context/ImagePreviewContext";
 
 const ChatRoom = ({
   chatRoomState,
@@ -25,11 +26,17 @@ const ChatRoom = ({
     selectChatState.getSelectedChatId() === chatRoomState.chatRoomId;
 
   const chatUnreadMsg = useChatUnreadMessages();
+  const { setSingleImagePreview } = useImagePreview();
 
   const unreadMsgCount = useMemo(
     () => chatUnreadMsg.getUnreadMessages(chatRoomState.chatRoomId),
     [chatUnreadMsg, chatRoomState],
   );
+
+  function viewChatPicture(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+    e.stopPropagation();
+    setSingleImagePreview(chatRoomState.getChatRoomPicture());
+  }
 
   return (
     <div
@@ -51,9 +58,14 @@ const ChatRoom = ({
         className={`flex w-full gap-4 transition-transform duration-300 ${isChatSelected ? "translate-x-1" : "translate-x-0"}`}
       >
         {chatRoomState.getChatType() === "group" ? (
-          <Avatar src={chatRoomState.getChatRoomPicture()} size={45} />
+          <Avatar
+            onClick={viewChatPicture}
+            src={chatRoomState.getChatRoomPicture()}
+            size={45}
+          />
         ) : (
           <StatusAvatar
+            onClick={viewChatPicture}
             userId={chatRoomState.getOtherUserIdInPrivateChat()}
             src={chatRoomState.getChatRoomPicture()}
             size={45}

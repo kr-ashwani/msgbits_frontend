@@ -7,6 +7,7 @@ import ChatAreaHeader from "./ChatAreaHeader";
 import ChatAreaView from "./ChatAreaView";
 import ChatAreaFooter from "./ChatAreaFooter";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import { ImagePreviewProvider } from "@/context/ImagePreviewContext";
 
 const ChatRoomMessages = () => {
   const component = useRef<HTMLElement>(null);
@@ -31,9 +32,11 @@ const ChatRoomMessages = () => {
       ref={component}
       className={`absolute inset-0 flex h-full w-full flex-col overflow-hidden bg-[--theme-bg-color] transition-transform ${selectedChat.getSelectedChatId() ? "max-md:translate-x-0" : "max-md:translate-x-full"} md:relative`}
     >
-      <ChatAreaHeader />
-      <ChatAreaView />
-      <ChatAreaFooter />
+      <ImagePreviewProvider>
+        <ChatAreaHeader />
+        <ChatAreaView />
+        <ChatAreaFooter />
+      </ImagePreviewProvider>
     </section>
   );
 };

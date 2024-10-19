@@ -9,6 +9,7 @@ import Setting from "../user/Setting";
 import Profile from "../user/Profile";
 import { IUser } from "@/schema/userSchema";
 import GroupChatFinalCreate from "./GroupChatFinalCreate";
+import { ImagePreviewProvider } from "@/context/ImagePreviewContext";
 
 export interface NewGroupType {
   name: string;
@@ -28,12 +29,14 @@ const ChatRoomWrapper = () => {
         id="chatRoomWrapper"
         className="h-full w-full bg-[--theme-bg-color]"
       >
-        <ChatRoomHeader
-          chatRoomSearch={chatRoomSearch}
-          setChatRoomSearch={setChatRoomSearch}
-        />
-        <ChatRoomContainer chatRoomSearch={chatRoomSearch} />
-        <ChatRoomAddButton />
+        <ImagePreviewProvider>
+          <ChatRoomHeader
+            chatRoomSearch={chatRoomSearch}
+            setChatRoomSearch={setChatRoomSearch}
+          />
+          <ChatRoomContainer chatRoomSearch={chatRoomSearch} />
+          <ChatRoomAddButton />
+        </ImagePreviewProvider>
       </section>
       <Setting name="Setting" />
       <Profile name="Profile" />
