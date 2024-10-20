@@ -12,6 +12,7 @@ import { useEmitMessageSeen } from "@/hooks/useEmitMessageSeen";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 import { useRepliedToMessageState } from "@/hooks/AppSelector/useRepliedToMessageState";
 import RepliedToMessageDrawer from "./RepliedToMessageDrawer";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 export const REPLIED_TO_HEIGHT = 100;
 export const REPLIED_TO_DURATION = 250;
@@ -37,6 +38,7 @@ const ChatAreaView = () => {
     [repliedToMessageState],
   );
   const isAlreadyInReplyMode = useRef(false);
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   useEffect(() => {
     updateMsgStatusToDom(msgStatus.current, "show");
@@ -90,6 +92,7 @@ const ChatAreaView = () => {
           msgStatus,
           selectedChat,
           chatRoomDataDispatch,
+          imagePreviewDispatch,
         )}
       </div>
       <RepliedToMessageDrawer repliedMessage={repliedMessage} />

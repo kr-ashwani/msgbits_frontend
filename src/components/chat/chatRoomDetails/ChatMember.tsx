@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ChatMemberDropdown from "./ChatMemberDropdown";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const ChatMember: React.FC<{
   member: IUser;
@@ -16,6 +17,7 @@ const ChatMember: React.FC<{
 }> = ({ member, chatRoomState }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = chatRoomState.getUserInfo();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   const handleShowDropdown = useCallback(() => {
     if (chatRoomState.getUserInfo()?._id !== member._id)
@@ -41,7 +43,14 @@ const ChatMember: React.FC<{
           className="flex h-full w-full cursor-pointer select-none items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg focus:bg-msg-hover-bg"
         >
           <div className="relative">
-            <Avatar src={member.profilePicture} size={40} />
+            <Avatar
+              onClick={(e) => {
+                e.stopPropagation();
+                imagePreviewDispatch.setImagePreview(member.profilePicture);
+              }}
+              src={member.profilePicture}
+              size={40}
+            />
           </div>
           <div className="flex grow flex-col items-start overflow-hidden">
             <p className="truncate text-sm font-semibold">

@@ -10,6 +10,7 @@ import { Dialog } from "@/components/utility/Dialog";
 import { useChatService } from "@/hooks/chat/useChatService";
 import Slider from "@/components/utility/Slider";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 export function setNewGroupList(userList: IUser[], user: IUser): IUser[] {
   const userExists = userList.some((member) => member._id === user._id);
@@ -40,6 +41,7 @@ const AddUserToChatRoom = ({
     [chatRoomState],
   );
   const chatService = useChatService();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   useEffect(() => {
     if (searchUser)
@@ -110,7 +112,14 @@ const AddUserToChatRoom = ({
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
             <div className="relative">
-              <Avatar src={user.profilePicture} size={45} />
+              <Avatar
+                onClick={(e) => {
+                  e.stopPropagation();
+                  imagePreviewDispatch.setImagePreview(user.profilePicture);
+                }}
+                src={user.profilePicture}
+                size={45}
+              />
               {newGroup.members.some((member) => member._id === user._id) ? (
                 <>
                   <div className="theme-color-Animation absolute inset-0 rounded-full bg-theme-color text-white opacity-80"></div>

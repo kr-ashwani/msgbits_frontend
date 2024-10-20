@@ -1,6 +1,7 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
 import Avatar from "@/components/utility/Avatar";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 import { useSelectedChatDispatch } from "@/hooks/AppDispatcher/useSelectedChatDispatch";
 import { useShowChatRoomDetailsDispatch } from "@/hooks/AppDispatcher/useShowChatRoomDetailsDispatch";
 import { useChatRoomState } from "@/hooks/AppSelector/useChatRoomState";
@@ -12,6 +13,7 @@ const PrivateChatCommonGroups = ({ memberId }: { memberId: string }) => {
   const chatRoomDataDispatch = useChatRoomDataDispatch();
   const selectedChatDispatch = useSelectedChatDispatch();
   const showChatRoomDetailsDispatch = useShowChatRoomDetailsDispatch();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   function handleGroupCreation() {
     chatRoomDataDispatch.addNewGroupMembers([memberId]);
@@ -56,7 +58,16 @@ const PrivateChatCommonGroups = ({ memberId }: { memberId: string }) => {
             className="flex w-full cursor-pointer items-center gap-5 px-5 py-3 hover:bg-msg-hover-bg"
           >
             <div className="relative">
-              <Avatar src={chatRoom.chatRoomPicture} size={40} />
+              <Avatar
+                onClick={(e) => {
+                  e.stopPropagation();
+                  imagePreviewDispatch.setImagePreview(
+                    chatRoom.chatRoomPicture,
+                  );
+                }}
+                src={chatRoom.chatRoomPicture}
+                size={40}
+              />
             </div>
             <div className="flex grow flex-col overflow-hidden">
               <p className="truncate text-sm font-semibold">

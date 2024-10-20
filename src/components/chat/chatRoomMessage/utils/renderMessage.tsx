@@ -10,6 +10,7 @@ import InfoMessage from "../InfoMessage";
 import SwipeableRightElement from "../SwipeableRightElement";
 import MessageFrame from "./MessageFrame";
 import { ChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import type { ImagePreviewDispatcher } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 function renderMessageWithType(messageState: MessageState): ReactNode {
   const rawMessage = messageState.getRawMessage();
@@ -38,6 +39,7 @@ export function renderMessages(
   msgStatus: React.MutableRefObject<MsgStatus>,
   selectedChat: SelectedChatState,
   chatRoomDataDispatch: ChatRoomDataDispatch,
+  imagePreviewDispatch: ImagePreviewDispatcher,
 ): ReactNode {
   msgStatus.current = resetMsgStatus();
 
@@ -58,7 +60,14 @@ export function renderMessages(
       if (rawMessage.type === "info") return null;
       if (!selfMessage) {
         return showAvatar ? (
-          Avatar({ src: user.profilePicture, size: 30, className: "mt-1" })
+          <Avatar
+            src={user.profilePicture}
+            size={30}
+            className={"mt-1 cursor-pointer"}
+            onClick={() =>
+              imagePreviewDispatch.setImagePreview(user.profilePicture)
+            }
+          />
         ) : (
           <div className="h-[30px] w-[30px] shrink-0"></div>
         );
