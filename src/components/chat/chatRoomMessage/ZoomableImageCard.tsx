@@ -1,6 +1,6 @@
 import { CardContent } from "@/components/ui/card";
 import { SafeImage } from "@/components/utility/SafeImage";
-import { ImagePreview } from "@/context/ImagePreviewContext";
+import { ImagePreview } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import {

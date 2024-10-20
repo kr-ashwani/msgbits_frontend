@@ -10,7 +10,7 @@ import StatusAvatar from "../user/StatusAvatar";
 import { useChatRoomDispatch } from "@/hooks/AppDispatcher/useChatRoomDispatch";
 import { useSocket } from "@/hooks/useSocket";
 import ChatRoomDetailsHamburger from "./ChatRoomDetailsHamburger";
-import { useImagePreview } from "@/context/ImagePreviewContext";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const ChatRoomDetailsInfo = ({
   chatRoomState,
@@ -22,7 +22,7 @@ const ChatRoomDetailsInfo = ({
   );
   const chatRoomDispatch = useChatRoomDispatch();
   const { socketQueue } = useSocket();
-  const { setSingleImagePreview } = useImagePreview();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   useLayoutEffect(() => {
     const pic = chatRoomState.getChatRoomPicture();
@@ -53,11 +53,12 @@ const ChatRoomDetailsInfo = ({
         <div>
           {rawChatRoom.type === "private" ? (
             <StatusAvatar
-              onClick={() => setSingleImagePreview(userSrc)}
+              onClick={() => imagePreviewDispatch.setImagePreview(userSrc)}
               indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
               userId={memberId}
               src={userSrc}
               size={120}
+              className="cursor-pointer"
             />
           ) : (
             <AvatarUpdatable

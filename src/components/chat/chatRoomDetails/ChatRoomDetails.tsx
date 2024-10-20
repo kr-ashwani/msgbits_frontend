@@ -12,7 +12,6 @@ import ChatRoomDetailsInfo from "./ChatRoomDetailsInfo";
 import { useChatUserState } from "@/hooks/AppSelector/useChatUserState";
 import UserDetails from "./UserDetails";
 import EditChatRoomName from "./EditChatRoomName";
-import { ImagePreviewProvider } from "@/context/ImagePreviewContext";
 
 const ChatRoomDetails = () => {
   const component = useRef<HTMLDivElement>(null);
@@ -34,25 +33,23 @@ const ChatRoomDetails = () => {
       stackContainerClass={`absolute z-[2] inset-0 h-full bg-[--theme-bg-color] transition-transform ${showChatRoomDetail.isChatRoomDetailsSelected() ? "max-lg:translate-x-0" : "max-lg:translate-x-full"} md:left-[--chatRoomContainer-width] lg:relative lg:left-0 lg:min-w-[--chatRoomDetail-width]`}
     >
       <section className="h-full">
-        <ImagePreviewProvider>
-          <div className="flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">
-            <div
-              className="cursor-pointer"
-              onClick={() =>
-                showChatRoomDetailsDispatch.toggleChatRoomDetails(false)
-              }
-            >
-              {ChatSvg("backArrow")}
-            </div>
-
-            <p className="grow pl-2 text-xl font-semibold">{`${user ? "User Details" : "Chat Room Details"}`}</p>
+        <div className="flex h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 py-3 lg:px-5">
+          <div
+            className="cursor-pointer"
+            onClick={() =>
+              showChatRoomDetailsDispatch.toggleChatRoomDetails(false)
+            }
+          >
+            {ChatSvg("backArrow")}
           </div>
-          {user ? (
-            <UserDetails user={user} />
-          ) : chatRoomState ? (
-            <ChatRoomDetailsInfo chatRoomState={chatRoomState} />
-          ) : null}
-        </ImagePreviewProvider>
+
+          <p className="grow pl-2 text-xl font-semibold">{`${user ? "User Details" : "Chat Room Details"}`}</p>
+        </div>
+        {user ? (
+          <UserDetails user={user} />
+        ) : chatRoomState ? (
+          <ChatRoomDetailsInfo chatRoomState={chatRoomState} />
+        ) : null}
       </section>
 
       {chatRoomState ? (

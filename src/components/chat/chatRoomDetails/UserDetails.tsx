@@ -4,10 +4,10 @@ import PrivateChatCommonGroups from "./PrivateChatCommonGroups";
 import { IUser } from "@/schema/userSchema";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 import StatusAvatar from "../user/StatusAvatar";
-import { useImagePreview } from "@/context/ImagePreviewContext";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const UserDetails = ({ user }: { user: IUser }) => {
-  const { setSingleImagePreview } = useImagePreview();
+  const imagePreviewDispatch = useImagePreviewDispatch();
   function getJoinedDate(date: string) {
     return new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -21,11 +21,14 @@ const UserDetails = ({ user }: { user: IUser }) => {
       <div className="flex flex-col items-center gap-[10px] px-7">
         <div>
           <StatusAvatar
-            onClick={() => setSingleImagePreview(user.profilePicture || "")}
+            onClick={() =>
+              imagePreviewDispatch.setImagePreview(user.profilePicture || "")
+            }
             indicatorClass="bottom-[1%] right-[18%] w-4 h-4"
             userId={user._id}
             src={user.profilePicture || ""}
             size={120}
+            className="cursor-pointer"
           />
         </div>
         <div className="text-lg font-semibold">{capitalizeStr(user.name)}</div>

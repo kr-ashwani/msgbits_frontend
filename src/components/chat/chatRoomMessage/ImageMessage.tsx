@@ -3,7 +3,7 @@ import React from "react";
 import DocumentMessage from "./DocumentMessage";
 import Svg from "@/components/svg";
 import { SafeImage } from "@/components/utility/SafeImage";
-import { useImagePreview } from "@/context/ImagePreviewContext";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const ImageOrVideoMessage = ({
   messageState,
@@ -11,7 +11,7 @@ const ImageOrVideoMessage = ({
   messageState: MessageState;
 }) => {
   const fileMessage = messageState.getRawMessage();
-  const { setSingleImagePreview } = useImagePreview();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   if (!fileMessage) return null;
   if (fileMessage.type !== "file") return null;
@@ -33,7 +33,7 @@ const ImageOrVideoMessage = ({
           src={file.url}
           width={file.dimension.width}
           height={file.dimension.height}
-          onClick={() => setSingleImagePreview(file.url)}
+          onClick={() => imagePreviewDispatch.setImagePreview(file.url)}
         />
       ) : (
         <div

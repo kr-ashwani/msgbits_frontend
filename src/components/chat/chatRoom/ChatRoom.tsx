@@ -7,7 +7,7 @@ import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import { useChatUnreadMessages } from "@/hooks/chat/useChatUnreadMessages";
 import ChatRoomLastMessage from "./ChatRoomLastMessage";
 import StatusAvatar from "../user/StatusAvatar";
-import { useImagePreview } from "@/context/ImagePreviewContext";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const ChatRoom = ({
   chatRoomState,
@@ -26,7 +26,7 @@ const ChatRoom = ({
     selectChatState.getSelectedChatId() === chatRoomState.chatRoomId;
 
   const chatUnreadMsg = useChatUnreadMessages();
-  const { setSingleImagePreview } = useImagePreview();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   const unreadMsgCount = useMemo(
     () => chatUnreadMsg.getUnreadMessages(chatRoomState.chatRoomId),
@@ -35,7 +35,7 @@ const ChatRoom = ({
 
   function viewChatPicture(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.stopPropagation();
-    setSingleImagePreview(chatRoomState.getChatRoomPicture());
+    imagePreviewDispatch.setImagePreview(chatRoomState.getChatRoomPicture());
   }
 
   return (

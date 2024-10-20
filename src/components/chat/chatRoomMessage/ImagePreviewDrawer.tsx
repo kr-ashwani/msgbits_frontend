@@ -1,9 +1,13 @@
 import { ChatSvg } from "@/components/svg/chatSvg";
-import { useImagePreview } from "@/context/ImagePreviewContext";
 import ImagePreviewCarousel from "./ImagePreviewCarousel";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 
 const ImagePreviewDrawer = () => {
-  const { imagePreview, setImagePreview } = useImagePreview();
+  const imagePreview = useAppSelector(
+    (state) => state.chat.chatRoomData.imagePreview,
+  );
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   return (
     <div
@@ -12,7 +16,7 @@ const ImagePreviewDrawer = () => {
       <div className="flex items-center border-b-[1px] border-border-color bg-chat-bg py-3">
         <div
           className="ml-[-8px] cursor-pointer pl-3"
-          onClick={() => setImagePreview({ images: [], initialImageCursor: 0 })}
+          onClick={() => imagePreviewDispatch.resetImagePreview()}
         >
           {ChatSvg("backArrow")}
         </div>
@@ -21,7 +25,7 @@ const ImagePreviewDrawer = () => {
       </div>
       {imagePreview.images.length ? (
         <>
-          <ImagePreviewCarousel />
+          <ImagePreviewCarousel imagePreview={imagePreview} />
         </>
       ) : null}
     </div>

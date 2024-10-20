@@ -1,6 +1,7 @@
 import { SafeImage } from "@/components/utility/SafeImage";
-import { ImagePreview, useImagePreview } from "@/context/ImagePreviewContext";
+import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
 import { useMessageState } from "@/hooks/AppSelector/useMessageState";
+import { ImagePreview } from "@/lib/store/features/chat/chatRoomDataSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { IFileMessage } from "@/schema/MessageSchema";
 import { Image } from "lucide-react";
@@ -21,7 +22,7 @@ const SharedPhotos = () => {
 
     return photosMesssage;
   }, [messageState, selectedChatId]);
-  const { setImagePreview } = useImagePreview();
+  const imagePreviewDispatch = useImagePreviewDispatch();
 
   const renderPhotos = imageMessages.slice(0, 12);
 
@@ -33,7 +34,7 @@ const SharedPhotos = () => {
       fileId: pic.file.fileId,
     }));
 
-    setImagePreview({
+    imagePreviewDispatch.setImagePreview({
       images: imagePreview,
       initialImageCursor: photoIndex,
     });
@@ -45,7 +46,7 @@ const SharedPhotos = () => {
         <Image size={20} />
         <p>Shared photos</p>
       </div>
-      <div className="grid-cols-4-65 grid max-w-[400px] auto-rows-[65px] gap-x-1.5 gap-y-1.5">
+      <div className="grid max-w-[400px] auto-rows-[65px] grid-cols-4-65 gap-x-1.5 gap-y-1.5">
         {renderPhotos.map((msg, index) => (
           <SafeImage
             onClick={() => showImagePreview(index)}

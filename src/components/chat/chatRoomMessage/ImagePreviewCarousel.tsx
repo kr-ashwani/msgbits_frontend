@@ -6,14 +6,15 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { useImagePreview } from "@/context/ImagePreviewContext";
 import ZoomableImageCard from "./ZoomableImageCard";
+import { ImagePreviewState } from "@/lib/store/features/chat/chatRoomDataSlice";
 
-const ImagePreviewCarousel: React.FC = () => {
+const ImagePreviewCarousel: React.FC<{
+  imagePreview: ImagePreviewState;
+}> = ({ imagePreview }) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const { imagePreview } = useImagePreview();
   const [isSwipeable, setIsSwipeable] = useState(true);
 
   useEffect(() => {

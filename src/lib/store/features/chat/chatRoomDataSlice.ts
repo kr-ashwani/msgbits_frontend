@@ -21,6 +21,14 @@ export type repliedToMessageState = {
   [p in string]: string;
 };
 export type newGroupMembersState = string[];
+export interface ImagePreview {
+  url: string;
+  fileId: string;
+}
+export interface ImagePreviewState {
+  images: ImagePreview[];
+  initialImageCursor: number;
+}
 
 export interface chatRoomDataState {
   chatInputMessage: chatInputMessageState;
@@ -31,6 +39,7 @@ export interface chatRoomDataState {
   repliedToMessage: repliedToMessageState;
   isInFilePreviewMode: boolean;
   showFileDiscardDialog: boolean;
+  imagePreview: ImagePreviewState;
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -41,6 +50,7 @@ const initialState: chatRoomDataState = {
   repliedToMessage: {},
   isInFilePreviewMode: false,
   showFileDiscardDialog: false,
+  imagePreview: { images: [], initialImageCursor: 0 },
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -158,6 +168,15 @@ export const chatRoomDataSlice = createSlice({
     setShowFileDiscardDialog(state, action: PayloadAction<boolean>) {
       state.showFileDiscardDialog = action.payload;
     },
+    addImagePreview(state, action: PayloadAction<ImagePreviewState>) {
+      state.imagePreview = action.payload;
+    },
+    resetImagePreview(state, action: PayloadAction<void>) {
+      state.imagePreview = {
+        images: [],
+        initialImageCursor: 0,
+      };
+    },
   },
 });
 
@@ -174,6 +193,8 @@ export const {
   resetRepliedToMessage,
   setFilePreviewMode,
   setShowFileDiscardDialog,
+  addImagePreview,
+  resetImagePreview,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;
