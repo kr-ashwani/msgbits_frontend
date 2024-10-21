@@ -50,16 +50,17 @@ const SharedPhotos = () => {
       </div>
       <div className="grid grid-cols-4 gap-1.5">
         {renderPhotos.map((msg, index) => (
-          <SafeImage
-            onClick={() => showImagePreview(index)}
-            key={msg.messageId}
-            src={msg.file.url}
-            alt=""
-            width={180}
-            height={180}
-            style={{ objectFit: "cover" }}
-            className="aspect-square h-full w-full cursor-pointer rounded-lg object-cover object-center"
-          />
+          <div key={msg.messageId} className="relative w-full pb-[100%]">
+            <SafeImage
+              onClick={() => showImagePreview(index)}
+              src={msg.file.url}
+              alt=""
+              width={180}
+              height={180}
+              style={{ objectFit: "cover" }}
+              className="absolute h-full w-full cursor-pointer rounded-lg object-cover object-center"
+            />
+          </div>
         ))}
       </div>
       {imageMessages.length > MAX_PHOTOS_TO_SHOW_IN_GRID ? (
