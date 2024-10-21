@@ -28,7 +28,7 @@ const ImageOrVideoMessage = ({
     >
       {file.url && file.url !== "failed" ? (
         <SafeImage
-          className="cursor-pointer rounded-xl"
+          className="cursor-pointer rounded-xl object-cover"
           alt="message"
           src={file.url}
           width={file.dimension.width}

@@ -7,6 +7,8 @@ import { IFileMessage } from "@/schema/MessageSchema";
 import { Image } from "lucide-react";
 import React, { useMemo } from "react";
 
+const MAX_PHOTOS_TO_SHOW_IN_GRID = 8;
+
 const SharedPhotos = () => {
   const selectedChatId = useAppSelector((state) => state.chat.selectedChat.id);
   const messageState = useMessageState();
@@ -24,7 +26,7 @@ const SharedPhotos = () => {
   }, [messageState, selectedChatId]);
   const imagePreviewDispatch = useImagePreviewDispatch();
 
-  const renderPhotos = imageMessages.slice(0, 12);
+  const renderPhotos = imageMessages.slice(0, MAX_PHOTOS_TO_SHOW_IN_GRID);
 
   if (!imageMessages.length) return null;
 
@@ -46,23 +48,23 @@ const SharedPhotos = () => {
         <Image size={20} />
         <p>Shared photos</p>
       </div>
-      <div className="grid max-w-[400px] auto-rows-[65px] grid-cols-4-65 gap-x-1.5 gap-y-1.5">
+      <div className="grid grid-cols-4 gap-1.5">
         {renderPhotos.map((msg, index) => (
           <SafeImage
             onClick={() => showImagePreview(index)}
             key={msg.messageId}
             src={msg.file.url}
             alt=""
-            width={80}
-            height={80}
+            width={180}
+            height={180}
             style={{ objectFit: "cover" }}
-            className="h-full w-full cursor-pointer rounded-lg object-cover object-center"
+            className="aspect-square h-full w-full cursor-pointer rounded-lg object-cover object-center"
           />
         ))}
       </div>
-      {imageMessages.length > 12 ? (
+      {imageMessages.length > MAX_PHOTOS_TO_SHOW_IN_GRID ? (
         <div
-          onClick={() => showImagePreview(12)}
+          onClick={() => showImagePreview(MAX_PHOTOS_TO_SHOW_IN_GRID)}
           className="cursor-pointer self-center px-5 text-[15px] font-semibold text-theme-color"
         >
           View More
