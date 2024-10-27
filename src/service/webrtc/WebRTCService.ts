@@ -12,6 +12,7 @@ export class WebRTCService {
   private ICE_SERVERS: ICEServer[];
 
   constructor(socketQueue: SocketEmitterQueue) {
+    console.log(process.env.NEXT_PUBLIC_TURN_USERNAME);
     this.socketQueue = socketQueue;
     this.ICE_SERVERS = [
       { urls: process.env.NEXT_PUBLIC_STUN_URLS ?? "" },
