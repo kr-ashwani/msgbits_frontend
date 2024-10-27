@@ -33,6 +33,9 @@ export class CallManager {
   getLocalUser() {
     return this.localUser;
   }
+  getLocalUserId() {
+    return this.localUser._id;
+  }
   getCallType() {
     return this.callingService?.getCallType();
   }

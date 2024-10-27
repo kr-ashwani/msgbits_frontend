@@ -163,15 +163,6 @@ export class CallingService {
     userId,
     activeParticipants,
   }: IWebRTCGetActiveParticipants) {
-    const participant = {
-      userId: this.localUser._id,
-      videoEnabled: this.callType === "video",
-      audioEnabled: true,
-    };
-    this.participants.set(this.localUser._id, participant);
-
-    this.initializeLocalStream();
-
     const promises = activeParticipants.map(async (memberId) => {
       // this creates peer connections
       await this.handleJoinCall({
@@ -227,6 +218,7 @@ export class CallingService {
 
   @handleError("Failed to initialize local stream")
   private async initializeLocalStream(): Promise<void> {
+    if (this.localStream) return;
     this.localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: this.callType === "video",

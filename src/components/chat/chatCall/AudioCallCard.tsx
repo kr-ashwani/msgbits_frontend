@@ -14,8 +14,11 @@ const AudioCallCard = ({ memberDesc }: { memberDesc: ParticipantsDesc }) => {
   useEffect(() => {
     if (audioRef.current && mediaStream) {
       audioRef.current.srcObject = mediaStream;
+      if (memberDesc.userId === callManager.getLocalUserId()) {
+        audioRef.current.muted = true; // Only mute local stream
+      }
     }
-  }, [mediaStream]);
+  }, [mediaStream, memberDesc, callManager]);
 
   if (!user) return null;
 

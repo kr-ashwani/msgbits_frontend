@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import AudioCallCard from "./AudioCallCard";
 import { MicOff, VideoOff } from "lucide-react";
 import { ParticipantsDesc } from "@/schema/WebRTCSchema";
@@ -12,8 +12,11 @@ const VideoCallCard = ({ memberDesc }: { memberDesc: ParticipantsDesc }) => {
   useEffect(() => {
     if (videoRef.current && mediaStream) {
       videoRef.current.srcObject = mediaStream;
+      if (memberDesc.userId === callManager.getLocalUserId()) {
+        videoRef.current.muted = true; // Only mute local stream
+      }
     }
-  }, [mediaStream]);
+  }, [mediaStream, callManager, memberDesc]);
 
   if (mediaStream) {
     return (
