@@ -1,5 +1,4 @@
 import { unreadMessagesState } from "@/lib/store/features/chat/chatRoomDataSlice";
-import { setSelectedChatId } from "@/lib/store/features/chat/selectedChatSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useMemo } from "react";
 

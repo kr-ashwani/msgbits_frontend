@@ -22,9 +22,9 @@ const Avatar = ({
       <SafeImage
         className="h-full w-full rounded-full object-cover object-center"
         src={src}
+        height={size}
         width={size}
         onClick={onClick}
-        height={size}
         alt="user Avatar Image"
       />
     </div>

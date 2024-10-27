@@ -1,5 +1,6 @@
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { IMessage } from "@/schema/MessageSchema";
+import { CallStatus } from "@/schema/WebRTCSchema";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type typingStatusState = {
@@ -40,6 +41,8 @@ export interface chatRoomDataState {
   isInFilePreviewMode: boolean;
   showFileDiscardDialog: boolean;
   imagePreview: ImagePreviewState;
+  callStatus: CallStatus;
+  updateCallUI: string;
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -51,6 +54,8 @@ const initialState: chatRoomDataState = {
   isInFilePreviewMode: false,
   showFileDiscardDialog: false,
   imagePreview: { images: [], initialImageCursor: 0 },
+  callStatus: { status: "IDLE" },
+  updateCallUI: "",
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -177,6 +182,12 @@ export const chatRoomDataSlice = createSlice({
         initialImageCursor: 0,
       };
     },
+    changeCallStatus(state, action: PayloadAction<CallStatus>) {
+      state.callStatus = action.payload;
+    },
+    updateCallUI(state, action: PayloadAction<string>) {
+      state.updateCallUI = action.payload;
+    },
   },
 });
 
@@ -195,6 +206,8 @@ export const {
   setShowFileDiscardDialog,
   addImagePreview,
   resetImagePreview,
+  changeCallStatus,
+  updateCallUI,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;

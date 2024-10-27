@@ -18,7 +18,7 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
       userList.push(
         <div
           key="sudoUser"
-          className="relative ml-[-8px] flex h-10 w-10 items-center justify-center rounded-full border-2 border-theme-bg-color bg-button-bg-color text-sm font-medium text-theme-color"
+          className="relative ml-[-12px] flex h-10 w-10 items-center justify-center rounded-full bg-button-bg-color text-sm font-medium text-theme-color"
         >
           +{membersLength - i}
         </div>,
@@ -28,7 +28,7 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
     userList.push(
       chatRoom.getChatType() === "group" ? (
         <Avatar
-          className="ml-[-12px] border-2 border-theme-bg-color"
+          className="relative ml-[-12px]"
           key={user._id}
           src={user.profilePicture}
           size={35}
@@ -36,7 +36,8 @@ function getChatMembersPictures(chatRoom: ChatRoomState) {
       ) : (
         <StatusAvatar
           userId={user._id}
-          className="ml-[-12px] border-2 border-theme-bg-color"
+          className="relative ml-[-12px]"
+          indicatorClass="right-[5%]"
           key={user._id}
           src={user.profilePicture}
           size={35}
@@ -61,7 +62,7 @@ const ChatAreaHeader = () => {
 
       <div
         onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}
-        className="grow truncate py-2 pl-2 pr-2 text-xl font-semibold"
+        className="grow truncate py-2 pl-2 pr-[12px] text-xl font-semibold"
       >
         {chatRoom?.getChatRoomName()}
       </div>

@@ -11,6 +11,7 @@ import { useChatRoomDispatch } from "@/hooks/AppDispatcher/useChatRoomDispatch";
 import { useSocket } from "@/hooks/useSocket";
 import ChatRoomDetailsHamburger from "./ChatRoomDetailsHamburger";
 import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
+import { useCallManager } from "@/hooks/chat/useCallManager";
 
 const ChatRoomDetailsInfo = ({
   chatRoomState,
@@ -23,6 +24,7 @@ const ChatRoomDetailsInfo = ({
   const chatRoomDispatch = useChatRoomDispatch();
   const { socketQueue } = useSocket();
   const imagePreviewDispatch = useImagePreviewDispatch();
+  const callManager = useCallManager();
 
   useLayoutEffect(() => {
     const pic = chatRoomState.getChatRoomPicture();
@@ -77,12 +79,28 @@ const ChatRoomDetailsInfo = ({
         </div>
         <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Created by ${chatRoomState?.getChatRoomCreatorName()}, ${chatRoomState?.getChatRoomCreatorDate()}`}</div>
         <div className="mt-[10px] flex w-full gap-2 text-theme-color">
-          <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
+          <div
+            className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium"
+            onClick={() =>
+              callManager.startCall({
+                chatRoomId: rawChatRoom.chatRoomId,
+                callType: "audio",
+              })
+            }
+          >
             <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("callIcon")}
             <span>Call Group</span>
           </div>
-          <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
+          <div
+            className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium"
+            onClick={() =>
+              callManager.startCall({
+                chatRoomId: rawChatRoom.chatRoomId,
+                callType: "video",
+              })
+            }
+          >
             <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("videoIcon")}
             <span>Video Chat</span>

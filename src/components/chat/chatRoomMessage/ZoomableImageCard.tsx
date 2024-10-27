@@ -117,9 +117,7 @@ const ZoomableImageCard = ({
                     src={src.url}
                     alt="Zoomable preview image"
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{ objectFit: "contain" }}
-                    className="rounded-lg"
+                    className="rounded-lg object-contain"
                     draggable={false}
                   />
                 </div>

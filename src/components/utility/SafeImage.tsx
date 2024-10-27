@@ -20,6 +20,8 @@ export function SafeImage({
   className,
   width,
   height,
+  fill,
+  sizes,
   onError,
   ...props
 }: SafeImageProps) {
@@ -42,17 +44,21 @@ export function SafeImage({
     <Image
       src={displaySrc}
       alt={alt}
-      className={cn("object-contain", className)}
+      className={cn(
+        "object-contain",
+        className,
+        imageState.imageError && "object-contain",
+      )}
       onLoad={() => setImageState({ isLoading: false, imageError: false })}
-      onError={() => {
-        setImageState({ isLoading: false, imageError: true });
-      }}
+      onError={() => setImageState({ isLoading: false, imageError: true })}
       width={width}
       height={height}
-      style={{
-        height: `${height}px`, // Set height to match prop
-        // width: `${width}px`, // Set width to match prop
-      }}
+      fill={fill}
+      sizes={
+        sizes || fill
+          ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          : undefined
+      }
       {...props}
     />
   );

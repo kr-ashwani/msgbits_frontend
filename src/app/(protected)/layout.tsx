@@ -1,4 +1,5 @@
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { CallManagerProvider } from "@/context/CallManagerContext";
 import { SocketProvider } from "@/context/SocketContext";
 
 export default function AuthLayout({
@@ -9,7 +10,9 @@ export default function AuthLayout({
   return (
     <>
       <ProtectedRoute>
-        <SocketProvider>{children}</SocketProvider>
+        <SocketProvider>
+          <CallManagerProvider>{children}</CallManagerProvider>
+        </SocketProvider>
       </ProtectedRoute>
     </>
   );

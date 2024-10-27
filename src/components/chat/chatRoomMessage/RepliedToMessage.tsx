@@ -38,8 +38,7 @@ function renderFileMessageLogo(fileMessage: IFileMessage): ReactNode {
           src={file.url}
           alt={file.fileName}
           fill
-          style={{ objectFit: "cover" }}
-          className="rounded-lg"
+          className="rounded-lg object-cover"
         />
       </div>
     );

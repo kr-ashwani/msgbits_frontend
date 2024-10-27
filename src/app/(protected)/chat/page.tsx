@@ -6,6 +6,7 @@ import useChatStyle from "@/hooks/useChatStyle";
 import { useSetUpSocketListners } from "@/hooks/useSetUpSocketListners";
 import StartUpSetup from "@/components/utility/StartUpSetup";
 import ImagePreviewDrawer from "@/components/chat/chatRoomMessage/ImagePreviewDrawer";
+import CallContainer from "@/components/chat/chatCall/CallContainer";
 
 const Chat = () => {
   useChatStyle();
@@ -20,6 +21,7 @@ const Chat = () => {
       <ChatRoomWrapper />
       <ChatRoomMessages />
       <ChatRoomDetails />
+      <CallContainer />
       <ImagePreviewDrawer />
     </main>
   );

@@ -6,9 +6,6 @@ import { updateSocketLastDisconectedTime } from "@/lib/store/features/socket/soc
 export function useUpdateSocketLastDisconnect() {
   const { socket } = useSocket();
   const dispatch = useAppDispatch();
-  const time = useAppSelector(
-    (state) => state.chat.socket.socketLastDisconnectedAt,
-  );
 
   useEffect(() => {
     const unsub = socket.onDisconnect(() => {

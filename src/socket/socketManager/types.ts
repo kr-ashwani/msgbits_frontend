@@ -21,6 +21,31 @@ import {
   UserUpdateProfile,
   UserUpdateProfileSchema,
 } from "@/schema/UserUpdateProfileSchema";
+import {
+  IWebRTCAnswer,
+  IWebRTCDeclineCall,
+  IWebRTCEndCall,
+  IWebRTCGetActiveParticipants,
+  IWebRTCIceCandidate,
+  IWebRTCIncomingCall,
+  IWebRTCJoinCall,
+  IWebRTCMediaStateChange,
+  IWebRTCMediaTrack,
+  IWebRTCOffer,
+  IWebRTCRoomFull,
+  IWebRTCStartCall,
+  WebRTCAnswerSchema,
+  WebRTCEndCallSchema,
+  WebRTCGetActiveParticipantsSchema,
+  WebRTCIceCandidateSchema,
+  WebRTCIncomingCallSchema,
+  WebRTCJoinCallSchema,
+  WebRTCMediaStateChangeSchema,
+  WebRTCMediaTrackSchema,
+  WebRTCOfferSchema,
+  WebRTCRoomFullSchema,
+  WebRTCStartCallSchema,
+} from "@/schema/WebRTCSchema";
 
 import { z } from "zod";
 
@@ -50,10 +75,26 @@ export interface SyncEmitterMapping {
   heartbeat: string;
 }
 
+export interface WebRTCEmitterMapping {
+  "webrtc-startCall": IWebRTCStartCall;
+  "webrtc-joinCall": IWebRTCJoinCall;
+  "webrtc-endCall": IWebRTCEndCall;
+  "webrtc-incomingCall": IWebRTCIncomingCall;
+  "webrtc-declineCall": IWebRTCDeclineCall;
+  "webrtc-getActiveParticipants": IWebRTCGetActiveParticipants;
+  "webrtc-offer": IWebRTCOffer;
+  "webrtc-answer": IWebRTCAnswer;
+  "webrtc-iceCandidate": IWebRTCIceCandidate;
+  "webrtc-trackAdded": IWebRTCMediaTrack;
+  "webrtc-mediaStateChange": IWebRTCMediaStateChange;
+  "webrtc-roomFull": IWebRTCRoomFull;
+}
+
 export type EmitterMapping = ChatRoomEmitterMapping &
   MessageEmitterMapping &
   ChatUserEmitterMapping &
-  SyncEmitterMapping;
+  SyncEmitterMapping &
+  WebRTCEmitterMapping;
 
 const ChatRoomListenerSchema = {
   "chatroom-create": ChatRoomSchema,
@@ -93,11 +134,27 @@ const SyncListenerSchema = {
   "sync-allUserStatus": z.array(z.string()),
 };
 
+const WebRTCListenerSchema = {
+  "webrtc-startCall": WebRTCStartCallSchema,
+  "webrtc-joinCall": WebRTCJoinCallSchema,
+  "webrtc-endCall": WebRTCEndCallSchema,
+  "webrtc-incomingCall": WebRTCIncomingCallSchema,
+  "webrtc-declineCall": WebRTCEndCallSchema,
+  "webrtc-getActiveParticipants": WebRTCGetActiveParticipantsSchema,
+  "webrtc-offer": WebRTCOfferSchema,
+  "webrtc-answer": WebRTCAnswerSchema,
+  "webrtc-iceCandidate": WebRTCIceCandidateSchema,
+  "webrtc-trackAdded": WebRTCMediaTrackSchema,
+  "webrtc-mediaStateChange": WebRTCMediaStateChangeSchema,
+  "webrtc-roomFull": WebRTCRoomFullSchema,
+};
+
 const ListenerSchema = {
   ...ChatRoomListenerSchema,
   ...MessageListenerSchema,
   ...ChatUserListenerSchema,
   ...SyncListenerSchema,
+  ...WebRTCListenerSchema,
 };
 
 export type ListenerSchema = typeof ListenerSchema;
