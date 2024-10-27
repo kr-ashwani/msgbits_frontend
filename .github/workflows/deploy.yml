@@ -69,7 +69,6 @@ jobs:
         DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}
         GITHUB_SHA: ${{ github.sha }}
         ENV_PROD: ${{ secrets.ENV_PROD }}
-        ENV_PROD_WEBRTC: ${{ secrets.ENV_PROD_WEBRTC }}
       run: |
         ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} "
           cd ~/msgbits/frontend
@@ -77,7 +76,6 @@ jobs:
           export GITHUB_SHA=${GITHUB_SHA}
 
           echo "$ENV_PROD" > .env.production
-          echo "$ENV_PROD_WEBRTC" >> .env.production
           
           echo 'Pulling latest images...'
           docker-compose pull
