@@ -55,9 +55,14 @@ function handleError(errorMessage?: string) {
       try {
         return await originalMethod.apply(this, args);
       } catch (error) {
+        // toast.error(
+        //   errorMessage +
+        //     `${error instanceof Error && process.env.NODE_ENV === "development" ? ` because ${error.message}` : ""}`,
+        // );
+
         toast.error(
           errorMessage +
-            `${error instanceof Error && process.env.NODE_ENV === "development" ? ` because ${error.message}` : ""}`,
+            `${error instanceof Error ? ` because ${error.message}` : ""}`,
         );
       }
     };
