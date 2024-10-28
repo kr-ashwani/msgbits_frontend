@@ -4,6 +4,7 @@ import { WebRTCService } from "./WebRTCService";
 import { IUser } from "@/schema/userSchema";
 import { v4 as uuid } from "uuid";
 import {
+  CallStatus,
   CallType,
   IWebRTCAnswer,
   IWebRTCEndCall,
@@ -11,7 +12,6 @@ import {
   IWebRTCIceCandidate,
   IWebRTCJoinCall,
   IWebRTCMediaStateChange,
-  IWebRTCMediaTrack,
   IWebRTCOffer,
   ParticipantsDesc,
 } from "@/schema/WebRTCSchema";
@@ -36,14 +36,18 @@ export class CallingService {
   private readonly socket: SocketManager;
   private readonly socketQueue: SocketEmitterQueue;
   private localStream: MediaStream | null = null;
-  private remoteStreams: Map<string, MediaStream> = new Map();
-  private participants: Map<string, ParticipantsDesc> = new Map();
+  private readonly remoteStreams: Map<string, MediaStream> = new Map();
+  private readonly participants: Map<string, ParticipantsDesc> = new Map();
   private readonly MAX_PARTICIPANTS = 4;
   private readonly localUser: IUser;
   private readonly callId: string;
   private readonly chatRoomId: string;
   private readonly callType: CallType;
   private readonly dispatch: AppDispatch;
+  private readonly unsubListeners: {
+    event: string;
+    eventHandler: (payload: any) => void;
+  }[] = [];
 
   constructor(params: CallingServiceParams) {
     this.webRTCService = new WebRTCService(params.socketQueue);
@@ -59,24 +63,51 @@ export class CallingService {
   }
 
   private setupSocketListeners(): void {
-    this.socket.on("webrtc-joinCall", this.handleJoinCall.bind(this));
-    this.socket.on("webrtc-endCall", this.handleEndCall.bind(this));
-    this.socket.on(
-      "webrtc-getActiveParticipants",
-      this.handleGetActiveParticipants.bind(this),
+    this.addToUnsub(
+      this.socket.on("webrtc-joinCall", this.handleJoinCall.bind(this)),
     );
-    this.socket.on("webrtc-declineCall", this.handleDeclineCall.bind(this));
-    this.socket.on("webrtc-offer", this.handleOffer.bind(this));
-    this.socket.on("webrtc-answer", this.handleAnswer.bind(this));
-    this.socket.on("webrtc-iceCandidate", this.handleIceCandidate.bind(this));
+    this.addToUnsub(
+      this.socket.on("webrtc-endCall", this.handleEndCall.bind(this)),
+    );
+    this.addToUnsub(
+      this.socket.on(
+        "webrtc-getActiveParticipants",
+        this.handleGetActiveParticipants.bind(this),
+      ),
+    );
+    this.addToUnsub(
+      this.socket.on("webrtc-declineCall", this.handleDeclineCall.bind(this)),
+    );
+    this.addToUnsub(
+      this.socket.on("webrtc-offer", this.handleOffer.bind(this)),
+    );
+    this.addToUnsub(
+      this.socket.on("webrtc-answer", this.handleAnswer.bind(this)),
+    );
+    this.addToUnsub(
+      this.socket.on("webrtc-iceCandidate", this.handleIceCandidate.bind(this)),
+    );
     //this.socket.on("webrtc-trackAdded", this.handleTrackAdded.bind(this));
-    this.socket.on(
-      "webrtc-mediaStateChange",
-      this.handleMediaStateChange.bind(this),
+    this.addToUnsub(
+      this.socket.on(
+        "webrtc-mediaStateChange",
+        this.handleMediaStateChange.bind(this),
+      ),
     );
-    this.socket.on("webrtc-roomFull", this.handleRoomFull.bind(this));
+    this.addToUnsub(
+      this.socket.on("webrtc-roomFull", this.handleRoomFull.bind(this)),
+    );
   }
 
+  addToUnsub({
+    event,
+    eventHandler,
+  }: {
+    event: string;
+    eventHandler: (payload: any) => void;
+  }) {
+    this.unsubListeners.push({ event, eventHandler });
+  }
   getCallType() {
     return this.callType;
   }
@@ -125,6 +156,7 @@ export class CallingService {
       console.warn("Maximum number of participants reached");
       return false;
     }
+
     const participant = {
       userId: this.localUser._id,
       videoEnabled: this.callType === "video",
@@ -262,18 +294,6 @@ export class CallingService {
     await this.webRTCService.addIceCandidate(userId, rtcCandidate);
   }
 
-  // @handleError("Failed to handle track")
-  // private handleTrackAdded({ userId, track }: IWebRTCMediaTrack): void {
-  //   let remoteStream = this.remoteStreams.get(userId);
-  //   if (!remoteStream) {
-  //     remoteStream = new MediaStream();
-  //     this.remoteStreams.set(userId, remoteStream);
-  //   }
-  //   const mediaTrack = track as MediaStreamTrack;
-  //   remoteStream.addTrack(mediaTrack);
-
-  // }
-
   @handleError("Failed to handle media state")
   private handleMediaStateChange({
     userId,
@@ -348,13 +368,7 @@ export class CallingService {
   }
 
   endCall(): void {
-    this.webRTCService.closeAllConnections();
-    if (this.localStream) {
-      this.localStream.getTracks().forEach((track) => track.stop());
-      this.localStream = null;
-    }
-    this.remoteStreams.clear();
-    this.participants.clear();
+    this.cleanup();
     if (this.chatRoomId)
       this.socketQueue.emit("webrtc-endCall", {
         callId: this.callId,
@@ -365,19 +379,28 @@ export class CallingService {
     this.dispatch(changeCallStatus({ status: "IDLE" }));
     this.updateCallUI();
   }
+  cleanup() {
+    this.removeSocketListeners();
+    this.webRTCService.closeAllConnections();
+    if (this.localStream) {
+      this.localStream.getTracks().forEach((track) => track.stop());
+      this.localStream = null;
+    }
+    this.remoteStreams.clear();
+    this.participants.clear();
+  }
 
   async setInCallStatus() {
-    this.dispatch(
-      changeCallStatus({
-        status: "INCALL",
-        info: {
-          callId: this.callId,
-          userId: this.localUser._id,
-          chatRoomId: this.chatRoomId,
-          callType: this.callType,
-        },
-      }),
-    );
+    const callStatus: CallStatus = {
+      status: "INCALL",
+      info: {
+        callId: this.callId,
+        userId: this.localUser._id,
+        chatRoomId: this.chatRoomId,
+        callType: this.callType,
+      },
+    };
+    this.dispatch(changeCallStatus(callStatus));
   }
 
   updateCallUI() {
@@ -386,18 +409,8 @@ export class CallingService {
   }
 
   private removeSocketListeners(): void {
-    this.socket.off("webrtc-joinCall", this.handleJoinCall);
-    this.socket.off("webrtc-endCall", this.handleEndCall);
-    this.socket.off(
-      "webrtc-getActiveParticipants",
-      this.handleGetActiveParticipants,
+    this.unsubListeners.forEach(({ event, eventHandler }) =>
+      this.socket.off(event as any, eventHandler as any),
     );
-    this.socket.off("webrtc-declineCall", this.handleDeclineCall);
-    this.socket.off("webrtc-offer", this.handleOffer);
-    this.socket.off("webrtc-answer", this.handleAnswer);
-    this.socket.off("webrtc-iceCandidate", this.handleIceCandidate);
-    //this.socket.off("webrtc-trackAdded", this.handleTrackAdded);
-    this.socket.off("webrtc-mediaStateChange", this.handleMediaStateChange);
-    this.socket.off("webrtc-roomFull", this.handleRoomFull);
   }
 }

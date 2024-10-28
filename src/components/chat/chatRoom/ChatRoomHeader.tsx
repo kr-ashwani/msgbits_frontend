@@ -24,12 +24,14 @@ const ChatRoomHeader = ({
         <div className="absolute pt-1">
           {ChatSvg("search", { width: "20px", height: "20px" })}
         </div>
-        <input
-          value={chatRoomSearch}
-          onChange={(e) => setChatRoomSearch(e.target.value)}
-          className="w-full border-none px-2 pl-7 text-[15px] font-semibold text-body-color outline-none"
-          placeholder="Search..."
-        />
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            value={chatRoomSearch}
+            onChange={(e) => setChatRoomSearch(e.target.value)}
+            className="w-full border-none px-2 pl-7 text-[15px] font-semibold text-body-color outline-none"
+            placeholder="Search..."
+          />
+        </form>
       </div>
       <div
         className="cursor-pointer text-setting-icon-color"

@@ -13,15 +13,6 @@ const RTCIceCandidateSchema = z.object({
   usernameFragment: z.string().nullish(),
 });
 
-const MediaStreamTrackSchema = z.object({
-  id: z.string(),
-  kind: z.string(),
-  label: z.string(),
-  enabled: z.boolean(),
-  muted: z.boolean(),
-  readyState: z.enum(["live", "ended"]),
-});
-
 // Call type enum
 const CallTypeEnum = z.enum(["audio", "video"]);
 
@@ -48,10 +39,6 @@ const BaseRoomSchema = BaseSchema.extend({
 // Individual message schemas extending from base schemas
 export const WebRTCIceCandidateSchema = BaseSchema.extend({
   candidate: RTCIceCandidateSchema,
-});
-
-export const WebRTCMediaTrackSchema = BaseSchema.extend({
-  track: MediaStreamTrackSchema,
 });
 
 export const WebRTCStartCallSchema = BaseRoomSchema.extend({
@@ -113,9 +100,7 @@ export type IRTCIceCandidate = z.infer<typeof RTCIceCandidateSchema>;
 export type IRTCSessionDescriptionInit = z.infer<
   typeof RTCSessionDescriptionInitSchema
 >;
-export type IMediaStreamTrack = z.infer<typeof MediaStreamTrackSchema>;
 export type IWebRTCIceCandidate = z.infer<typeof WebRTCIceCandidateSchema>;
-export type IWebRTCMediaTrack = z.infer<typeof WebRTCMediaTrackSchema>;
 export type IWebRTCStartCall = z.infer<typeof WebRTCStartCallSchema>;
 export type IWebRTCIncomingCall = z.infer<typeof WebRTCIncomingCallSchema>;
 export type IWebRTCDeclineCall = z.infer<typeof WebRTCEndCallSchema>;

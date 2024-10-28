@@ -13,11 +13,11 @@ import { toast } from "sonner";
 import { SocketEmitterQueue } from "../socketQueue/SocketEmitterQueue";
 
 export class CallManager {
-  private socket: SocketManager;
-  private socketQueue: SocketEmitterQueue;
+  private readonly socket: SocketManager;
+  private readonly socketQueue: SocketEmitterQueue;
+  private readonly localUser: IUser;
+  private readonly dispatch: AppDispatch;
   private callingService: CallingService | null = null;
-  private localUser: IUser;
-  private dispatch: AppDispatch;
 
   constructor(
     socket: SocketManager,
@@ -52,9 +52,6 @@ export class CallManager {
     callType: CallType;
     chatRoomId: string;
   }) {
-    const status = await this.checkDeviceCompatibility(callType);
-    if (!status) return;
-
     this.callingService = new CallingService({
       socketQueue: this.socketQueue,
       socket: this.socket,
@@ -63,6 +60,9 @@ export class CallManager {
       callType,
       chatRoomId,
     });
+
+    const status = await this.checkDeviceCompatibility(callType);
+    if (!status) return this.endCall();
 
     this.callingService.startCall();
   }
@@ -74,9 +74,6 @@ export class CallManager {
     chatRoomId,
     userId,
   }: IWebRTCIncomingCall) {
-    const status = await this.checkDeviceCompatibility(callType);
-    if (!status) return;
-
     this.callingService = new CallingService({
       socketQueue: this.socketQueue,
       socket: this.socket,
@@ -86,6 +83,9 @@ export class CallManager {
       chatRoomId,
       callId,
     });
+
+    const status = await this.checkDeviceCompatibility(callType);
+    if (!status) return this.endCall();
 
     this.joinCall(userId);
   }
@@ -136,6 +136,10 @@ export class CallManager {
   getLocalParticipant(): ParticipantsDesc | undefined {
     const callParticipants = this.callingService?.getParticipants()!;
     return callParticipants.get(this.localUser._id);
+  }
+
+  cleanup() {
+    this.callingService?.cleanup();
   }
 
   @requiresCallSession()

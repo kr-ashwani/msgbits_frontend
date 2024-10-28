@@ -7,9 +7,9 @@ type ICEServer = {
 };
 
 export class WebRTCService {
-  private peerConnections: Map<string, RTCPeerConnection> = new Map();
-  private socketQueue: SocketEmitterQueue;
-  private ICE_SERVERS: ICEServer[];
+  private readonly peerConnections: Map<string, RTCPeerConnection> = new Map();
+  private readonly socketQueue: SocketEmitterQueue;
+  private readonly ICE_SERVERS: ICEServer[];
 
   constructor(socketQueue: SocketEmitterQueue) {
     this.socketQueue = socketQueue;

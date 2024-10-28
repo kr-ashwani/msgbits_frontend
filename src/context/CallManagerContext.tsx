@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import { CallManager } from "@/service/webrtc/CallManager";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
@@ -15,15 +15,27 @@ export const CallManagerProvider = ({ children }: { children: ReactNode }) => {
 
   if (!user) throw new Error("permission denied. User must be logged in");
 
-  const callManager = useMemo(
-    () => new CallManager(socket, socketQueue, user, dispatch),
-    [socket, socketQueue, user, dispatch],
-  );
+  const callManager = useMemo(() => {
+    const manager = new CallManager(socket, socketQueue, user, dispatch);
+    return {
+      instance: manager,
+      cleanup: () => {
+        try {
+          manager.cleanup();
+        } catch (error) {
+          console.error("Error during CallManager cleanup:", error);
+        }
+      },
+    };
+  }, [socket, socketQueue, user, dispatch]);
 
-  const value = callManager;
+  useEffect(() => {
+    // performing cleanup
+    return () => callManager?.cleanup();
+  }, [callManager]);
 
   return (
-    <CallManagerContext.Provider value={value}>
+    <CallManagerContext.Provider value={callManager.instance}>
       {children}
     </CallManagerContext.Provider>
   );

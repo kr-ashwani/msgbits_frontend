@@ -30,7 +30,6 @@ import {
   IWebRTCIncomingCall,
   IWebRTCJoinCall,
   IWebRTCMediaStateChange,
-  IWebRTCMediaTrack,
   IWebRTCOffer,
   IWebRTCRoomFull,
   IWebRTCStartCall,
@@ -41,7 +40,6 @@ import {
   WebRTCIncomingCallSchema,
   WebRTCJoinCallSchema,
   WebRTCMediaStateChangeSchema,
-  WebRTCMediaTrackSchema,
   WebRTCOfferSchema,
   WebRTCRoomFullSchema,
   WebRTCStartCallSchema,
@@ -85,7 +83,6 @@ export interface WebRTCEmitterMapping {
   "webrtc-offer": IWebRTCOffer;
   "webrtc-answer": IWebRTCAnswer;
   "webrtc-iceCandidate": IWebRTCIceCandidate;
-  "webrtc-trackAdded": IWebRTCMediaTrack;
   "webrtc-mediaStateChange": IWebRTCMediaStateChange;
   "webrtc-roomFull": IWebRTCRoomFull;
 }
@@ -144,7 +141,6 @@ const WebRTCListenerSchema = {
   "webrtc-offer": WebRTCOfferSchema,
   "webrtc-answer": WebRTCAnswerSchema,
   "webrtc-iceCandidate": WebRTCIceCandidateSchema,
-  "webrtc-trackAdded": WebRTCMediaTrackSchema,
   "webrtc-mediaStateChange": WebRTCMediaStateChangeSchema,
   "webrtc-roomFull": WebRTCRoomFullSchema,
 };

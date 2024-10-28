@@ -66,12 +66,14 @@ const PrivateChatCreate = ({ name }: { name: string }) => {
           <div className="absolute pt-1">
             {ChatSvg("search", { width: "20px", height: "20px" })}
           </div>
-          <input
-            value={searchUser}
-            onChange={(e) => setSearchUser(e.target.value)}
-            className="w-full border-none px-2 pl-7 text-[15px] font-semibold text-body-color outline-none"
-            placeholder="Search..."
-          />
+          <form onSubmit={(e) => e.preventDefault()}>
+            <input
+              value={searchUser}
+              onChange={(e) => setSearchUser(e.target.value)}
+              className="w-full border-none px-2 pl-7 text-[15px] font-semibold text-body-color outline-none"
+              placeholder="Search..."
+            />
+          </form>
         </div>
       </div>
 
