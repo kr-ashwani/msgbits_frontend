@@ -25,7 +25,6 @@ import { handleError } from "./CallDecorators";
 interface CallingServiceParams {
   socket: SocketManager;
   localUser: IUser;
-  callId?: string;
   chatRoomId: string;
   callType: CallType;
   dispatch: AppDispatch;
@@ -50,64 +49,41 @@ export class CallingService {
   }[] = [];
 
   constructor(params: CallingServiceParams) {
-    this.webRTCService = new WebRTCService(params.socketQueue);
+    this.webRTCService = new WebRTCService(
+      params.socketQueue,
+      params.localUser,
+    );
     this.socketQueue = params.socketQueue;
     this.socket = params.socket;
     this.chatRoomId = params.chatRoomId;
     this.localUser = params.localUser;
     this.callType = params.callType;
-    this.callId = params.callId ?? uuid();
+    this.callId = params.chatRoomId;
     this.dispatch = params.dispatch;
     this.setupSocketListeners();
     this.setInCallStatus();
   }
 
   private setupSocketListeners(): void {
-    this.addToUnsub(
+    this.unsubListeners.push(
       this.socket.on("webrtc-joinCall", this.handleJoinCall.bind(this)),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-endCall", this.handleEndCall.bind(this)),
-    );
-    this.addToUnsub(
       this.socket.on(
         "webrtc-getActiveParticipants",
         this.handleGetActiveParticipants.bind(this),
       ),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-declineCall", this.handleDeclineCall.bind(this)),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-offer", this.handleOffer.bind(this)),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-answer", this.handleAnswer.bind(this)),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-iceCandidate", this.handleIceCandidate.bind(this)),
-    );
-    //this.socket.on("webrtc-trackAdded", this.handleTrackAdded.bind(this));
-    this.addToUnsub(
       this.socket.on(
         "webrtc-mediaStateChange",
         this.handleMediaStateChange.bind(this),
       ),
-    );
-    this.addToUnsub(
       this.socket.on("webrtc-roomFull", this.handleRoomFull.bind(this)),
     );
   }
 
-  addToUnsub({
-    event,
-    eventHandler,
-  }: {
-    event: string;
-    eventHandler: (payload: any) => void;
-  }) {
-    this.unsubListeners.push({ event, eventHandler });
-  }
   getCallType() {
     return this.callType;
   }
@@ -142,8 +118,8 @@ export class CallingService {
 
     this.socketQueue.emit("webrtc-startCall", {
       callId: this.callId,
-      chatRoomId: this.chatRoomId,
-      userId: this.localUser._id,
+      to: "all",
+      from: this.localUser._id,
       callType: this.callType,
     });
 
@@ -169,43 +145,27 @@ export class CallingService {
 
     this.socketQueue.emit("webrtc-getActiveParticipants", {
       callId: this.callId,
-      chatRoomId: this.chatRoomId,
       activeParticipants: [],
-      userId: this.localUser._id,
+      from: userId,
+      to: this.localUser._id,
     });
-
-    // just create the peerConnectionInstance  and attach our local track
-    await this.webRTCService.createPeerConnection(
-      userId,
-      this.callId,
-      this.remoteTrackAddedCb.bind(this),
-    );
-
-    if (this.localStream) {
-      for (const track of this.localStream.getTracks()) {
-        await this.webRTCService.addTrack(userId, track, this.localStream);
-      }
-    }
 
     return true;
   }
+
   @handleError("Failed to handle active call members")
   async handleGetActiveParticipants({
     callId,
-    userId,
     activeParticipants,
   }: IWebRTCGetActiveParticipants) {
     const promises = activeParticipants.map(async (memberId) => {
       // this creates peer connections
-      await this.handleJoinCall({
-        userId: memberId,
-        chatRoomId: this.chatRoomId,
-        callId: this.callId,
-      });
+      await this.createPeerConnection(memberId);
       // this creates offer for each peer connections
       const offer = await this.webRTCService.createOffer(memberId);
       this.socketQueue.emit("webrtc-offer", {
-        userId: this.localUser._id,
+        from: this.localUser._id,
+        to: memberId,
         callId,
         offer,
       });
@@ -213,33 +173,43 @@ export class CallingService {
 
     await Promise.all(promises);
   }
-  @handleError("Failed to handle join call")
-  async handleJoinCall({ userId, chatRoomId }: IWebRTCJoinCall) {
+
+  @handleError("Failed to crate peer connections")
+  async createPeerConnection(remoteUserId: string) {
     if (this.participants.size >= this.MAX_PARTICIPANTS) {
       console.warn("Maximum number of participants reached");
       return;
     }
 
     const participantInfo = {
-      userId,
+      userId: remoteUserId,
       videoEnabled: this.callType === "video",
       audioEnabled: true,
     };
-    this.participants.set(userId, participantInfo);
+    this.participants.set(remoteUserId, participantInfo);
     this.updateCallUI();
 
     // just create the peerConnectionInstance  and attach our local track
     await this.webRTCService.createPeerConnection(
-      userId,
+      remoteUserId,
       this.callId,
       this.remoteTrackAddedCb.bind(this),
     );
 
     if (this.localStream) {
       for (const track of this.localStream.getTracks()) {
-        await this.webRTCService.addTrack(userId, track, this.localStream);
+        await this.webRTCService.addTrack(
+          remoteUserId,
+          track,
+          this.localStream,
+        );
       }
     }
+  }
+
+  @handleError("Failed to handle join call")
+  async handleJoinCall({ from }: IWebRTCJoinCall) {
+    await this.createPeerConnection(from);
   }
 
   async handleDeclineCall() {}
@@ -259,48 +229,49 @@ export class CallingService {
   }
 
   @handleError("Failed to end call")
-  private handleEndCall({ userId }: IWebRTCEndCall): void {
-    this.participants.delete(userId);
-    this.webRTCService.closeConnection(userId);
-    this.remoteStreams.delete(userId);
+  private handleEndCall({ from }: IWebRTCEndCall): void {
+    this.participants.delete(from);
+    this.webRTCService.closeConnection(from);
+    this.remoteStreams.delete(from);
 
     this.updateCallUI();
   }
 
   @handleError("Failed to handle offer")
-  private async handleOffer({ userId, offer }: IWebRTCOffer): Promise<void> {
+  private async handleOffer({ from, offer }: IWebRTCOffer): Promise<void> {
     const rtcOffer = offer as RTCSessionDescription;
-    await this.webRTCService.setRemoteDescription(userId, rtcOffer);
-    const answer = await this.webRTCService.createAnswer(userId);
+    await this.webRTCService.setRemoteDescription(from, rtcOffer);
+    const answer = await this.webRTCService.createAnswer(from);
     this.socketQueue.emit("webrtc-answer", {
       callId: this.callId,
-      userId,
+      to: from,
+      from: this.localUser._id,
       answer,
     });
   }
 
   @handleError("Failed to handle answer")
-  private async handleAnswer({ userId, answer }: IWebRTCAnswer): Promise<void> {
+  private async handleAnswer({ from, answer }: IWebRTCAnswer): Promise<void> {
     const rtcAnswer = answer as RTCSessionDescription;
-    await this.webRTCService.setRemoteDescription(userId, rtcAnswer);
+    await this.webRTCService.setRemoteDescription(from, rtcAnswer);
   }
 
   @handleError("Failed to handle ice candidates")
   private async handleIceCandidate({
-    userId,
+    from,
     candidate,
   }: IWebRTCIceCandidate): Promise<void> {
     const rtcCandidate = candidate as RTCIceCandidate;
-    await this.webRTCService.addIceCandidate(userId, rtcCandidate);
+    await this.webRTCService.addIceCandidate(from, rtcCandidate);
   }
 
   @handleError("Failed to handle media state")
   private handleMediaStateChange({
-    userId,
+    from,
     videoEnabled,
     audioEnabled,
   }: IWebRTCMediaStateChange): void {
-    const participant = this.participants.get(userId);
+    const participant = this.participants.get(from);
     if (participant) {
       participant.videoEnabled = videoEnabled;
       participant.audioEnabled = audioEnabled;
@@ -325,7 +296,8 @@ export class CallingService {
 
       const participant = {
         callId: this.callId,
-        userId: this.localUser._id,
+        from: this.localUser._id,
+        to: "all",
         videoEnabled: videoTrack.enabled,
         audioEnabled: this.participants.get(this.localUser._id)!.audioEnabled,
       };
@@ -344,7 +316,8 @@ export class CallingService {
         audioTrack.enabled;
 
       const participant = {
-        userId: this.localUser._id,
+        from: this.localUser._id,
+        to: "all",
         callId: this.callId,
         videoEnabled: this.participants.get(this.localUser._id)!.videoEnabled,
         audioEnabled: audioTrack.enabled,
@@ -372,8 +345,8 @@ export class CallingService {
     if (this.chatRoomId)
       this.socketQueue.emit("webrtc-endCall", {
         callId: this.callId,
-        chatRoomId: this.chatRoomId,
-        userId: this.localUser._id,
+        from: this.localUser._id,
+        to: "all",
       });
 
     this.dispatch(changeCallStatus({ status: "IDLE" }));
@@ -395,8 +368,8 @@ export class CallingService {
       status: "INCALL",
       info: {
         callId: this.callId,
-        userId: this.localUser._id,
-        chatRoomId: this.chatRoomId,
+        from: this.localUser._id,
+        to: "all",
         callType: this.callType,
       },
     };

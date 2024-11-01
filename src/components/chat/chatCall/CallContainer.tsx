@@ -15,16 +15,11 @@ const CallContainer = () => {
   const { socket } = useSocket();
 
   useEffect(() => {
-    function handleIncomingCall({
-      callId,
-      userId,
-      chatRoomId,
-      callType,
-    }: IWebRTCIncomingCall) {
+    function handleIncomingCall(info: IWebRTCIncomingCall) {
       dispatch(
         changeCallStatus({
           status: "RINGING",
-          info: { callId, userId, chatRoomId, callType },
+          info,
         }),
       );
     }

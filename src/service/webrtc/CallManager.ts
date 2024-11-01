@@ -22,12 +22,12 @@ export class CallManager {
   constructor(
     socket: SocketManager,
     socketQueue: SocketEmitterQueue,
-    userId: IUser,
+    user: IUser,
     dispatch: AppDispatch,
   ) {
     this.socketQueue = socketQueue;
     this.socket = socket;
-    this.localUser = userId;
+    this.localUser = user;
     this.dispatch = dispatch;
   }
   getLocalUser() {
@@ -68,26 +68,20 @@ export class CallManager {
   }
 
   @requiresNoCallSession()
-  async answerCall({
-    callId,
-    callType,
-    chatRoomId,
-    userId,
-  }: IWebRTCIncomingCall) {
+  async answerCall({ callId, from, callType }: IWebRTCIncomingCall) {
     this.callingService = new CallingService({
       socketQueue: this.socketQueue,
       socket: this.socket,
       localUser: this.localUser,
       dispatch: this.dispatch,
       callType,
-      chatRoomId,
-      callId,
+      chatRoomId: callId,
     });
 
     const status = await this.checkDeviceCompatibility(callType);
     if (!status) return this.endCall();
 
-    this.joinCall(userId);
+    this.joinCall(from);
   }
 
   @requiresCallSession()

@@ -1,3 +1,4 @@
+import { IUser } from "@/schema/userSchema";
 import { SocketEmitterQueue } from "../socketQueue/SocketEmitterQueue";
 
 type ICEServer = {
@@ -10,9 +11,11 @@ export class WebRTCService {
   private readonly peerConnections: Map<string, RTCPeerConnection> = new Map();
   private readonly socketQueue: SocketEmitterQueue;
   private readonly ICE_SERVERS: ICEServer[];
+  private readonly localUser: IUser;
 
-  constructor(socketQueue: SocketEmitterQueue) {
+  constructor(socketQueue: SocketEmitterQueue, user: IUser) {
     this.socketQueue = socketQueue;
+    this.localUser = user;
     this.ICE_SERVERS = [
       { urls: process.env.NEXT_PUBLIC_STUN_URLS ?? "" },
       {
@@ -34,7 +37,8 @@ export class WebRTCService {
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         this.socketQueue.emit("webrtc-iceCandidate", {
-          userId,
+          from: this.localUser._id,
+          to: userId,
           callId,
           candidate: event.candidate,
         });

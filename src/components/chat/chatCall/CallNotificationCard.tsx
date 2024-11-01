@@ -17,7 +17,7 @@ const CallNotificationCard = ({
   const notificationCardRef = useRef<HTMLDivElement>(null);
   const callManager = useCallManager();
 
-  const { callId, callType, userId, chatRoomId } = callInfo;
+  const { callId, callType, from } = callInfo;
 
   useEffect(() => {
     setTimeout(() => {
@@ -28,11 +28,10 @@ const CallNotificationCard = ({
     }, 0);
   }, []);
 
-  const chatRoomName = chatRoomContainerState.getChatRoomName(chatRoomId);
-  const chatRoomPicture =
-    chatRoomContainerState.getChatRoomPictureById(chatRoomId);
+  const chatRoomName = chatRoomContainerState.getChatRoomName(callId);
+  const chatRoomPicture = chatRoomContainerState.getChatRoomPictureById(callId);
   const chatRoomType = chatRoomContainerState
-    .getChatRoomById(chatRoomId)
+    .getChatRoomById(callId)
     .getChatType();
 
   async function handleCall(type: "Accept" | "Reject") {
@@ -71,7 +70,7 @@ const CallNotificationCard = ({
             {chatRoomName}
           </span>
           <span className="truncate text-[14px] font-medium text-msg-message lg:text-[13px]">
-            {`${chatUser.getUserById(userId)?.name} is calling you...`}
+            {`${chatUser.getUserById(from)?.name} is calling you...`}
           </span>
         </div>
 
