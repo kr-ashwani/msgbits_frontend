@@ -8,13 +8,11 @@ const ChatLanding = () => {
 
   return (
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-5 bg-theme-bg-color font-manrope">
-      <div className="theme-color-Animation flex w-[350px] text-theme-color lg:w-[450px]">
+      <div className="theme-color-Animation flex h-[65%] w-[350px] justify-center text-theme-color lg:w-[450px]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
           data-name="Layer 1"
-          width="882"
-          height="450"
           viewBox="0 0 891.29496 745.19434"
         >
           <ellipse
@@ -160,10 +158,10 @@ const ChatLanding = () => {
       </div>
 
       <div className="flex flex-col gap-[3px] text-center">
-        <p className="text-xl font-semibold text-[#4b5563]">
+        <p className="font-semibold text-[#4b5563] lg:text-xl">
           A robust realtime messaging app for the modern world
         </p>
-        <p className="font-medium text-muted-foreground">
+        <p className="text-sm font-medium text-muted-foreground lg:text-base">
           Connect, collaborate, and communicate seamlessly
         </p>
       </div>
