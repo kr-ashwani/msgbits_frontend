@@ -1,3 +1,5 @@
+"use client";
+
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
 import useIsMobile from "@/hooks/useIsMobile";
 import { useAppSelector } from "@/lib/store/hooks";

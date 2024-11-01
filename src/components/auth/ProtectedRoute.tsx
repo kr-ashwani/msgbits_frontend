@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { redirect, usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import AuthenticatingMessage from "./AuthenticatingMessage";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
@@ -10,8 +11,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     (state) => state.auth,
   );
 
-  if (isAuthPreflightCompleted === false)
-    return <p>Authenticating..... please wait</p>;
+  if (isAuthPreflightCompleted === false) return <AuthenticatingMessage />;
   else if (isAuthPreflightCompleted === true && user === null)
     return redirect(`/login?httpredirect=${pathname}`);
   else return children;

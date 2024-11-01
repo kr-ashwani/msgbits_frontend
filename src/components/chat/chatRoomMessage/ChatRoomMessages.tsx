@@ -7,6 +7,7 @@ import ChatAreaHeader from "./ChatAreaHeader";
 import ChatAreaView from "./ChatAreaView";
 import ChatAreaFooter from "./ChatAreaFooter";
 import { useChatRoomDataDispatch } from "@/hooks/AppDispatcher/useChatRoomDataDispatch";
+import ChatLanding from "./ChatLanding";
 
 const ChatRoomMessages = () => {
   const component = useRef<HTMLElement>(null);
@@ -34,6 +35,7 @@ const ChatRoomMessages = () => {
       <ChatAreaHeader />
       <ChatAreaView />
       <ChatAreaFooter />
+      <ChatLanding />
     </section>
   );
 };
