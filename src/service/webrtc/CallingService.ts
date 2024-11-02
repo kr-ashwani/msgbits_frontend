@@ -81,6 +81,7 @@ export class CallingService {
         this.handleMediaStateChange.bind(this),
       ),
       this.socket.on("webrtc-roomFull", this.handleRoomFull.bind(this)),
+      this.socket.onConnect(this.onSocketConnect.bind(this)),
     );
   }
 
@@ -92,6 +93,11 @@ export class CallingService {
   }
   getDispatch() {
     return this.dispatch;
+  }
+
+  private onSocketConnect() {
+    this.cleanWhenDisconnected();
+    this.joinCall("client");
   }
 
   remoteTrackAddedCb(userId: string, streams: readonly MediaStream[]) {
@@ -361,6 +367,11 @@ export class CallingService {
     }
     this.remoteStreams.clear();
     this.participants.clear();
+  }
+
+  cleanWhenDisconnected() {
+    this.webRTCService.closeAllConnections();
+    this.remoteStreams.clear();
   }
 
   async setInCallStatus() {

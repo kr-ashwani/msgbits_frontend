@@ -123,6 +123,11 @@ export class SocketManager {
     return handler;
   }
 
+  public onConnect(callback: () => void) {
+    this.socket.on("connect", callback);
+    return { event: "connect", eventHandler: callback };
+  }
+
   public offDisconnect(callback: (reason: string) => void) {
     this.socket.off("disconnect", callback);
   }
