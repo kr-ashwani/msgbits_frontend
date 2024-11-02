@@ -43,6 +43,7 @@ export interface chatRoomDataState {
   imagePreview: ImagePreviewState;
   callStatus: CallStatus;
   updateCallUI: string;
+  activeChatRoomCalls: string[];
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -56,6 +57,7 @@ const initialState: chatRoomDataState = {
   imagePreview: { images: [], initialImageCursor: 0 },
   callStatus: { status: "IDLE" },
   updateCallUI: "",
+  activeChatRoomCalls: [],
 };
 
 export const chatRoomDataSlice = createSlice({
@@ -188,6 +190,21 @@ export const chatRoomDataSlice = createSlice({
     updateCallUI(state, action: PayloadAction<string>) {
       state.updateCallUI = action.payload;
     },
+
+    addActiveChatRoomCall(state, action: PayloadAction<string | string[]>) {
+      if (typeof action.payload === "string")
+        state.activeChatRoomCalls.push(action.payload);
+      else if (Array.isArray(action.payload))
+        action.payload.forEach((chatRoomId) =>
+          state.activeChatRoomCalls.push(chatRoomId),
+        );
+    },
+
+    removeActiveChatRoomCall(state, action: PayloadAction<string>) {
+      state.activeChatRoomCalls = state.activeChatRoomCalls.filter(
+        (chatRoomId) => chatRoomId !== action.payload,
+      );
+    },
   },
 });
 
@@ -208,6 +225,8 @@ export const {
   resetImagePreview,
   changeCallStatus,
   updateCallUI,
+  addActiveChatRoomCall,
+  removeActiveChatRoomCall,
 } = chatRoomDataSlice.actions;
 
 export default chatRoomDataSlice.reducer;

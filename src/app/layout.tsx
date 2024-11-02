@@ -32,7 +32,8 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Msgbits",
-  description: "A Robust Messaging Solution for the Modern World",
+  description:
+    "Connect instantly with a secure, real-time messaging app built for today's world.",
 };
 
 export default function RootLayout({
