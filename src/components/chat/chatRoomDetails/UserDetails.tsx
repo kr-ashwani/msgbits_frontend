@@ -21,12 +21,12 @@ const UserDetails = ({ user }: { user: IUser }) => {
     });
   }
 
-  function handleStartCall(type: "audio" | "video") {
-    const message = chatService.sendNewMessage("call", type);
+  function handleStartCall(callType: "audio" | "video") {
+    const message = chatService.sendNewMessage("call", callType);
     if (message && message.length)
       callManager.startCall({
         chatRoomId: message[0].chatRoomId,
-        callType: "audio",
+        callType,
       });
   }
 

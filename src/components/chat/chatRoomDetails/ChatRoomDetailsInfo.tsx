@@ -50,13 +50,13 @@ const ChatRoomDetailsInfo = ({
     socketQueue.emit("chatroom-updateChatNameOrPic", updatedProfile);
   }
 
-  function handleStartCall(type: "audio" | "video") {
+  function handleStartCall(callType: "audio" | "video") {
     if (!rawChatRoom) return;
 
-    chatService.sendNewMessage("call", type);
+    chatService.sendNewMessage("call", callType);
     callManager.startCall({
       chatRoomId: rawChatRoom.chatRoomId,
-      callType: "audio",
+      callType,
     });
   }
 
