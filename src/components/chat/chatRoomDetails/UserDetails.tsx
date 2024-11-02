@@ -5,15 +5,29 @@ import { IUser } from "@/schema/userSchema";
 import { capitalizeStr } from "@/utils/custom/capitalizeStr";
 import StatusAvatar from "../user/StatusAvatar";
 import { useImagePreviewDispatch } from "@/hooks/AppDispatcher/useImagePreviewDispatch";
+import { useChatService } from "@/hooks/chat/useChatService";
+import { useCallManager } from "@/hooks/chat/useCallManager";
 
 const UserDetails = ({ user }: { user: IUser }) => {
   const imagePreviewDispatch = useImagePreviewDispatch();
+  const chatService = useChatService();
+  const callManager = useCallManager();
+
   function getJoinedDate(date: string) {
     return new Date(date).toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
+  }
+
+  function handleStartCall(type: "audio" | "video") {
+    const message = chatService.sendNewMessage("call", type);
+    if (message && message.length)
+      callManager.startCall({
+        chatRoomId: message[0].chatRoomId,
+        callType: "audio",
+      });
   }
 
   return (
@@ -34,12 +48,18 @@ const UserDetails = ({ user }: { user: IUser }) => {
         <div className="text-lg font-semibold">{capitalizeStr(user.name)}</div>
         <div className="mt-[-5px] text-xs font-semibold text-msg-date">{`Joined on ${getJoinedDate(user.createdAt)}`}</div>
         <div className="mt-[10px] flex w-full gap-2 text-theme-color">
-          <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
+          <div
+            className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium"
+            onClick={() => handleStartCall("audio")}
+          >
             <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("callIcon")}
-            <span>Call Group</span>
+            <span>Voice Call</span>
           </div>
-          <div className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium">
+          <div
+            className="relative flex w-0 grow cursor-pointer items-center justify-center gap-2 py-3 text-sm font-medium"
+            onClick={() => handleStartCall("video")}
+          >
             <div className="theme-color-Animation absolute inset-0 rounded-md bg-theme-color opacity-10"></div>
             {ChatSvg("videoIcon")}
             <span>Video Chat</span>

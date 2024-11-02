@@ -28,7 +28,6 @@ import { joinArrayWithAnd } from "@/utils/custom/joinArrayWithAnd";
 import { toast } from "@/utils/toast/Toast";
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import _ from "lodash";
-import { setFilePreviewMode } from "@/lib/store/features/chat/chatRoomDataSlice";
 
 interface NewGroupChatParams {
   chatName: string;
@@ -39,6 +38,7 @@ interface NewGroupChatParams {
 interface Message {
   text: string;
   file: IFileMessage[];
+  call: "audio" | "video";
 }
 
 class ChatService {
@@ -98,7 +98,7 @@ class ChatService {
     if (!lastMessage || (lastMessage && !isToday(lastMessage.createdAt)))
       timeStampMsg = new TimestampMessage(this.user._id, chatRoomId);
 
-    //chatRoomId can be user id so dont forget to update it
+    //chatRoomId can be user id so don't forget to update it
     let msg: IMessage[] = [];
     if (type === "text") {
       const tempMessage = message as Message["text"];
@@ -118,6 +118,17 @@ class ChatService {
         updatedMessage.updatedAt = new Date().toISOString();
         msg.push(updatedMessage);
       });
+    }
+    if (type === "call") {
+      const tempMessage = `${capitalizeStr(this.user.name)} has started a ${message} call`;
+      msg.push(
+        new InfoMessage(
+          tempMessage,
+          this.user._id,
+          chatRoomId,
+          null,
+        ).toObject(),
+      );
     }
     const lastNewMsg = _.last(msg);
     if (!lastNewMsg) return;

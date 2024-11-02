@@ -67,6 +67,15 @@ export const useSetUpSocketListners = () => {
         chatUserDispatch.addAllChatUsers(payload.chatUser);
       }),
       socket.on("sync-allUserStatus", chatUserDispatch.getUserOnlineStatus),
+      socket.on(
+        "sync-chatRoomCallSession",
+        chatRoomDispatch.addActiveChatRoomCall,
+      ),
+
+      socket.on(
+        "webrtc-callSessionTerminated",
+        chatRoomDispatch.removeActiveChatRoomCall,
+      ),
     ];
 
     return () => {

@@ -77,6 +77,14 @@ export const WebRTCGetActiveParticipantsSchema = BaseSchema.extend({
   activeParticipants: z.array(z.string()),
 });
 
+export const WebRTCCallInfo = z.object({
+  chatRoomId: z.string({
+    required_error: "chatRoomId is required",
+    invalid_type_error: "chatRoomId must be a string",
+  }),
+  callType: z.enum(["audio", "video"]),
+});
+
 export interface ParticipantsDesc {
   userId: string;
   videoEnabled: boolean;
@@ -108,6 +116,7 @@ export type IWebRTCMediaStateChange = z.infer<
   typeof WebRTCMediaStateChangeSchema
 >;
 export type IWebRTCRoomFull = z.infer<typeof WebRTCRoomFullSchema>;
+export type IWebRTCCallInfo = z.infer<typeof WebRTCCallInfo>;
 export type IWebRTCGetActiveParticipants = z.infer<
   typeof WebRTCGetActiveParticipantsSchema
 >;

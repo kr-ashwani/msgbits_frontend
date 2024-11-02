@@ -7,6 +7,9 @@ import { useSelectedChatState } from "@/hooks/AppSelector/useSelectedChatState";
 import React, { ReactNode } from "react";
 import StatusAvatar from "../user/StatusAvatar";
 import Avatar from "@/components/utility/Avatar";
+import { Phone } from "lucide-react";
+import { useChatRoomCallSession } from "@/hooks/AppSelector/useChatRoomCallSession";
+import { useCallManager } from "@/hooks/chat/useCallManager";
 
 function getChatMembersPictures(chatRoom: ChatRoomState) {
   const members = chatRoom.getChatRoomMembers();
@@ -51,6 +54,21 @@ const ChatAreaHeader = () => {
   const selectedChatDispatch = useSelectedChatDispatch();
   const chatRoom = useSelectedChatState().getChatState();
   const showChatRoomDispatch = useShowChatRoomDetailsDispatch();
+  const callSession = useChatRoomCallSession();
+  const callManager = useCallManager();
+
+  function handleJoinCall() {
+    if (!chatRoom?.chatRoomId) return;
+    const callInfo = callSession.getCallInfo(chatRoom.chatRoomId);
+    if (!callInfo) return;
+
+    callManager.answerCall({
+      callId: callInfo.chatRoomId,
+      from: "client",
+      to: "server",
+      callType: callInfo.callType,
+    });
+  }
   return (
     <div className="flex min-h-[65px] shrink-0 cursor-pointer items-center border-b-[1px] border-border-color px-3 lg:px-5">
       <div
@@ -66,6 +84,16 @@ const ChatAreaHeader = () => {
       >
         {chatRoom?.getChatRoomName()}
       </div>
+
+      {chatRoom?.chatRoomId && callSession.isActiveCall(chatRoom.chatRoomId) ? (
+        <div
+          className="mr-[18px] mt-2 flex flex-col items-center px-1"
+          onClick={handleJoinCall}
+        >
+          <Phone size={16} className="fill-user-online text-user-online" />
+          <div className="text-xs text-user-online">Join call</div>
+        </div>
+      ) : null}
       <div
         className="flex py-2"
         onClick={() => showChatRoomDispatch.toggleChatRoomDetails(true)}

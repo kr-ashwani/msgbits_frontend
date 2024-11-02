@@ -3,6 +3,8 @@ import { MessageState } from "@/hooks/AppSelector/useMessageState";
 
 import React, { ReactNode, useMemo } from "react";
 import TypingIndicator from "../chatRoomMessage/TypingIndicator";
+import { useChatRoomCallSession } from "@/hooks/AppSelector/useChatRoomCallSession";
+import { Phone } from "lucide-react";
 
 function displayLastMessage(messageState: MessageState): ReactNode {
   const rawMessage = messageState.getRawMessage();
@@ -21,6 +23,8 @@ const ChatRoomLastMessage = ({
   messageState: MessageState;
 }) => {
   const typingStatus = useChatTypingStatusState();
+  const callSession = useChatRoomCallSession();
+
   const typingMessage = useMemo(() => {
     const member = typingStatus.getUser(messageState.getChatRoomId() ?? "");
 
@@ -29,6 +33,16 @@ const ChatRoomLastMessage = ({
       ? "You are typing"
       : `${member.userName} is typing`;
   }, [typingStatus, messageState]);
+
+  if (callSession.isActiveCall(messageState.getChatRoomId() || ""))
+    return (
+      <div className="truncate">
+        <div className="flex items-center gap-[1px] pr-4">
+          <Phone size={13} className="fill-green-500 text-green-500" />
+          <div className="ml-1 truncate">Call in Progress...</div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="truncate">

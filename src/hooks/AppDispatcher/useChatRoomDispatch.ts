@@ -1,4 +1,8 @@
 import {
+  addActiveChatRoomCall,
+  removeActiveChatRoomCall,
+} from "@/lib/store/features/chat/chatRoomDataSlice";
+import {
   addChatRoom,
   addNewMembers,
   chatRoomMakeAdmin,
@@ -12,6 +16,7 @@ import { ChatAddNewMember } from "@/schema/ChatAddNewMemberSchema";
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { IChatRoom } from "@/schema/ChatRoomSchema";
 import { GroupChatProfileUpdate } from "@/schema/GroupChatProfileUpdate";
+import { IWebRTCCallInfo } from "@/schema/WebRTCSchema";
 import { useMemo } from "react";
 
 export class ChatRoomDispatcher {
@@ -43,6 +48,14 @@ export class ChatRoomDispatcher {
 
   updateGroupChatProfilePicOrName = (payload: GroupChatProfileUpdate) => {
     this.dispatch(updateGroupChatProfilePicOrName(payload));
+  };
+
+  addActiveChatRoomCall = (payload: IWebRTCCallInfo[]) => {
+    this.dispatch(addActiveChatRoomCall(payload));
+  };
+
+  removeActiveChatRoomCall = (payload: string) => {
+    this.dispatch(removeActiveChatRoomCall(payload));
   };
 
   constructor(dispatch: AppDispatch) {

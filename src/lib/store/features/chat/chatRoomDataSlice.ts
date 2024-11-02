@@ -1,6 +1,6 @@
 import { ChatRoomAndMember } from "@/schema/ChatRoomAndMemberSchema";
 import { IMessage } from "@/schema/MessageSchema";
-import { CallStatus } from "@/schema/WebRTCSchema";
+import { CallStatus, IWebRTCCallInfo } from "@/schema/WebRTCSchema";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type typingStatusState = {
@@ -43,7 +43,7 @@ export interface chatRoomDataState {
   imagePreview: ImagePreviewState;
   callStatus: CallStatus;
   updateCallUI: string;
-  activeChatRoomCalls: string[];
+  activeChatRoomCalls: IWebRTCCallInfo[];
 }
 const initialState: chatRoomDataState = {
   chatInputMessage: {},
@@ -191,18 +191,33 @@ export const chatRoomDataSlice = createSlice({
       state.updateCallUI = action.payload;
     },
 
-    addActiveChatRoomCall(state, action: PayloadAction<string | string[]>) {
-      if (typeof action.payload === "string")
-        state.activeChatRoomCalls.push(action.payload);
-      else if (Array.isArray(action.payload))
-        action.payload.forEach((chatRoomId) =>
-          state.activeChatRoomCalls.push(chatRoomId),
-        );
+    addActiveChatRoomCall(
+      state,
+      action: PayloadAction<IWebRTCCallInfo | IWebRTCCallInfo[]>,
+    ) {
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach((callInfo) => {
+          if (
+            !state.activeChatRoomCalls.some(
+              (state) => state.chatRoomId === callInfo.chatRoomId,
+            )
+          )
+            state.activeChatRoomCalls.push(callInfo);
+        });
+      } else {
+        const { chatRoomId } = action.payload;
+        if (
+          !state.activeChatRoomCalls.some(
+            (state) => state.chatRoomId === chatRoomId,
+          )
+        )
+          state.activeChatRoomCalls.push(action.payload);
+      }
     },
 
     removeActiveChatRoomCall(state, action: PayloadAction<string>) {
       state.activeChatRoomCalls = state.activeChatRoomCalls.filter(
-        (chatRoomId) => chatRoomId !== action.payload,
+        (state) => state.chatRoomId !== action.payload,
       );
     },
   },

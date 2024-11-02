@@ -34,6 +34,7 @@ import {
   IWebRTCRoomFull,
   IWebRTCStartCall,
   WebRTCAnswerSchema,
+  WebRTCCallInfo,
   WebRTCEndCallSchema,
   WebRTCGetActiveParticipantsSchema,
   WebRTCIceCandidateSchema,
@@ -129,6 +130,7 @@ const SyncListenerSchema = {
     chatUser: z.array(ChatUserSchema),
   }),
   "sync-allUserStatus": z.array(z.string()),
+  "sync-chatRoomCallSession": z.array(WebRTCCallInfo),
 };
 
 const WebRTCListenerSchema = {
@@ -143,6 +145,7 @@ const WebRTCListenerSchema = {
   "webrtc-iceCandidate": WebRTCIceCandidateSchema,
   "webrtc-mediaStateChange": WebRTCMediaStateChangeSchema,
   "webrtc-roomFull": WebRTCRoomFullSchema,
+  "webrtc-callSessionTerminated": z.string(),
 };
 
 const ListenerSchema = {

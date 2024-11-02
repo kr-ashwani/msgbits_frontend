@@ -11,6 +11,7 @@ import { AppDispatch } from "@/lib/store/store";
 import { deviceChecker, DeviceStatus } from "./DeviceChecker";
 import { toast } from "sonner";
 import { SocketEmitterQueue } from "../socketQueue/SocketEmitterQueue";
+import { changeCallStatus } from "@/lib/store/features/chat/chatRoomDataSlice";
 
 export class CallManager {
   private readonly socket: SocketManager;
@@ -97,7 +98,7 @@ export class CallManager {
 
   @requiresNoCallSession()
   declineCall(): void {
-    this.callingService?.declineCall();
+    this.dispatch(changeCallStatus({ status: "IDLE" }));
     this.callingService = null;
   }
 

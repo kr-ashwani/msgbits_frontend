@@ -26,7 +26,7 @@ const VideoCallCard = ({ memberDesc }: { memberDesc: ParticipantsDesc }) => {
             ref={videoRef}
             autoPlay
             playsInline
-            className="h-full w-full object-cover"
+            className={`h-full w-full object-cover ${callManager.getLocalUserId() === memberDesc.userId ? "scale-x-[-1]" : ""}`}
           />
         </div>
         <div className="absolute bottom-4 left-4 flex items-center gap-2">
