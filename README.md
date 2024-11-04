@@ -16,6 +16,7 @@ A modern real-time messaging platform built with Next.js and TypeScript, featuri
 - [System Requirements](#system-requirements)
 - [Installation](#installation)
 - [Development](#development)
+- [Deployment](#deployment)
 - [Build](#build)
 - [WebRTC Implementation Details](#webrtc-implementation-details)
 - [State Management](#state-management)
@@ -209,6 +210,38 @@ Your app should now be running on `http://localhost:3000`
 - Implement proper error handling
 - Write meaningful commit messages
 - Follow the project's file/folder structure
+
+## Deployment
+
+### Continuous Integration/Deployment
+
+The application uses GitHub Actions for automated deployment to EC2:
+
+1. On push to main branch:
+
+   - Build is triggered
+   - Tests are run
+   - Docker image is created and pushed to registry
+   - New image is deployed to EC2
+
+2. Production Environment:
+
+   - Running on EC2 instance
+   - Redis container for caching and session management
+   - Environment variables loaded from production config
+   - Automated SSL certificate renewal
+
+3. Monitoring:
+   - Application logs stored on EC2 and database
+   - Error tracking and alerting
+   - Resource utilization monitoring
+
+### Scaling Strategy
+
+- Horizontal scaling using Node.js cluster
+- Redis for session storage across instances
+- Load balancer distribution
+- Auto-scaling based on metrics
 
 ## Build
 
