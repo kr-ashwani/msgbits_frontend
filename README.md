@@ -1,4 +1,4 @@
-# Real-Time Chat Application
+# 💬 Msgbits - Real-Time Chat Application
 
 A modern real-time messaging platform built with Next.js and TypeScript, featuring secure communication, file sharing, comprehensive chat management, and native WebRTC-powered audio/video calls.
 
