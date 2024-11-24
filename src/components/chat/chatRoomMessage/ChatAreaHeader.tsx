@@ -87,11 +87,11 @@ const ChatAreaHeader = () => {
 
       {chatRoom?.chatRoomId && callSession.isActiveCall(chatRoom.chatRoomId) ? (
         <div
-          className="mr-[18px] mt-2 flex flex-col items-center px-1"
+          className="mr-[22px] flex items-center gap-1 rounded-lg bg-user-online px-2 py-[6px]"
           onClick={handleJoinCall}
         >
-          <Phone size={16} className="fill-user-online text-user-online" />
-          <div className="text-xs text-user-online">Join call</div>
+          <Phone size={16} className="fill-chat-bg text-chat-bg" />
+          <div className="text-sm text-chat-bg">Join call</div>
         </div>
       ) : null}
       <div

@@ -112,6 +112,7 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
         <Link
           className="text-right font-roboSlab font-medium text-yellow-600"
           href={"/forgotpassword"}
+          aria-label="forgot password"
         >
           Forget Password?
         </Link>
@@ -125,6 +126,7 @@ const AuthForm = (props: { AuthType: "Login" | "Signup" }) => {
         <Link
           className="pl-2 font-medium text-yellow-600"
           href={`/${oppositeAuthType.toLocaleLowerCase()}`}
+          aria-label={oppositeAuthType}
         >
           {oppositeAuthType}
         </Link>

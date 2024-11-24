@@ -7,7 +7,9 @@ const Footer = () => {
     <footer className="mb-6 px-4 pt-10">
       <div className="flex items-start justify-between gap-8 max-sm:flex-col md:gap-10">
         <div className="flex flex-col items-start gap-1">
-          <a href="/">{Svg("Logo", { width: "120", height: "50" })}</a>
+          <Link href="/" aria-label="msgbits">
+            {Svg("Logo", { width: "120", height: "50" })}
+          </Link>
           <p className="text-white-400 font-montserrat text-base leading-7 sm:max-w-sm">
             Made with ❤️ by <span className="font-bold">Ashwani</span>
           </p>
@@ -17,7 +19,7 @@ const Footer = () => {
                 className="flex h-12 w-12 items-center justify-center rounded-full"
                 key={icon.alt}
               >
-                <Link href={icon.link} target="new">
+                <Link href={icon.link} target="new" aria-label={icon.alt}>
                   {icon.src}
                 </Link>
               </div>
@@ -40,7 +42,9 @@ const Footer = () => {
                     className="text-white-400 mt-3 font-montserrat text-sm leading-normal hover:text-slate-gray"
                     key={link.name}
                   >
-                    <a href={link.link}>{link.name}</a>
+                    <Link href={link.link} aria-label={link.name}>
+                      {link.name}
+                    </Link>
                   </li>
                 ))}
               </ul>

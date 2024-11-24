@@ -10,7 +10,9 @@ const OAuth = () => {
   const dispatch = useAppDispatch();
   const facebookRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    googleOAuth(dispatch);
+    setTimeout(() => {
+      googleOAuth(dispatch);
+    }, 100);
     const facebookUnsub = facebookOAuth(facebookRef, dispatch);
     return facebookUnsub;
   }, [dispatch]);

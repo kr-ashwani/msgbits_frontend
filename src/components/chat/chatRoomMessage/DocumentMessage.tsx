@@ -5,6 +5,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { SquareArrowOutUpRight } from "lucide-react";
 import { formatBytes } from "@/utils/custom/formatBytes";
+import Link from "next/link";
 
 const CircularProgress = ({
   className,
@@ -57,14 +58,16 @@ const DocumentMessage = ({ messageState }: { messageState: MessageState }) => {
     <div
       className={`mx-2 cursor-pointer ${fileMessage.message ? "mb-3" : ""} mt-2 flex items-center rounded-xl`}
     >
-      <a
+      <Link
         className="flex w-[270px] items-center px-2 py-1"
-        href={file.url}
+        href={file.url || "#"}
         onClick={(e) =>
           (!file.url || file.url === "failed") && e.preventDefault()
         }
         target="_blank"
         rel="noopener noreferrer"
+        aria-disabled={!file.url || file.url === "failed"}
+        aria-label={`Download file: ${file.fileName}`}
       >
         <div id={file.fileId} className="flex grow gap-1">
           <div className="h-12 w-0 grow">
@@ -107,7 +110,7 @@ const DocumentMessage = ({ messageState }: { messageState: MessageState }) => {
             )}
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

@@ -1,37 +1,43 @@
 import { IUser } from "@/schema/userSchema";
 import { SocketEmitterQueue } from "../socketQueue/SocketEmitterQueue";
-
-type ICEServer = {
-  urls: string;
-  username?: string;
-  credential?: string;
-};
+import { fetchData } from "@/utils/custom/customFetch";
+import { serverResWapperSchema } from "@/schema/ServerResWrapperSchema";
+import { StunTurnConfigSchema } from "@/schema/stunTurnConfigSchema";
 
 export class WebRTCService {
   private readonly peerConnections: Map<string, RTCPeerConnection> = new Map();
   private readonly socketQueue: SocketEmitterQueue;
-  private readonly ICE_SERVERS: ICEServer[];
   private readonly localUser: IUser;
 
   constructor(socketQueue: SocketEmitterQueue, user: IUser) {
     this.socketQueue = socketQueue;
     this.localUser = user;
-    this.ICE_SERVERS = [
-      { urls: process.env.NEXT_PUBLIC_STUN_URLS ?? "" },
-      {
-        urls: process.env.NEXT_PUBLIC_TURN_URLS ?? "",
-        username: process.env.NEXT_PUBLIC_TURN_USERNAME,
-        credential: process.env.NEXT_PUBLIC_TURN_PASSWORD,
-      },
-    ];
   }
 
   async createPeerConnection(
     userId: string,
     callId: string,
     onTrackAddedCb: (userId: string, stream: readonly MediaStream[]) => void,
-    configuration: RTCConfiguration = { iceServers: this.ICE_SERVERS },
   ): Promise<RTCPeerConnection> {
+    const response = await fetchData(
+      "/stunturncredentials",
+      serverResWapperSchema(StunTurnConfigSchema),
+    );
+    console.log(response);
+    if (!response.success) throw Error("Failed to create peer connection");
+    const credentials = response.payload.data;
+    const configuration = {
+      iceServers: [
+        {
+          urls: credentials.stunUrl,
+        },
+        {
+          urls: credentials.turnUrl,
+          username: credentials.username,
+          credential: credentials.credential,
+        },
+      ],
+    };
     const peerConnection = new RTCPeerConnection(configuration);
 
     peerConnection.onicecandidate = (event) => {

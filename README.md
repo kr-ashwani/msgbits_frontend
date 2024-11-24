@@ -177,14 +177,9 @@ npm install
 NEXT_PUBLIC_SERVER_URL = server_url
 NEXT_PUBLIC_SELF_URL = frontend_url
 NEXT_PUBLIC_OAUTH_GOOGLE_CLIENT_ID = google_client_id
-NEXT_PUBLIC_OAUTH_GOOGLE_CLIENT_SECRET = google_client_secret
 NEXT_PUBLIC_OAUTH_GITHUB_CLIENT_ID = github_client_id
 NEXT_PUBLIC_OAUTH_FACEBOOK_APP_ID = facebook_app_id
 NEXT_PUBLIC_MAX_FILE_SIZE_MB = max_file_upload_size
-NEXT_PUBLIC_STUN_URLS = custom_stun_server
-NEXT_PUBLIC_TURN_URLS = custom_turn_server
-NEXT_PUBLIC_TURN_USERNAME = turn_server_username
-NEXT_PUBLIC_TURN_PASSWORD = turn_server_password
 ```
 
 4. Run the development server:

@@ -54,11 +54,11 @@ export default function RootLayout({
         <Toaster theme="light" />
 
         <Script
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           src="https://accounts.google.com/gsi/client"
         />
         <Script
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           src="https://connect.facebook.net/en_US/all.js"
         />
       </body>
