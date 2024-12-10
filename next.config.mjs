@@ -15,6 +15,11 @@ const nextConfig = {
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: getHostFromURL(process.env.NEXT_PUBLIC_SERVER_URL),
         pathname: '/**',
