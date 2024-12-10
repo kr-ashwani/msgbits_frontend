@@ -85,11 +85,10 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains'
           },
-          {
-
-            key: 'Content-Security-Policy',
-            value: contentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
-          }
+          // {
+          //   key: 'Content-Security-Policy',
+          //   value: contentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+          // }
         ]
       }]
   }
