@@ -46,8 +46,7 @@ export const ChatSvg = (
         ></path>
       </svg>
     );
-
-  if (type === "search")
+  else if (type === "search")
     return (
       <svg
         width={opts.width ? opts.width : "50"}
@@ -59,8 +58,7 @@ export const ChatSvg = (
         <path d="M55.146 51.887L41.588 37.786A22.926 22.926 0 0046.984 23c0-12.682-10.318-23-23-23s-23 10.318-23 23 10.318 23 23 23c4.761 0 9.298-1.436 13.177-4.162l13.661 14.208c.571.593 1.339.92 2.162.92.779 0 1.518-.297 2.079-.837a3.004 3.004 0 00.083-4.242zM23.984 6c9.374 0 17 7.626 17 17s-7.626 17-17 17-17-7.626-17-17 7.626-17 17-17z" />
       </svg>
     );
-
-  if (type === "setting")
+  else if (type === "setting")
     return (
       <svg
         width={opts.width ? opts.width : "50"}
@@ -77,7 +75,7 @@ export const ChatSvg = (
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
       </svg>
     );
-  if (type === "addBtn")
+  else if (type === "addBtn")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +91,7 @@ export const ChatSvg = (
         <path d="M12 5v14M5 12h14" />
       </svg>
     );
-  if (type === "emoteIcon")
+  else if (type === "emoteIcon")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -111,8 +109,7 @@ export const ChatSvg = (
         <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"></path>
       </svg>
     );
-
-  if (type === "attachment")
+  else if (type === "attachment")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -128,8 +125,7 @@ export const ChatSvg = (
         <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
       </svg>
     );
-
-  if (type === "msgSend")
+  else if (type === "msgSend")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +137,7 @@ export const ChatSvg = (
         <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480l0-83.6c0-4 1.5-7.8 4.2-10.8L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z" />
       </svg>
     );
-  if (type === "backArrow")
+  else if (type === "backArrow")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +153,7 @@ export const ChatSvg = (
         />
       </svg>
     );
-  if (type === "groupChatIcon")
+  else if (type === "groupChatIcon")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -173,8 +169,7 @@ export const ChatSvg = (
         </g>
       </svg>
     );
-
-  if (type === "checkIcon")
+  else if (type === "checkIcon")
     return (
       <svg
         width={opts.width ? opts.width : "24"}
@@ -186,8 +181,7 @@ export const ChatSvg = (
         <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
       </svg>
     );
-
-  if (type === "xmarkIcon")
+  else if (type === "xmarkIcon")
     return (
       <svg
         width={opts.width ? opts.width : "16"}
@@ -199,8 +193,7 @@ export const ChatSvg = (
         <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
       </svg>
     );
-
-  if (type === "rightArrow")
+  else if (type === "rightArrow")
     return (
       <svg
         width={opts.width ? opts.width : "24"}
@@ -212,8 +205,7 @@ export const ChatSvg = (
         <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
       </svg>
     );
-
-  if (type === "cameraIcon")
+  else if (type === "cameraIcon")
     return (
       <svg
         width={opts.width ? opts.width : "30"}
@@ -225,15 +217,13 @@ export const ChatSvg = (
         <path d="M149.1 64.8L138.7 96 64 96C28.7 96 0 124.7 0 160L0 416c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-256c0-35.3-28.7-64-64-64l-74.7 0L362.9 64.8C356.4 45.2 338.1 32 317.4 32L194.6 32c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z" />
       </svg>
     );
-
-  if (type === "groupIcon")
+  else if (type === "groupIcon")
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
         <path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192l42.7 0c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0L21.3 320C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7l42.7 0C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3l-213.3 0zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352l117.3 0C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7l-330.7 0c-14.7 0-26.7-11.9-26.7-26.7z" />
       </svg>
     );
-
-  if (type === "callIcon")
+  else if (type === "callIcon")
     return (
       <svg
         width={opts.width ? opts.width : "18"}
@@ -250,8 +240,7 @@ export const ChatSvg = (
         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path>
       </svg>
     );
-
-  if (type === "videoIcon")
+  else if (type === "videoIcon")
     return (
       <svg
         width={opts.width ? opts.width : "18"}
@@ -269,8 +258,7 @@ export const ChatSvg = (
         <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
       </svg>
     );
-
-  if (type === "userAddicon")
+  else if (type === "userAddicon")
     return (
       <svg
         width={opts.width ? opts.width : "25"}
@@ -282,8 +270,7 @@ export const ChatSvg = (
         <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z" />
       </svg>
     );
-
-  if (type === "exitIcon")
+  else if (type === "exitIcon")
     return (
       <svg
         width={opts.width ? opts.width : "22"}
@@ -295,8 +282,7 @@ export const ChatSvg = (
         <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
       </svg>
     );
-
-  if (type === "penIcon")
+  else if (type === "penIcon")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"

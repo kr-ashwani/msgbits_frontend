@@ -91,13 +91,25 @@ export const footerLinks = [
     title: "Get in touch",
     links: [
       { name: "customer@msgbits.com", link: "mailto:customer@msgbits.com" },
-      { name: "+919123456789", link: "tel:+92554862354" },
+      { name: "+919123456789", link: "tel:+919123456789" },
     ],
   },
 ];
 
 export const socialMedia = [
-  { src: Svg("Facebook", { width: "30" }), alt: "facebook logo", link: "#" },
-  { src: Svg("Twitter", { width: "30" }), alt: "twitter logo", link: "#" },
-  { src: Svg("Instagram", { width: "30" }), alt: "instagram logo", link: "#" },
+  {
+    src: Svg("AuthGithub", { width: "28", height: "28" }),
+    alt: "Github logo",
+    link: "https://github.com/kr-ashwani",
+  },
+  {
+    src: Svg("linkedin", { width: "28", height: "28" }),
+    alt: "Linkedin logo",
+    link: "https://www.linkedin.com/in/kr-ashwani",
+  },
+  {
+    src: Svg("Instagram", { width: "30", height: "30" }),
+    alt: "instagram logo",
+    link: "https://www.instagram.com/i_m_ashwani.kr/",
+  },
 ];

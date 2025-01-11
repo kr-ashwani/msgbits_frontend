@@ -35,7 +35,7 @@ export const MessageSvg = (
         <path d="M21 15l-5-5L5 21"></path>
       </svg>
     );
-  if (type === "msgPending")
+  else if (type === "msgPending")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@ export const MessageSvg = (
         />
       </svg>
     );
-  if (type === "msgSent")
+  else if (type === "msgSent")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +69,7 @@ export const MessageSvg = (
         <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z" />
       </svg>
     );
-  if (type === "msgDelivered")
+  else if (type === "msgDelivered")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ export const MessageSvg = (
         <path d="M2.305,11.235a1,1,0,0,1,1.414.024l3.206,3.319L14.3,7.289A1,1,0,0,1,15.7,8.711l-8.091,8a1,1,0,0,1-.7.289H6.9a1,1,0,0,1-.708-.3L2.281,12.649A1,1,0,0,1,2.305,11.235ZM20.3,7.289l-7.372,7.289-.263-.273a1,1,0,1,0-1.438,1.39l.966,1a1,1,0,0,0,.708.3h.011a1,1,0,0,0,.7-.289l8.091-8A1,1,0,0,0,20.3,7.289Z" />
       </svg>
     );
-  if (type === "msgSeen")
+  else if (type === "msgSeen")
     return (
       <svg
         fill="currentColor"
@@ -99,8 +99,7 @@ export const MessageSvg = (
         ></path>
       </svg>
     );
-
-  if (type === "xIcon")
+  else if (type === "xIcon")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"

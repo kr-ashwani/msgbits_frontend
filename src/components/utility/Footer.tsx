@@ -42,7 +42,11 @@ const Footer = () => {
                     className="text-white-400 mt-3 font-montserrat text-sm leading-normal hover:text-slate-gray"
                     key={link.name}
                   >
-                    <Link href={link.link} aria-label={link.name}>
+                    <Link
+                      href={link.link}
+                      aria-label={link.name}
+                      target="_blank"
+                    >
                       {link.name}
                     </Link>
                   </li>

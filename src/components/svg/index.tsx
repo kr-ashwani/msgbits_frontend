@@ -21,7 +21,8 @@ interface SvgOpts {
     | "ChattingLogo"
     | "Login"
     | "Logo"
-    | "Signup";
+    | "Signup"
+    | "linkedin";
 
   width: string;
   height: string;
@@ -48,7 +49,7 @@ const Svg = (
         />
       </svg>
     );
-  if (type === "AuthGoogle")
+  else if (type === "AuthGoogle")
     return (
       <svg
         width={opts.width ? opts.width : "42"}
@@ -75,7 +76,7 @@ const Svg = (
         />
       </svg>
     );
-  if (type === "AuthFacebook")
+  else if (type === "AuthFacebook")
     return (
       <svg
         width={opts.width ? opts.width : "47"}
@@ -94,8 +95,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "AuthPassword")
+  else if (type === "AuthPassword")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -114,8 +114,7 @@ const Svg = (
         </g>
       </svg>
     );
-
-  if (type === "AuthUser")
+  else if (type === "AuthUser")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -139,8 +138,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "ArrorRight")
+  else if (type === "ArrorRight")
     return (
       <svg
         width={opts.width ? opts.width : "16"}
@@ -155,8 +153,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "CopyrightSign")
+  else if (type === "CopyrightSign")
     return (
       <svg
         width={opts.width ? opts.width : "10"}
@@ -172,8 +169,7 @@ const Svg = (
         <circle cx="10" cy="10" r="9.5" stroke="#000" />
       </svg>
     );
-
-  if (type === "Facebook")
+  else if (type === "Facebook")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -202,8 +198,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "Instagram")
+  else if (type === "Instagram")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -256,8 +251,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "loading")
+  else if (type === "loading")
     return (
       <svg
         width={opts.width ? opts.width : "28"}
@@ -282,8 +276,7 @@ const Svg = (
         </g>
       </svg>
     );
-
-  if (type === "PasswordEyeClose")
+  else if (type === "PasswordEyeClose")
     return (
       <svg
         width={opts.width ? opts.width : "28"}
@@ -294,8 +287,7 @@ const Svg = (
         <path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z" />
       </svg>
     );
-
-  if (type === "PasswordEyeOpen")
+  else if (type === "PasswordEyeOpen")
     return (
       <svg
         width={opts.width ? opts.width : "28"}
@@ -306,8 +298,7 @@ const Svg = (
         <path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
       </svg>
     );
-
-  if (type === "Timer")
+  else if (type === "Timer")
     return (
       <svg
         width={opts.width ? opts.width : "15"}
@@ -322,8 +313,7 @@ const Svg = (
         />
       </svg>
     );
-
-  if (type === "Twitter")
+  else if (type === "Twitter")
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -334,7 +324,7 @@ const Svg = (
         <path d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z" />
       </svg>
     );
-  if (type === "Video")
+  else if (type === "Video")
     return (
       <svg
         width={opts.width ? opts.width : "20"}
@@ -349,7 +339,7 @@ const Svg = (
         />
       </svg>
     );
-  if (type === "Wifi")
+  else if (type === "Wifi")
     return (
       <svg
         width={opts.width ? opts.width : "21"}
@@ -377,7 +367,7 @@ const Svg = (
         </defs>
       </svg>
     );
-  if (type === "ChattingLogo")
+  else if (type === "ChattingLogo")
     return (
       <svg
         width={opts.width ? opts.width : "214"}
@@ -1079,7 +1069,7 @@ const Svg = (
         </defs>
       </svg>
     );
-  if (type === "Login")
+  else if (type === "Login")
     return (
       <svg
         width={opts.width ? opts.width : "245"}
@@ -1912,7 +1902,7 @@ const Svg = (
         </defs>
       </svg>
     );
-  if (type === "Logo")
+  else if (type === "Logo")
     return (
       <svg
         width={opts.width ? opts.width : "310"}
@@ -2176,7 +2166,7 @@ const Svg = (
         </defs>
       </svg>
     );
-  if (type === "Signup")
+  else if (type === "Signup")
     return (
       <svg
         width={opts.width ? opts.width : "219"}
@@ -2532,6 +2522,21 @@ const Svg = (
           d="M20.0835 74.7604C33.661 75.1419 47.0815 74.3209 60.6456 75.3257C61.3653 75.3796 61.3704 74.4342 60.6456 74.3928C47.0965 73.6257 33.6493 74.1163 20.0835 73.9505C19.4523 73.9422 19.4556 74.7424 20.0835 74.7604Z"
           fill="white"
         />
+      </svg>
+    );
+  else if (type === "linkedin")
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        data-supported-dps="24x24"
+        fill="#0077B5"
+        className="mercado-match"
+        width={opts.width ? opts.width : "24"}
+        height={opts.height ? opts.height : "24"}
+        focusable="false"
+      >
+        <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
       </svg>
     );
 };
